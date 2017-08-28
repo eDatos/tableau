@@ -1,0 +1,11 @@
+form {
+    margin-top: 10%;
+    margin-bottom: 10%;
+    border: 1px solid grey;
+    border-radius: 5px;
+    padding: 3%;
+}
+
+#divButton {
+    margin-top: 2%;
+}
