@@ -1,9 +1,84 @@
+/* Google Font's Droid Sans */
+@font-face {
+    font-family: 'Droid Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Droid Sans'), local('DroidSans'), url('fonts/DroidSans.ttf') format('truetype');
+  }
+  /* Google Font's Droid Sans Bold */
+@font-face {
+    font-family: 'Droid Sans';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Droid Sans Bold'), local('DroidSans-Bold'), url('fonts/DroidSans-Bold.ttf') format('truetype');
+}
+
+.top {
+	border-bottom: 2px solid rgb(214, 214, 214);
+	padding: 0px 4px 8px 0px !important;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.section {
+	font-family: "Droid Sans", sans-serif;
+	font-size: 15px;
+	color: #000;
+	max-width: 960px;
+	margin: 0 auto;
+	padding: 5px 0 0 0;
+	clear: both;
+}
+
+.section .izq {
+	float: left;
+}
+
+.section .der {
+	float: right;
+}
+
+.section#header {
+	padding-top: 15px;
+}
+
+ul {
+    list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+li {
+    display: inline;
+	padding: 0 5px 0 0;
+}
+
+a {
+    color: #000;
+	font-weight: 600;
+    padding: 0px 4px 10px 0px !important;
+	margin: 15px 6px 0px 0px !important;
+}
+
+a:hover {
+    border-bottom: 2px solid #000;
+    font-weight: 600;
+    text-decoration: none;
+	color: #9c9c9c;
+}
+
+.active {
+    font-weight: 600;
+	color: #9c9c9c;
+}
+
 form {
     margin-top: 10%;
     margin-bottom: 10%;
     border: 1px solid grey;
     border-radius: 5px;
     padding: 3%;
+    font-family: 'Droid Sans', sans-serif;
 }
 
 #divButton {

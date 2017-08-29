@@ -32,11 +32,13 @@
             //var time = _.invert(resp.dimension.TIME.representation.index);
             //var measure = _.invert(resp.dimension.MEASURE.representation.index);
             for (var i = 0, len1 = resp.dimension.GEOGRAPHICAL.representation.size; i < len1; i++) {
+                var geographical = searchKey(resp.dimension.GEOGRAPHICAL.representation.index, i);
                 for (var j = 0, len2 = resp.dimension.TIME.representation.size; j < len2; j++) {
+                    var time = searchKey(resp.dimension.TIME.representation.index, j);
                     for (var k = 0, len3 = resp.dimension.MEASURE.representation.size; k < len3; k++) {
                         tableData.push({
-                            "geographical": searchKey(resp.dimension.GEOGRAPHICAL.representation.index, i),
-                            "time": searchKey(resp.dimension.TIME.representation.index, j),
+                            "geographical": geographical,
+                            "time": time,
                             "measure": searchKey(resp.dimension.MEASURE.representation.index, k),
                             "observation": resp.observation[i * len2 * len3 + j * len3 + k],
                         });
