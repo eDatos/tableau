@@ -4,11 +4,15 @@
         <meta http-equiv="Cache-Control" content="no-store" />
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
         <link href="main.css" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" crossorigin="anonymous"></script>
         <script src="https://connectors.tableau.com/libs/tableauwdc-2.2.latest.js" type="text/javascript"></script>
-        <script src="main.js" type="text/javascript"></script>
+        <script src="js/vendor/lodash.js" type="text/javascript"></script>
+        <script src="js/app/tableau.js" type="text/javascript"></script>
+        <script src="js/app/main.js" type="text/javascript"></script>
     </head>
     <body>
         <div class="top">
@@ -23,7 +27,7 @@
             <div class="section" id="header">
                 <ul>
                     <li>
-                        <a href="home.html"><i class="fa fa-home fa-2x" aria-hidden="true"></i></a>
+                        <a href="home.html"><i class="fa fa-home" aria-hidden="true"></i></a>
                     </li>
                     <li>
                         <a class="active" href="">eIndicadores</a>
@@ -38,11 +42,38 @@
             </div>
         </div>
         <div class="content">
-            <div class="section">
-                <form>
-                    <div class="row">
-                        <label class="col-xs-2">URL: </label>
-                        <input class="col-xs-10" name="url" id="inputUrl" />
+            <div class="section" id="obtenerDatos">
+                <form id="obtenerDatos">
+                    <h4>Seleccione los datos que desea obtener:</h4>
+                    <label class="radioLabel"><input type="radio" name="tipoDato" onclick="datosObtener(this)" value="url" checked>URL del indicador</label>
+                    <div class="row radioDiv" id="url">
+                            <label class="col-xs-2">URL: </label>
+                            <input class="col-xs-10" name="url" id="inputUrl" />
+                    </div>
+                    <label class="radioLabel"><input type="radio" name="tipoDato" onclick="datosObtener(this)" value="indicador">Seleccionar indicador</label>
+                    <div class="row radioDiv" id="indicador" style="display: none">
+                        <label class="col-xs-2">Endpoint: </label>
+                        <input class="col-xs-10" name="endpoint" id="inputEndpointIndicador" />
+                        <button type="button" class="btn btn-primary" id="endpointButton" onclick="buscarIndicadores()">Buscar indicadores</button>
+                    </div>
+                    <div class="selectDiv row radioDiv" style="display: none">
+                        <label class="col-xs-2">Indicadores:</label>
+                        <select class="col-xs-10" id="selectIndicador"></select>
+                    </div>
+                    <label class="radioLabel"><input type="radio" name="tipoDato" onclick="datosObtener(this)" value="instanciaIndicador">Seleccionar instancia de indicador</label>
+                    <div class="row radioDiv" id="instanciaIndicador" style="display: none">
+                        <label class="col-xs-2">Endpoint: </label>
+                        <input class="col-xs-10" name="endpoint" id="inputEndpointSistemaIndicador" />
+                        <button type="button" class="btn btn-primary" id="endpointButton" onclick="buscarSistemasIndicadores()">Buscar sistemas de indicadores</button>
+                    </div>
+                    <div class="selectDiv row radioDiv" style="display: none">
+                        <label class="col-xs-2">Sistemas de indicadores:</label>
+                        <select class="col-xs-10" id="selectSistemaIndicador"></select>
+                        <button type="button" class="btn btn-primary" id="sistemaIndicadorButton" onclick="buscarInstanciasIndicadores()">Buscar instancias de indicadores</button>
+                    </div>
+                    <div class="selectDiv row radioDiv" style="display: none">
+                        <label class="col-xs-2">Instancias de indicadores:</label>
+                        <select class="col-xs-10" id="selectInstanciaIndicador"></select>
                     </div>
                     <div class="row" id="divButton">
                         <button type="button" class="btn btn-success col-xs-2 col-xs-offset-10" id="dataButton">Obtener datos</button>

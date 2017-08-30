@@ -13,6 +13,10 @@
     src: local('Droid Sans Bold'), local('DroidSans-Bold'), url('fonts/DroidSans-Bold.ttf') format('truetype');
 }
 
+#header i {
+    font-size: 24px !important;
+}
+
 .top {
 	border-bottom: 2px solid rgb(214, 214, 214);
 	padding: 0px 4px 8px 0px !important;
@@ -42,37 +46,37 @@
 	padding-top: 15px;
 }
 
-ul {
+#header ul {
     list-style-type: none;
 	margin: 0;
 	padding: 0;
 }
 
-li {
+#header li {
     display: inline;
 	padding: 0 5px 0 0;
 }
 
-a {
+#header a {
     color: #000;
 	font-weight: 600;
     padding: 0px 4px 10px 0px !important;
 	margin: 15px 6px 0px 0px !important;
 }
 
-a:hover {
+#header a:hover {
     border-bottom: 2px solid #000;
     font-weight: 600;
     text-decoration: none;
 	color: #9c9c9c;
 }
 
-.active {
+#header a.active {
     font-weight: 600;
 	color: #9c9c9c;
 }
 
-form {
+#obtenerDatos form {
     margin-top: 10%;
     margin-bottom: 10%;
     border: 1px solid grey;
@@ -81,6 +85,48 @@ form {
     font-family: 'Droid Sans', sans-serif;
 }
 
-#divButton {
+#obtenerDatos form #divButton {
+    margin-top: 8%;
+    margin-right: 7%;
+}
+
+#obtenerDatos form input[type="radio"] {
+    margin-right: 10px;
+}
+
+#obtenerDatos form .radioLabel {
+    display: block;
+    margin-left: 5%;
     margin-top: 2%;
+}
+
+#obtenerDatos form label {
+    font-weight: 500;
+}
+
+#obtenerDatos form .radioDiv {
+    margin: 2% 7% 2% 7%;
+}
+
+#obtenerDatos form .radioDiv button {
+    margin-top: 2%;
+    float: right;
+}
+
+#obtenerDatos form .selectDiv {
+    margin-top: 2%;
+}
+
+#obtenerDatos form #endpointButton {
+    margin-left: 100%;
+}
+
+#obtenerDatos form .btn-primary {
+    margin-bottom: 2%;
+}
+
+#errorMsg {
+    color: red;
+    font-weight: 600;
+    text-align: center;
 }
