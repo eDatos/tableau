@@ -17,10 +17,10 @@
     <body>
         <div class="top">
             <div class="section">
-                <div class="izq">
+                <div class="left">
                     <img src="http://www.gobiernodecanarias.org/opencms8/export/system/modules/es.gobcan.istac.web/resources/images/logo_istac.jpg" alt="" />
                 </div>
-                <div class="der">
+                <div class="right">
                     <img src="http://estadisticas.arte-consultores.com/plantillas/logo_edatos.jpg" alt="" />
                 </div>
             </div>
@@ -42,38 +42,64 @@
             </div>
         </div>
         <div class="content">
-            <div class="section" id="obtenerDatos">
-                <form id="obtenerDatos">
+            <div class="section">
+                <div class="text">
+                    <p>
+                        Este conector le permite cargar los datos de un indicador o de una instancia de indicador. 
+                        Estos datos se publican originalmente a través de la API de Indicadores(http://www.gobiernodecanarias.org/istac/api/indicators/v1.0).
+                    </p>
+                    <p>
+                        A la hora de seleccional los datos del indicador a cargar tiene varias opciones:
+                    </p>
+                    <ol>
+                        <li>Introducir la URL de los datos que desea cargar. Esta URL debe ser una petición de las que finalizan en "/data" de la API anteriormente mencionada.</li>
+                        <li>Navegador por distintos criterios para seleccionar el recurso que desea cargar.</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="section" id="selectData">
+                <form>
                     <h4>Seleccione los datos que desea obtener:</h4>
-                    <label class="radioLabel"><input type="radio" name="tipoDato" onclick="datosObtener(this)" value="url" checked>URL del indicador</label>
+                    <label class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="url" checked>URL del indicador</label>
                     <div class="row radioDiv" id="url">
                             <label class="col-xs-2">URL: </label>
                             <input class="col-xs-10" name="url" id="inputUrl" />
                     </div>
-                    <label class="radioLabel"><input type="radio" name="tipoDato" onclick="datosObtener(this)" value="indicador">Seleccionar indicador</label>
-                    <div class="row radioDiv" id="indicador" style="display: none">
+
+                    <label class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="indicator">Seleccionar indicador</label>
+                    <div class="radioDiv row" id="indicator" style="display: none">
                         <label class="col-xs-2">Endpoint: </label>
-                        <input class="col-xs-10" name="endpoint" id="inputEndpointIndicador" />
-                        <button type="button" class="btn btn-primary" id="endpointButton" onclick="buscarIndicadores()">Buscar indicadores</button>
+                        <input class="col-xs-10" name="endpoint" id="inputEndpointIndicator" />
+                    </div>
+                    <div class="radioDiv row" style="display:none" id="indicator">
+                        <button type="button" class="btn btn-primary" id="endpointButton" onclick="searchIndicators()">Buscar indicadores</button>
+                        <div id="loaderIndicator" class="loader" style="display: none"></div>
                     </div>
                     <div class="selectDiv row radioDiv" style="display: none">
                         <label class="col-xs-2">Indicadores:</label>
-                        <select class="col-xs-10" id="selectIndicador"></select>
+                        <select class="col-xs-10" id="selectIndicator"></select>
                     </div>
-                    <label class="radioLabel"><input type="radio" name="tipoDato" onclick="datosObtener(this)" value="instanciaIndicador">Seleccionar instancia de indicador</label>
-                    <div class="row radioDiv" id="instanciaIndicador" style="display: none">
+
+                    <label class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="indicatorInstance">Seleccionar instancia de indicador</label>
+                    <div class="row radioDiv" id="indicatorInstance" style="display: none">
                         <label class="col-xs-2">Endpoint: </label>
-                        <input class="col-xs-10" name="endpoint" id="inputEndpointSistemaIndicador" />
-                        <button type="button" class="btn btn-primary" id="endpointButton" onclick="buscarSistemasIndicadores()">Buscar sistemas de indicadores</button>
+                        <input class="col-xs-10" name="endpoint" id="inputEndpointIndicatorSystem" />
+                    </div>
+                    <div class="radioDiv row" id="indicatorInstance" style="display:none">
+                        <button type="button" class="btn btn-primary" id="endpointButton" onclick="searchIndicatorsSystems()">Buscar sistemas de indicadores</button>
+                        <div id="loaderIndicatorSystem" class="loader" style="display: none"></div>
                     </div>
                     <div class="selectDiv row radioDiv" style="display: none">
                         <label class="col-xs-2">Sistemas de indicadores:</label>
-                        <select class="col-xs-10" id="selectSistemaIndicador"></select>
-                        <button type="button" class="btn btn-primary" id="sistemaIndicadorButton" onclick="buscarInstanciasIndicadores()">Buscar instancias de indicadores</button>
+                        <select class="col-xs-10" id="selectIndicatorSystem"></select>
+                    </div>
+                    <div class="radioDiv row" id="selectIndicatorSystemButton" style="display: none">
+                        <button type="button" class="btn btn-primary" id="indicatorSystemButton" onclick="searchIndicatorsInstances()">Buscar instancias de indicadores</button>
+                        <div id="loaderIndicatorInstance" class="loader" style="display: none"></div>
                     </div>
                     <div class="selectDiv row radioDiv" style="display: none">
                         <label class="col-xs-2">Instancias de indicadores:</label>
-                        <select class="col-xs-10" id="selectInstanciaIndicador"></select>
+                        <select class="col-xs-10" id="selectIndicatorInstance"></select>
                     </div>
                     <div class="row" id="divButton">
                         <button type="button" class="btn btn-success col-xs-2 col-xs-offset-10" id="dataButton">Obtener datos</button>

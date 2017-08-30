@@ -1,6 +1,6 @@
 (function () {
     var myConnector = tableau.makeConnector();
-    var urlIndicador;
+    var urlIndicator;
 
     myConnector.getSchema = function (schemaCallback) {
         var cols = [
@@ -49,26 +49,26 @@
 
     $(document).ready(function () {
         $("#dataButton").click(function () {
-            switch($('input[name="tipoDato"]:checked').val()) {
+            switch($('input[name="datatype"]:checked').val()) {
                 case 'url':
-                    urlIndicador = $('#inputUrl').val();
+                    urlIndicator = $('#inputUrl').val();
                     break;
-                case 'indicador':
-                    urlIndicador = $('#inputEndpointIndicador').val() + '/indicators/' + $('#selectIndicador').val() + '/data';
-                    if ($('#selectIndicador').val() == null || $('#selectIndicador').val() == undefined || $('#selectIndicador').val().length == 0) {
-                        urlIndicador = '';
+                case 'indicator':
+                    urlIndicator = $('#inputEndpointIndicator').val() + '/indicators/' + $('#selectIndicator').val() + '/data';
+                    if ($('#selectIndicator').val() == null || $('#selectIndicator').val() == undefined || $('#selectIndicator').val().length == 0) {
+                        urlIndicator = '';
                     }
                     break;
-                case 'instanciaIndicador':
-                    urlIndicador = $('#inputEndpointSistemaIndicador').val() + '/indicatorsSystems/' + $('#selectSistemaIndicador').val() + '/indicatorsInstances/' +
-                        $('#selectInstanciaIndicador').val() + '/data';
-                        if ($('#selectInstanciaIndicador').val() == null || $('#selectInstanciaIndicador').val() == undefined || $('#selectInstanciaIndicador').val().length == 0) {
-                            urlIndicador = '';
+                case 'indicatorInstance':
+                    urlIndicator = $('#inputEndpointIndicatorSystem').val() + '/indicatorsSystems/' + $('#selectIndicatorSystem').val() + '/indicatorsInstances/' +
+                        $('#selectIndicatorInstance').val() + '/data';
+                        if ($('#selectIndicatorInstance').val() == null || $('#selectIndicatorInstance').val() == undefined || $('#selectIndicatorInstance').val().length == 0) {
+                            urlIndicator = '';
                         }
                     break;
             }
             var urlObj = {
-                url: urlIndicador.trim()
+                url: urlIndicator.trim()
             };
 
             function isValidUrl(url) {
