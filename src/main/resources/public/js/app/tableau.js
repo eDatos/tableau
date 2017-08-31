@@ -9,6 +9,8 @@
             { id : "measure", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
             { id : "geographicalGranularity", columnRole : "dimension", dataType : tableau.dataTypeEnum.string},
             { id : "timeGranularity", columnRole : "dimension", dataType : tableau.dataTypeEnum.string},
+            { id : "geographicalLabel", columnRole : "dimension", dataType : tableau.dataTypeEnum.string},
+            { id : "timeLabel", columnRole : "dimension", dataType: tableau.dataTypeEnum.string},
             { id : "observation", dataType : tableau.dataTypeEnum.float }
         ];
     
@@ -25,23 +27,19 @@
         var urlObj = JSON.parse(tableau.connectionData);
         var promises = [];
 
-        if (urlObj.granularity) {
+        if (urlObj.granularity || urlObj.labels) {
             promises.push($.getJSON(urlObj.url.substring(0, urlObj.url.indexOf('/data'))));
         }
         promises.push($.getJSON(urlObj.url));
         
         $.when.apply($, promises).then(function() {
             var indexArguments = 0;
-            if (urlObj.granularity) {
-                geographicalGranularity = {};
-                for (i = 0; i < arguments[indexArguments][0].dimension.GEOGRAPHICAL.representation.length; i++) {
-                    geographicalGranularity[arguments[indexArguments][0].dimension.GEOGRAPHICAL.representation[i].code] = arguments[indexArguments][0].dimension.GEOGRAPHICAL.representation[i].granularityCode;
-                }
+            if (urlObj.granularity || urlObj.labels) {
+                var geographicalRepresentations = arguments[indexArguments][0].dimension.GEOGRAPHICAL.representation;
+                var timeRepresentations = arguments[indexArguments][0].dimension.TIME.representation;
                 
-                timeGranularity = {};
-                for (i = 0; i < arguments[indexArguments][0].dimension.TIME.representation.length; i++) {
-                    timeGranularity[arguments[indexArguments][0].dimension.TIME.representation[i].code] = arguments[indexArguments][0].dimension.TIME.representation[i].granularityCode;
-                }
+                var indexedGeographicalRepresentations = _.keyBy(geographicalRepresentations, 'code');
+                var indexedTimeRepresentations = _.keyBy(timeRepresentations, 'code');
 
                 indexArguments++;
             }
@@ -65,8 +63,12 @@
                         hash.measure = measureDimensions[k];
                         hash.observation = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
                         if (urlObj.granularity) {
-                            hash.geographicalGranularity = geographicalGranularity[hash.geographical];
-                            hash.timeGranularity = timeGranularity[hash.time];
+                            hash.geographicalGranularity = indexedGeographicalRepresentations[hash.geographical].granularityCode;
+                            hash.timeGranularity = indexedTimeRepresentations[hash.time].granularityCode;
+                        }
+                        if (urlObj.labels) {
+                            hash.geographicalLabel = indexedGeographicalRepresentations[hash.geographical].title.__default__;
+                            hash.timeLabel = indexedTimeRepresentations[hash.time].title.__default__;
                         }
                         tableData.push(hash);
                     }
@@ -102,7 +104,8 @@
             }
             var urlObj = {
                 url: urlIndicator.trim(),
-                granularity: $('#showGranularity').is(':checked')
+                granularity: $('#showGranularity').is(':checked'),
+                labels: $('#showLabels').is(':checked')
             };
 
             function isValidUrl(url) {
