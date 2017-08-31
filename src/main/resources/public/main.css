@@ -34,11 +34,11 @@
 	clear: both;
 }
 
-.section .izq {
+.section .left {
 	float: left;
 }
 
-.section .der {
+.section .right {
 	float: right;
 }
 
@@ -76,8 +76,8 @@
 	color: #9c9c9c;
 }
 
-#obtenerDatos form {
-    margin-top: 10%;
+#selectData form {
+    margin-top: 4%;
     margin-bottom: 10%;
     border: 1px solid grey;
     border-radius: 5px;
@@ -85,43 +85,39 @@
     font-family: 'Droid Sans', sans-serif;
 }
 
-#obtenerDatos form #divButton {
+#selectData form #divButton {
     margin-top: 8%;
     margin-right: 7%;
 }
 
-#obtenerDatos form input[type="radio"] {
+#selectData form input[type="radio"] {
     margin-right: 10px;
 }
 
-#obtenerDatos form .radioLabel {
+#selectData form .radioLabel {
     display: block;
     margin-left: 5%;
     margin-top: 2%;
 }
 
-#obtenerDatos form label {
+#selectData form label {
     font-weight: 500;
 }
 
-#obtenerDatos form .radioDiv {
+#selectData form .radioDiv {
     margin: 2% 7% 2% 7%;
 }
 
-#obtenerDatos form .radioDiv button {
+#selectData form .radioDiv button {
     margin-top: 2%;
     float: right;
 }
 
-#obtenerDatos form .selectDiv {
+#selectData form .selectDiv {
     margin-top: 2%;
 }
 
-#obtenerDatos form #endpointButton {
-    margin-left: 100%;
-}
-
-#obtenerDatos form .btn-primary {
+#selectData form .btn-primary {
     margin-bottom: 2%;
 }
 
@@ -129,4 +125,42 @@
     color: red;
     font-weight: 600;
     text-align: center;
+}
+
+h3 {
+    margin-top: 5%;
+}
+
+.text {
+    margin-top: 5%;
+}
+
+/* Spinner */
+
+.loader {
+    border: 6px solid #D8D8D8;
+    border-radius: 50%;
+    border-top: 6px solid #3498db;
+    width: 32px;
+    height: 32px;
+    -webkit-animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite;
+    float: right;
+    margin: 2%;
+}
+
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* END Spinner */
+
+#granularity {
+    margin-top: 3%;
 }

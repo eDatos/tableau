@@ -1,4 +1,4 @@
-function datosObtener(radio) {
+function chooseDataOption(radio) {
     var radioDivs = document.getElementsByClassName("radioDiv");
     for (var i = 0; i < radioDivs.length; i++) {
         if (radioDivs[i].id != radio.value) {
@@ -9,48 +9,59 @@ function datosObtener(radio) {
     }
 }
 
-function buscarIndicadores() {
-    var indicadores = [];
-    $.getJSON(document.getElementById("inputEndpointIndicador").value + "/indicators", function(resp) {
+function searchIndicators() {
+    $("#loaderIndicator").show();
+    var indicators = [];
+    $('#selectIndicator').html('').select2();
+    $.getJSON(document.getElementById("inputEndpointIndicator").value + "/indicators", function(resp) {
         for (var i = 0; i < resp.items.length; i++) {
-            indicadores[i] = {id: resp.items[i].id, text: resp.items[i].id};
+            indicators[i] = {id: resp.items[i].id, text: resp.items[i].title.__default__};
         }
-        $('#selectIndicador').select2({
-            data: indicadores,
+        $('#selectIndicator').select2({
+            data: indicators,
             dropdownAutoWidth : true,            
             width: '83.3%'
         });
-        document.getElementById("selectIndicador").parentElement.style.display = "block";
+        $("#loaderIndicator").hide();
+        document.getElementById("selectIndicator").parentElement.style.display = "block";
     });
 }
 
-function buscarSistemasIndicadores() {
-    var sistemasIndicadores = [];
-    $.getJSON(document.getElementById("inputEndpointSistemaIndicador").value + "/indicatorsSystems", function(resp) {
+function searchIndicatorsSystems() {
+    $("#loaderIndicatorSystem").show();
+    document.getElementById("selectIndicatorInstance").parentElement.style.display = "none";
+    var indicatorsSystems = [];
+    $('#selectIndicatorSystem').html('').select2();
+    $.getJSON(document.getElementById("inputEndpointIndicatorSystem").value + "/indicatorsSystems", function(resp) {
         for (var i = 0; i < resp.items.length; i++) {
-            sistemasIndicadores[i] = {id: resp.items[i].id, text: resp.items[i].id};
+            indicatorsSystems[i] = {id: resp.items[i].id, text: resp.items[i].title.__default__};
         }
-        $('#selectSistemaIndicador').select2({
-            data: sistemasIndicadores,
+        $('#selectIndicatorSystem').select2({
+            data: indicatorsSystems,
             dropdownAutoWidth : true,            
             width: '83.3%'
         });
-        document.getElementById("selectSistemaIndicador").parentElement.style.display = "block";
+        $("#loaderIndicatorSystem").hide();
+        document.getElementById("selectIndicatorSystem").parentElement.style.display = "block";
+        document.getElementById("selectIndicatorSystemButton").style.display = "block";
     });
 }
 
-function buscarInstanciasIndicadores() {
-    var instanciasIndicadores = [];
-    url = document.getElementById("inputEndpointSistemaIndicador").value + "/indicatorsSystems/" + document.getElementById("selectSistemaIndicador").value + "/indicatorsInstances";
+function searchIndicatorsInstances() {
+    $("#loaderIndicatorInstance").show();
+    var indicatorsInstances = [];
+    $('#selectIndicatorInstance').html('').select2();
+    url = document.getElementById("inputEndpointIndicatorSystem").value + "/indicatorsSystems/" + document.getElementById("selectIndicatorSystem").value + "/indicatorsInstances";
     $.getJSON(url, function(resp){
         for (var i = 0; i < resp.items.length; i++) {
-            instanciasIndicadores[i] = {id: resp.items[i].id, text: resp.items[i].id};
+            indicatorsInstances[i] = {id: resp.items[i].id, text: resp.items[i].title.__default__};
         }
-        $('#selectInstanciaIndicador').select2({
-            data: instanciasIndicadores,
+        $('#selectIndicatorInstance').select2({
+            data: indicatorsInstances,
             dropdownAutoWidth : true,            
             width: '83.3%'
         });
-        document.getElementById("selectInstanciaIndicador").parentElement.style.display = "block";
-        });
+        $("#loaderIndicatorInstance").hide();
+        document.getElementById("selectIndicatorInstance").parentElement.style.display = "block";
+    });
 }
