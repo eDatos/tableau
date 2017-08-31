@@ -46,7 +46,7 @@
                 <div class="text">
                     <p>
                         Este conector le permite cargar los datos de un indicador o de una instancia de indicador. 
-                        Estos datos se publican originalmente a través de la API de Indicadores(http://www.gobiernodecanarias.org/istac/api/indicators/v1.0).
+                        Estos datos se publican originalmente a través de la <a href="http://www.gobiernodecanarias.org/istac/api/indicators/v1.0">API de Indicadores</a>.
                     </p>
                     <p>
                         A la hora de seleccional los datos del indicador a cargar tiene varias opciones:
@@ -100,6 +100,11 @@
                     <div class="selectDiv row radioDiv" style="display: none">
                         <label class="col-xs-2">Instancias de indicadores:</label>
                         <select class="col-xs-10" id="selectIndicatorInstance"></select>
+                    </div>
+
+                    <div id="granularity">
+                        <h4>Formato de respuesta:</h4>
+                        <label class="radioLabel"><input type="checkbox" id="showGranularity">Añadir las columnas "Granularidad geográfica" y "Granularidad temporal"</label>
                     </div>
                     <div class="row" id="divButton">
                         <button type="button" class="btn btn-success col-xs-2 col-xs-offset-10" id="dataButton">Obtener datos</button>
