@@ -22,7 +22,7 @@
 
         var tableInfo = {
             id : "indicatorData",
-            alias : "Datos del indicador",
+            alias : tableau.connectionName,
             columns : cols
         };
     
@@ -82,7 +82,9 @@
     
             table.appendRows(tableData);
             doneCallback();
-        });
+        }, function() {
+            doneCallback();
+        })
     };
 
     tableau.registerConnector(myConnector);
@@ -92,12 +94,14 @@
             switch($('input[name="datatype"]:checked').val()) {
                 case 'url':
                     urlIndicator = $('#inputUrl').val();
+                    tableau.connectionName = "Indicador: ";
                     break;
                 case 'indicator':
                     urlIndicator = $('#inputEndpointIndicator').val() + '/indicators/' + $('#selectIndicator').val() + '/data';
                     if ($('#selectIndicator').val() == null || $('#selectIndicator').val() == undefined || $('#selectIndicator').val().length == 0) {
                         urlIndicator = '';
                     }
+                    tableau.connectionName = "Indicador: ";
                     break;
                 case 'indicatorInstance':
                     urlIndicator = $('#inputEndpointIndicatorSystem').val() + '/indicatorsSystems/' + $('#selectIndicatorSystem').val() + '/indicatorsInstances/' +
@@ -105,6 +109,7 @@
                         if ($('#selectIndicatorInstance').val() == null || $('#selectIndicatorInstance').val() == undefined || $('#selectIndicatorInstance').val().length == 0) {
                             urlIndicator = '';
                         }
+                        tableau.connectionName = "Instancia de indicador: ";
                     break;
             }
             var urlObj = {
@@ -115,14 +120,16 @@
 
             function isValidUrl(url) {
                 url = url.toString();
-                return url != undefined && url != null && url.length != 0;
+                return url.match(".+/data") != null;
             }
 
             if (isValidUrl(urlObj.url)) {
                 $('#errorMsg').html("");
                 tableau.connectionData = JSON.stringify(urlObj);
-                tableau.connectionName = "ISTAC indicator data";
-                tableau.submit();
+                $.getJSON(urlObj.url.substring(0, urlObj.url.indexOf('/data')), function(resp) {
+                    tableau.connectionName = tableau.connectionName + resp.title.__default__;
+                    tableau.submit();
+                });
             } else {
                 $('#errorMsg').html("La URL del indicador está incompleta o no es correcta");
             }

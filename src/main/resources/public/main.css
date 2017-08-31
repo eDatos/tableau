@@ -94,6 +94,10 @@
     margin-right: 10px;
 }
 
+#selectData form input[type="checkbox"] {
+    margin-right: 10px;
+}
+
 #selectData form .radioLabel {
     display: block;
     margin-left: 5%;
