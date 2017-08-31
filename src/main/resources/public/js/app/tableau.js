@@ -7,13 +7,19 @@
             { id : "geographical", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
             { id : "time", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
             { id : "measure", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
-            { id : "geographicalGranularity", columnRole : "dimension", dataType : tableau.dataTypeEnum.string},
-            { id : "timeGranularity", columnRole : "dimension", dataType : tableau.dataTypeEnum.string},
-            { id : "geographicalLabel", columnRole : "dimension", dataType : tableau.dataTypeEnum.string},
-            { id : "timeLabel", columnRole : "dimension", dataType: tableau.dataTypeEnum.string},
             { id : "observation", dataType : tableau.dataTypeEnum.float }
         ];
-    
+
+        var urlObj = JSON.parse(tableau.connectionData);
+        if (urlObj.granularity) {
+            cols.push({ id : "geographicalGranularity", columnRole : "dimension", dataType : tableau.dataTypeEnum.string});
+            cols.push({ id : "timeGranularity", columnRole : "dimension", dataType : tableau.dataTypeEnum.string});
+        }
+        if (urlObj.labels) {
+            cols.push({ id : "geographicalLabel", columnRole : "dimension", dataType : tableau.dataTypeEnum.string});
+            cols.push({ id : "timeLabel", columnRole : "dimension", dataType: tableau.dataTypeEnum.string});
+        }
+
         var tableInfo = {
             id : "indicatorData",
             alias : "Datos del indicador",
@@ -35,11 +41,10 @@
         $.when.apply($, promises).then(function() {
             var indexArguments = 0;
             if (urlObj.granularity || urlObj.labels) {
-                var geographicalRepresentations = arguments[indexArguments][0].dimension.GEOGRAPHICAL.representation;
-                var timeRepresentations = arguments[indexArguments][0].dimension.TIME.representation;
+                var dimensions = arguments[indexArguments][0].dimension;
                 
-                var indexedGeographicalRepresentations = _.keyBy(geographicalRepresentations, 'code');
-                var indexedTimeRepresentations = _.keyBy(timeRepresentations, 'code');
+                var indexedGeographicalRepresentations = _.keyBy(dimensions.GEOGRAPHICAL.representation, 'code');
+                var indexedTimeRepresentations = _.keyBy(dimensions.TIME.representation, 'code');
 
                 indexArguments++;
             }
