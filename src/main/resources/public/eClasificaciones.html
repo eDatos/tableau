@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>WDC ISTAC</title>
+        <meta charset="UTF-8">
         <meta http-equiv="Cache-Control" content="no-store" />
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -9,34 +10,16 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" crossorigin="anonymous"></script>
         <script src="https://connectors.tableau.com/libs/tableauwdc-2.2.latest.js" type="text/javascript"></script>
         <script src="main.js" type="text/javascript"></script>
+        <script>
+            $(function() {
+                $("#headerTemplate").load("templates/header.html", function() {
+                    $("#eClasificaciones").addClass("active");
+                });
+            });
+        </script>
     </head>
     <body>
-        <div class="top">
-            <div class="section">
-                <div class="left">
-                    <img src="http://www.gobiernodecanarias.org/opencms8/export/system/modules/es.gobcan.istac.web/resources/images/logo_istac.jpg" alt="" />
-                </div>
-                <div class="right">
-                    <img src="http://estadisticas.arte-consultores.com/plantillas/logo_edatos.jpg" alt="" />
-                </div>
-            </div>
-            <div class="section" id="header">
-                <ul>
-                    <li>
-                        <a href="home.html"><i class="fa fa-home" aria-hidden="true"></i></a>
-                    </li>
-                    <li>
-                        <a href="index.html">eIndicadores</a>
-                    </li>
-                    <li>
-                        <a href="eCubos.html">eCubos</a>
-                    </li>
-                    <li>
-                        <a class="active" href="">eClasificaciones</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+        <div id="headerTemplate"></div>
         <div class="content">
             <div class="section">
                 <h3>TEXTO INFORMATIVO - eClasificaciones</h3>

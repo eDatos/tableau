@@ -76,6 +76,10 @@
 	color: #9c9c9c;
 }
 
+#headerTemplate {
+    min-height: 113px;
+}
+
 #selectData form {
     margin-top: 4%;
     margin-bottom: 10%;
