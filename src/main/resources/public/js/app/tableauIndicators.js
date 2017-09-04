@@ -3,11 +3,13 @@
     var urlIndicator;
 
     myConnector.getSchema = function (schemaCallback) {
+        observationName = tableau.connectionName.substring(tableau.connectionName.indexOf(":") + 2);
+        observationName = _.replace(observationName, new RegExp(" ", "g"), "_");
         var cols = [
             { id : "geographical", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
             { id : "time", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
             { id : "measure", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
-            { id : "observation", dataType : tableau.dataTypeEnum.float }
+            { id : observationName, dataType : tableau.dataTypeEnum.float }
         ];
 
         var urlObj = JSON.parse(tableau.connectionData);
@@ -23,7 +25,7 @@
         var tableInfo = {
             id : "indicatorData",
             alias : tableau.connectionName,
-            columns : cols
+            columns : _.sortBy(cols, 'id')
         };
     
         schemaCallback([tableInfo]);

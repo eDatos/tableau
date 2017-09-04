@@ -12,7 +12,7 @@
         var tableInfo = {
             id : "indicatorData",
             alias : tableau.connectionName,
-            columns : cols
+            columns : _.sortBy(cols, 'id')
         };
     
         schemaCallback([tableInfo]);
@@ -57,14 +57,6 @@
                         urlCodelist = '';
                     }
                     tableau.connectionName = "Clasificación: ";
-                    break;
-                case 'indicatorInstance':
-                    urlCodelist = $('#inputEndpointIndicatorSystem').val() + '/indicatorsSystems/' + $('#selectIndicatorSystem').val() + '/indicatorsInstances/' +
-                        $('#selectIndicatorInstance').val() + '/data';
-                        if ($('#selectIndicatorInstance').val() == null || $('#selectIndicatorInstance').val() == undefined || $('#selectIndicatorInstance').val().length == 0) {
-                            urlCodelist = '';
-                        }
-                        tableau.connectionName = "Instancia de indicador: ";
                     break;
             }
             var urlObj = {

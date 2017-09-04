@@ -17,7 +17,7 @@
         <script>
             $(function() {
                 $("#headerTemplate").load("templates/header.html", function() {
-                    $("#eIndicadores").addClass("active");
+                    $("#indicadores").addClass("active");
                 });
             });
         </script>
@@ -25,21 +25,6 @@
     <body>
         <div id="headerTemplate"></div>
         <div class="content">
-            <div class="section">
-                <div class="text">
-                    <p>
-                        Este conector le permite cargar los datos de un indicador o de una instancia de indicador. 
-                        Estos datos se publican originalmente a través de la <a href="http://www.gobiernodecanarias.org/istac/api/indicators/v1.0">API de Indicadores</a>.
-                    </p>
-                    <p>
-                        A la hora de seleccional los datos del indicador a cargar tiene varias opciones:
-                    </p>
-                    <ol>
-                        <li>Introducir la URL de los datos que desea cargar. Esta URL debe ser una petición de las que finalizan en "/data" de la API anteriormente mencionada.</li>
-                        <li>Navegador por distintos criterios para seleccionar el recurso que desea cargar.</li>
-                    </ol>
-                </div>
-            </div>
             <div class="section" id="selectData">
                 <form>
                     <h4>Seleccione los datos que desea obtener:</h4>
@@ -95,6 +80,21 @@
                     </div>
                     <div id="errorMsg"></div>
                 </form>
+            </div>
+            <div class="section">
+                <div class="text">
+                    <p>
+                        Este conector le permite cargar los datos de un indicador o de una instancia de indicador. 
+                        Estos datos se publican originalmente a través de la <a href="http://www.gobiernodecanarias.org/istac/api/indicators/v1.0">API de Indicadores</a>.
+                    </p>
+                    <p>
+                        A la hora de seleccional los datos del indicador a cargar tiene varias opciones:
+                    </p>
+                    <ol>
+                        <li>Introducir la URL de los datos que desea cargar. Esta URL debe ser una petición de las que finalizan en "/data" de la API anteriormente mencionada.</li>
+                        <li>Navegador por distintos criterios para seleccionar el recurso que desea cargar.</li>
+                    </ol>
+                </div>
             </div>
         </div>
     </body>

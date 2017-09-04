@@ -73,7 +73,7 @@
 
 #header a.active {
     font-weight: 600;
-	color: #9c9c9c;
+	color: #008BD0;
 }
 
 #headerTemplate {
@@ -82,7 +82,7 @@
 
 #selectData form {
     margin-top: 4%;
-    margin-bottom: 10%;
+    margin-bottom: 4%;
     border: 1px solid grey;
     border-radius: 5px;
     padding: 3%;
@@ -136,10 +136,6 @@
 }
 
 h3 {
-    margin-top: 5%;
-}
-
-.text {
     margin-top: 5%;
 }
 
