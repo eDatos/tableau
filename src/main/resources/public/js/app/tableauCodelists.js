@@ -1,6 +1,6 @@
 (function () {
     var myConnector = tableau.makeConnector();
-    var urlIndicator;
+    var urlCodelist;
 
     myConnector.getSchema = function (schemaCallback) {
         var cols = [
@@ -48,27 +48,27 @@
         $("#dataButton").click(function () {
             switch($('input[name="datatype"]:checked').val()) {
                 case 'url':
-                    urlIndicator = $('#inputUrl').val();
-                    tableau.connectionName = "Indicador: ";
+                    urlCodelist = $('#inputUrl').val();
+                    tableau.connectionName = "Clasificación: ";
                     break;
-                case 'indicator':
-                    urlIndicator = $('#inputEndpointIndicator').val() + '/indicators/' + $('#selectIndicator').val() + '/data';
-                    if ($('#selectIndicator').val() == null || $('#selectIndicator').val() == undefined || $('#selectIndicator').val().length == 0) {
-                        urlIndicator = '';
+                case 'variableFamily':
+                    urlCodelist = $('#selectCodelist').val() + '/codes';
+                    if ($('#selectCodelist').val() == null || $('#selectCodelist').val() == undefined || $('#selectCodelist').val().length == 0) {
+                        urlCodelist = '';
                     }
-                    tableau.connectionName = "Indicador: ";
+                    tableau.connectionName = "Clasificación: ";
                     break;
                 case 'indicatorInstance':
-                    urlIndicator = $('#inputEndpointIndicatorSystem').val() + '/indicatorsSystems/' + $('#selectIndicatorSystem').val() + '/indicatorsInstances/' +
+                    urlCodelist = $('#inputEndpointIndicatorSystem').val() + '/indicatorsSystems/' + $('#selectIndicatorSystem').val() + '/indicatorsInstances/' +
                         $('#selectIndicatorInstance').val() + '/data';
                         if ($('#selectIndicatorInstance').val() == null || $('#selectIndicatorInstance').val() == undefined || $('#selectIndicatorInstance').val().length == 0) {
-                            urlIndicator = '';
+                            urlCodelist = '';
                         }
                         tableau.connectionName = "Instancia de indicador: ";
                     break;
             }
             var urlObj = {
-                url: urlIndicator.trim()
+                url: urlCodelist.trim()
             };
 
             function isValidUrl(url) {
@@ -80,7 +80,7 @@
                 $('#errorMsg').html("");
                 tableau.connectionData = JSON.stringify(urlObj);
                 $.getJSON(urlObj.url.substring(0, urlObj.url.indexOf('/codes')) + '.json', function(resp) {
-                    tableau.connectionName = tableau.connectionName + _.keyBy(resp.shortName.text, 'lang')['es'].value;
+                    tableau.connectionName = tableau.connectionName + _.keyBy(resp.name.text, 'lang')['es'].value;
                     tableau.submit();
                 });
             } else {

@@ -74,3 +74,68 @@ function searchIndicatorsInstances() {
         document.getElementById("selectIndicatorInstance").parentElement.style.display = "block";
     });
 }
+
+function searchVariableFamilies() {
+    $("#loaderVariableFamily").show();
+    var variableFamilies = [];
+    $("#selectVariable").parent().hide();
+    $("#selectCodelist").parent().hide();
+    $('#selectVariableFamily').html('').select2();
+    url = document.getElementById("inputEndpointVariableFamily").value + "/variablefamilies.json?limit=1000";
+    $.getJSON(url, function(resp){
+        for (var i = 0; i < resp.variableFamily.length; i++) {
+            variableFamilies[i] = {id: resp.variableFamily[i].id, text: _.keyBy(resp.variableFamily[i].name.text, 'lang')['es'].value};
+        }
+        $('#selectVariableFamily').select2({
+            data: variableFamilies,
+            dropdownAutoWidth : true,            
+            width: '83.3%'
+        });
+        $("#loaderVariableFamily").hide();
+        document.getElementById("selectVariableFamily").parentElement.style.display = "block";
+        document.getElementById("selectVaribleFamilyButton").style.display = "block";
+    }).error(function() {
+        $("#loaderVariableFamily").hide();
+        $('#errorMsg').html("El endpoint indicado no existe");
+    });
+}
+
+function searchVariables() {
+    $("#loaderVariable").show();
+    var variables = [];
+    $("#selectCodelist").parent().hide();
+    $("#selectVariable").html('').select2();
+    url = document.getElementById("inputEndpointVariableFamily").value + "/variablefamilies/" + document.getElementById("selectVariableFamily").value + "/variables.json?limit=1000";
+    $.getJSON(url, function(resp) {
+        for (var i = 0; i < resp.variable.length; i++) {
+            variables[i] = {id: resp.variable[i].urn, text: _.keyBy(resp.variable[i].name.text, 'lang')['es'].value};
+        }
+        $("#selectVariable").select2({
+            data: variables,
+            dropdownAutoWidth : true,
+            width: '83.3%'
+        });
+        $("#loaderVariable").hide();
+        document.getElementById("selectVariable").parentElement.style.display = "block";
+        document.getElementById("selectVariableButton").style.display = "block";
+    });
+}
+
+function searchCodelists() {
+    $("#loaderCodelist").show();
+    var codelists = [];
+    $("#selectCodelist").html('').select2();
+    url = $("#inputEndpointVariableFamily").val() + '/codelists.json?limit=1000&query=VARIABLE_URN EQ "' + $("#selectVariable").val() +'" AND LATEST EQ "true"';
+    $.getJSON(url, function(resp) {
+        for (var i = 0; i < resp.codelist.length; i++) {
+            codelists[i] = {id: resp.codelist[i].selfLink.href, text: _.keyBy(resp.codelist[i].name.text, 'lang')['es'].value};
+        }
+        $("#selectCodelist").select2({
+            data: codelists,
+            dropdownAutoWidth : true,
+            width: '83.3%'
+        });
+        $("#loaderCodelist").hide();
+        document.getElementById("selectCodelist").parentElement.style.display = "block";
+    });
+}

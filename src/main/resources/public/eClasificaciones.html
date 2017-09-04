@@ -5,8 +5,10 @@
         <meta http-equiv="Cache-Control" content="no-store" />
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
         <link href="main.css" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" crossorigin="anonymous"></script>
         <script src="https://connectors.tableau.com/libs/tableauwdc-2.2.latest.js" type="text/javascript"></script>
         <script src="js/vendor/lodash.js" type="text/javascript"></script>
@@ -36,6 +38,37 @@
                             <label class="col-xs-2">URL: </label>
                             <input class="col-xs-10" name="url" id="inputUrl" />
                     </div>
+
+                    <label class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="variableFamily">Seleccionar variable</label>
+                    <div class="radioDiv row" id="variableFamily" style="display: none">
+                        <label class="col-xs-2">Endpoint: </label>
+                        <input class="col-xs-10" name="endpoint" id="inputEndpointVariableFamily" />
+                    </div>
+                    <div class="radioDiv row" style="display:none" id="variableFamily">
+                        <button type="button" class="btn btn-primary" id="endpointButton" onclick="searchVariableFamilies()">Buscar familias de variables</button>
+                        <div id="loaderVariableFamily" class="loader" style="display: none"></div>
+                    </div>
+                    <div class="selectDiv row radioDiv" style="display: none">
+                        <label class="col-xs-2">Familias de variables:</label>
+                        <select class="col-xs-10" id="selectVariableFamily"></select>
+                    </div>
+                    <div class="radioDiv row" id="selectVaribleFamilyButton" style="display: none">
+                        <button type="button" class="btn btn-primary" id="variableFamilyButton" onclick="searchVariables()">Buscar variables</button>
+                        <div id="loaderVariable" class="loader" style="display: none"></div>
+                    </div>
+                    <div class="selectDiv row radioDiv" style="display: none">
+                        <label class="col-xs-2">Variables:</label>
+                        <select class="col-xs-10" id="selectVariable"></select>
+                    </div>
+                    <div class="radioDiv row" id="selectVariableButton" style="display: none">
+                        <button type="button" class="btn btn-primary" id="variableButton" onclick="searchCodelists()">Buscar clasificaciones</button>
+                        <div id="loaderCodelist" class="loader" style="display: none"></div>
+                    </div>
+                    <div class="selectDiv row radioDiv" style="display: none">
+                        <label class="col-xs-2">Clasificaciones:</label>
+                        <select class="col-xs-10" id="selectCodelist"></select>
+                    </div>
+
                     <div class="row" id="divButton">
                         <button type="button" class="btn btn-success col-xs-2 col-xs-offset-10" id="dataButton">Obtener datos</button>
                     </div>
