@@ -9,7 +9,9 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" crossorigin="anonymous"></script>
         <script src="https://connectors.tableau.com/libs/tableauwdc-2.2.latest.js" type="text/javascript"></script>
-        <script src="main.js" type="text/javascript"></script>
+        <script src="js/vendor/lodash.js" type="text/javascript"></script>
+        <script src="js/app/tableauCodelists.js" type="text/javascript"></script>
+        <script src="js/app/main.js" type="text/javascript"></script>
         <script>
             $(function() {
                 $("#headerTemplate").load("templates/header.html", function() {
@@ -22,7 +24,23 @@
         <div id="headerTemplate"></div>
         <div class="content">
             <div class="section">
-                <h3>TEXTO INFORMATIVO - eClasificaciones</h3>
+                <div class="text">
+                    <p>Texto explicativo ...</p>
+                </div>
+            </div>
+            <div class="section" id="selectData">
+                <form>
+                    <h4>Seleccione los datos que desea obtener:</h4>
+                    <label class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="url" checked>URL del indicador</label>
+                    <div class="row radioDiv" id="url">
+                            <label class="col-xs-2">URL: </label>
+                            <input class="col-xs-10" name="url" id="inputUrl" />
+                    </div>
+                    <div class="row" id="divButton">
+                        <button type="button" class="btn btn-success col-xs-2 col-xs-offset-10" id="dataButton">Obtener datos</button>
+                    </div>
+                    <div id="errorMsg"></div>
+                </form>
             </div>
         </div>
     </body>
