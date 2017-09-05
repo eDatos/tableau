@@ -3,14 +3,16 @@
     var urlIndicator;
 
     myConnector.getSchema = function (schemaCallback) {
+        var urlObj = JSON.parse(tableau.connectionData);
+        /* Tableau no acepta espacios en los nombres de las columnas, por eso se reemplazan por _ */
+        var observationName = _.replace(urlObj.name, new RegExp(" ", "g"), "_");
         var cols = [
             { id : "geographical", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
             { id : "time", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
             { id : "measure", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
-            { id : "observation", dataType : tableau.dataTypeEnum.float }
+            { id : observationName, dataType : tableau.dataTypeEnum.float }
         ];
 
-        var urlObj = JSON.parse(tableau.connectionData);
         if (urlObj.granularity) {
             cols.push({ id : "geographicalGranularity", columnRole : "dimension", dataType : tableau.dataTypeEnum.string});
             cols.push({ id : "timeGranularity", columnRole : "dimension", dataType : tableau.dataTypeEnum.string});
@@ -23,7 +25,7 @@
         var tableInfo = {
             id : "indicatorData",
             alias : tableau.connectionName,
-            columns : cols
+            columns : _.sortBy(cols, 'id')
         };
     
         schemaCallback([tableInfo]);
@@ -66,7 +68,7 @@
                         hash.geographical = geographicalDimensions[i];
                         hash.time = timeDimensions[j];
                         hash.measure = measureDimensions[k];
-                        hash.observation = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
+                        hash[urlObj.name] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
                         if (urlObj.granularity) {
                             hash.geographicalGranularity = indexedGeographicalRepresentations[hash.geographical].granularityCode;
                             hash.timeGranularity = indexedTimeRepresentations[hash.time].granularityCode;
@@ -125,9 +127,10 @@
 
             if (isValidUrl(urlObj.url)) {
                 $('#errorMsg').html("");
-                tableau.connectionData = JSON.stringify(urlObj);
                 $.getJSON(urlObj.url.substring(0, urlObj.url.indexOf('/data')), function(resp) {
+                    urlObj.name = _.replace(resp.title.__default__, new RegExp(" ", "g"), "_");
                     tableau.connectionName = tableau.connectionName + resp.title.__default__;
+                    tableau.connectionData = JSON.stringify(urlObj);
                     tableau.submit();
                 });
             } else {
