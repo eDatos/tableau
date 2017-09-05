@@ -65,7 +65,7 @@
 
             function isValidUrl(url) {
                 url = url.toString();
-                return url.match(".+/codes") != null;
+                return url.match(".+/codes$") != null;
             }
 
             if (isValidUrl(urlObj.url)) {

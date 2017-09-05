@@ -5,12 +5,11 @@
     myConnector.getSchema = function (schemaCallback) {
         var urlObj = JSON.parse(tableau.connectionData);
         /* Tableau no acepta espacios en los nombres de las columnas, por eso se reemplazan por _ */
-        var observationName = _.replace(urlObj.name, new RegExp(" ", "g"), "_");
         var cols = [
             { id : "geographical", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
             { id : "time", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
             { id : "measure", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
-            { id : observationName, dataType : tableau.dataTypeEnum.float }
+            { id : urlObj.observationId, alias: urlObj.name, dataType : tableau.dataTypeEnum.float }
         ];
 
         if (urlObj.granularity) {
@@ -68,7 +67,7 @@
                         hash.geographical = geographicalDimensions[i];
                         hash.time = timeDimensions[j];
                         hash.measure = measureDimensions[k];
-                        hash[urlObj.name] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
+                        hash[urlObj.observationId] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
                         if (urlObj.granularity) {
                             hash.geographicalGranularity = indexedGeographicalRepresentations[hash.geographical].granularityCode;
                             hash.timeGranularity = indexedTimeRepresentations[hash.time].granularityCode;
@@ -122,13 +121,28 @@
 
             function isValidUrl(url) {
                 url = url.toString();
-                return url.match(".+/data") != null;
+                return url.match(".+/data$") != null;
+            }
+
+            function removeAccents(string) {
+                string = _.replace(string, new RegExp("á", "g"), "a");
+                string = _.replace(string, new RegExp("Á", "g"), "A");
+                string = _.replace(string, new RegExp("é", "g"), "e");
+                string = _.replace(string, new RegExp("É", "g"), "E");
+                string = _.replace(string, new RegExp("í", "g"), "i");
+                string = _.replace(string, new RegExp("Í", "g"), "I");
+                string = _.replace(string, new RegExp("ó", "g"), "o");
+                string = _.replace(string, new RegExp("Ó", "g"), "O");
+                string = _.replace(string, new RegExp("ú", "g"), "u");
+                string = _.replace(string, new RegExp("Ú", "g"), "U");
+                return string;
             }
 
             if (isValidUrl(urlObj.url)) {
                 $('#errorMsg').html("");
                 $.getJSON(urlObj.url.substring(0, urlObj.url.indexOf('/data')), function(resp) {
-                    urlObj.name = _.replace(resp.title.__default__, new RegExp(" ", "g"), "_");
+                    urlObj.name = resp.title.__default__;
+                    urlObj.observationId = removeAccents(_.replace(urlObj.name, new RegExp(" ", "g"), "_"));
                     tableau.connectionName = tableau.connectionName + resp.title.__default__;
                     tableau.connectionData = JSON.stringify(urlObj);
                     tableau.submit();

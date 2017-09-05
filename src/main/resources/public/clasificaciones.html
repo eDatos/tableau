@@ -25,11 +25,6 @@
     <body>
         <div id="headerTemplate"></div>
         <div class="content">
-            <div class="section">
-                <div class="text">
-                    <p>Texto explicativo ...</p>
-                </div>
-            </div>
             <div class="section" id="selectData">
                 <form>
                     <h4>Seleccione los datos que desea obtener:</h4>
@@ -74,6 +69,25 @@
                     </div>
                     <div id="errorMsg"></div>
                 </form>
+            </div>
+            <div class="section">
+                <div class="text">
+                    <p>
+                        Este conector le permite cargar cualquiera de las clasificaciones que utiliza el ISTAC para codificar sus variables / conceptos.
+                        Estos datos se publican originalmente a través de la <a href="http://www.gobiernodecanarias.org/istac/api/structural-resources">API de Recursos Estructurales</a>.
+                    </p>
+                    <p>
+                        A la hora de seleccionar la clasificación que se desea obtener disponemos de varias opciones:
+                    </p>
+                    <ol>
+                        <li>
+                            Introducir la URL de los datos que se desea cargar. 
+                            Esta URL debe ser una petición que devuelva los códigos de una clasificación y, por tanto, debe acabar en "/codes".
+                        </li>
+                        <li>
+                            Navegar por distintos criterios para seleccionar el recurso que desea cargar.
+                        </li>
+                </div>
             </div>
         </div>
     </body>
