@@ -100,6 +100,7 @@
 
             if (isValidUrl(urlObj.url)) {
                 $('#errorMsg').html("");
+                urlObj.url = urlObj.url.replace("&fields=-metadata", "");
                 if (urlObj.url.indexOf("?") != -1) {
                     if (urlObj.url.indexOf(".json") == -1) {
                         urlObj.url = urlObj.url.replace("?", ".json?");
