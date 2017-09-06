@@ -7,7 +7,7 @@
         /* Tableau no acepta espacios en los nombres de las columnas, por eso se reemplazan por _ */
         var cols = [
             { id : "geographical", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
-            { id : "time", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
+            { id : "time", columnRole : "dimension", dataType : tableau.dataTypeEnum.date },
             { id : "measure", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
             { id : urlObj.observationId, alias: urlObj.name, dataType : tableau.dataTypeEnum.float }
         ];
@@ -65,7 +65,8 @@
                     for (var k = 0, lengthMeasure = dataResponse.dimension.MEASURE.representation.size; k < lengthMeasure; k++) {
                         var hash = {};
                         hash.geographical = geographicalDimensions[i];
-                        hash.time = timeDimensions[j];
+                        date = timeDimensions[j].split("M");
+                        hash.time = new Date (date[0], date[1] - 1);
                         hash.measure = measureDimensions[k];
                         hash[urlObj.observationId] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
                         if (urlObj.granularity) {
