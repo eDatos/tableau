@@ -101,9 +101,13 @@
             if (isValidUrl(urlObj.url)) {
                 $('#errorMsg').html("");
                 if (urlObj.url.indexOf("?") != -1) {
-                    urlObj.url = urlObj.url.replace("?", ".json?");
+                    if (urlObj.url.indexOf(".json") == -1) {
+                        urlObj.url = urlObj.url.replace("?", ".json?");
+                    }
                 } else {
-                    urlObj.url = urlObj.url + ".json";
+                    if (urlObj.url.indexOf(".json") == -1) {
+                        urlObj.url = urlObj.url + ".json";
+                    }
                 }
                 $.getJSON(urlObj.url, function(resp) {
                     tableau.connectionName = tableau.connectionName + _.keyBy(resp.name.text, 'lang')['es'].value;

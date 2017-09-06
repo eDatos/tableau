@@ -22,7 +22,7 @@
         var urlObj = JSON.parse(tableau.connectionData);
         var promises = [];
 
-        promises.push($.getJSON(urlObj.url + '.json'));
+        promises.push($.getJSON(urlObj.url));
         
         $.when.apply($, promises).then(function() {
             var tableData = [];
@@ -65,13 +65,16 @@
 
             function isValidUrl(url) {
                 url = url.toString();
-                return url.match(".+/codes$") != null;
+                return url.match(".+/codes(.json)?$") != null;
             }
 
             if (isValidUrl(urlObj.url)) {
                 $('#errorMsg').html("");
                 tableau.connectionData = JSON.stringify(urlObj);
-                $.getJSON(urlObj.url.substring(0, urlObj.url.indexOf('/codes')) + '.json', function(resp) {
+                if (urlObj.url.indexOf(".json") == -1) {
+                    urlObj.url = urlObj.url + ".json";
+                }
+                $.getJSON(urlObj.url.substring(0, urlObj.url.indexOf('/codes')), function(resp) {
                     tableau.connectionName = tableau.connectionName + _.keyBy(resp.name.text, 'lang')['es'].value;
                     tableau.submit();
                 });
