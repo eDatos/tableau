@@ -11,6 +11,7 @@ function chooseDataOption(radio) {
 }
 
 function searchIndicators() {
+    $("#errorMsg").html("");
     $("#loaderIndicator").show();
     var indicators = [];
     $('#selectIndicator').html('').select2();
@@ -33,6 +34,7 @@ function searchIndicators() {
 }
 
 function searchIndicatorsSystems() {
+    $("#errorMsg").html("");
     $("#loaderIndicatorSystem").show();
     document.getElementById("selectIndicatorInstance").parentElement.style.display = "none";
     var indicatorsSystems = [];
@@ -57,6 +59,7 @@ function searchIndicatorsSystems() {
 }
 
 function searchIndicatorsInstances() {
+    $("#errorMsg").html("");
     $("#loaderIndicatorInstance").show();
     var indicatorsInstances = [];
     $('#selectIndicatorInstance').html('').select2();
@@ -72,10 +75,14 @@ function searchIndicatorsInstances() {
         });
         $("#loaderIndicatorInstance").hide();
         document.getElementById("selectIndicatorInstance").parentElement.style.display = "block";
+    }).error(function() {
+        $("#loaderVariableFamily").hide();
+        $('#errorMsg').html("El endpoint indicado no existe");
     });
 }
 
 function searchVariableFamilies() {
+    $("#errorMsg").html("");
     $("#loaderVariableFamily").show();
     var variableFamilies = [];
     $("#selectVariable").parent().hide();
@@ -101,6 +108,7 @@ function searchVariableFamilies() {
 }
 
 function searchVariables() {
+    $("#errorMsg").html("");
     $("#loaderVariable").show();
     var variables = [];
     $("#selectCodelist").parent().hide();
@@ -118,10 +126,14 @@ function searchVariables() {
         $("#loaderVariable").hide();
         document.getElementById("selectVariable").parentElement.style.display = "block";
         document.getElementById("selectVariableButton").style.display = "block";
+    }).error(function() {
+        $("#loaderCodelist").hide();
+        $("#errorMsg").html("Error");
     });
 }
 
 function searchCodelists() {
+    $("#errorMsg").html("");
     $("#loaderCodelist").show();
     var codelists = [];
     $("#selectCodelist").html('').select2();
@@ -137,5 +149,8 @@ function searchCodelists() {
         });
         $("#loaderCodelist").hide();
         document.getElementById("selectCodelist").parentElement.style.display = "block";
+    }).error(function() {
+        $("#loaderCodelist").hide();
+        $("#errorMsg").html("Error");
     });
 }
