@@ -4,7 +4,7 @@
             "name": "Indicador: ",
             "instance": "Instancia de indicador: ",
             "navbar": "Indicadores",
-            "url": "URL del indicador",
+            "url": "URL del indicador / instancia de indicador",
             "selectIndicator": "Seleccionar indicador",
             "search": "Buscar indicadores",
             "indicators": "Indicadores",
@@ -47,7 +47,7 @@
         "dataset": {
             "name": "Cubo: ",
             "navbar": "Cubos",
-            "url": "URL del cubo",
+            "url": "URL del cubo / consulta de datos",
             "desc": "Este conector le permite cargar los datos de un dataset o una consulta. Estos datos se publican originalmente a través de la ",
             "apiLink": "http://estadisticas.arte-consultores.com/statistical-resources/v1.0",
             "api": "API de Recursos Estadísticos",
