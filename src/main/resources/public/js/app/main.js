@@ -29,7 +29,7 @@ function searchIndicators() {
         document.getElementById("selectIndicator").parentElement.style.display = "block";
     }).error(function() {
         $("#loaderIndicator").hide();
-        $('#errorMsg').html("El endpoint indicado no existe");
+        $('#errorMsg').html(errorMsg['es'].error.endpoint);
     });
 }
 
@@ -54,7 +54,7 @@ function searchIndicatorsSystems() {
         document.getElementById("selectIndicatorSystemButton").style.display = "block";
     }).error(function() {
         $("#loaderIndicatorSystem").hide();
-        $('#errorMsg').html("El endpoint indicado no existe");
+        $('#errorMsg').html(errorMsg['es'].error.endpoint);
     });
 }
 
@@ -77,7 +77,7 @@ function searchIndicatorsInstances() {
         document.getElementById("selectIndicatorInstance").parentElement.style.display = "block";
     }).error(function() {
         $("#loaderVariableFamily").hide();
-        $('#errorMsg').html("El endpoint indicado no existe");
+        $('#errorMsg').html(errorMsg['es'].error.request);
     });
 }
 
@@ -103,7 +103,7 @@ function searchVariableFamilies() {
         document.getElementById("selectVaribleFamilyButton").style.display = "block";
     }).error(function() {
         $("#loaderVariableFamily").hide();
-        $('#errorMsg').html("El endpoint indicado no existe");
+        $('#errorMsg').html(errorMsg['es'].error.endpoint);
     });
 }
 
@@ -128,7 +128,7 @@ function searchVariables() {
         document.getElementById("selectVariableButton").style.display = "block";
     }).error(function() {
         $("#loaderCodelist").hide();
-        $("#errorMsg").html("Error");
+        $("#errorMsg").html(errorMsg['es'].error.request);
     });
 }
 
@@ -151,6 +151,6 @@ function searchCodelists() {
         document.getElementById("selectCodelist").parentElement.style.display = "block";
     }).error(function() {
         $("#loaderCodelist").hide();
-        $("#errorMsg").html("Error");
+        $("#errorMsg").html(errorMsg['es'].error.request);
     });
 }

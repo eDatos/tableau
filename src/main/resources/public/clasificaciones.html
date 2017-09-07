@@ -14,6 +14,7 @@
         <script src="js/vendor/lodash.js" type="text/javascript"></script>
         <script src="js/app/tableauCodelists.js" type="text/javascript"></script>
         <script src="js/app/main.js" type="text/javascript"></script>
+        <script src="js/app/translate.js" type="text/javascript"></script>
         <script>
             $(function() {
                 $("#headerTemplate").load("templates/header.html", function() {
@@ -27,66 +28,56 @@
         <div class="content">
             <div class="section" id="selectData">
                 <form>
-                    <h4>Seleccione los datos que desea obtener:</h4>
-                    <label class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="url" checked>URL del indicador</label>
+                    <h4 id="titleForm"></h4>
+                    <label id="labelCodelistUrl" class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="url" checked></label>
                     <div class="row radioDiv" id="url">
-                            <label class="col-xs-2">URL: </label>
+                            <label id="labelUrl" class="col-xs-2"></label>
                             <input class="col-xs-10" name="url" id="inputUrl" />
                     </div>
 
-                    <label class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="variableFamily">Seleccionar variable</label>
+                    <label id="selectVariableLabel" class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="variableFamily"></label>
                     <div class="radioDiv row" id="variableFamily" style="display: none">
-                        <label class="col-xs-2">Endpoint: </label>
+                        <label class="col-xs-2 labelEndpoint">Endpoint: </label>
                         <input class="col-xs-10" name="endpoint" id="inputEndpointVariableFamily" />
                     </div>
                     <div class="radioDiv row" style="display:none" id="variableFamily">
-                        <button type="button" class="btn btn-primary" id="endpointButton" onclick="searchVariableFamilies()">Buscar familias de variables</button>
+                        <button type="button" class="btn btn-primary" id="searchVariableFamiliesButton" onclick="searchVariableFamilies()"></button>
                         <div id="loaderVariableFamily" class="loader" style="display: none"></div>
                     </div>
                     <div class="selectDiv row radioDiv" style="display: none">
-                        <label class="col-xs-2">Familias de variables:</label>
+                        <label id="families" class="col-xs-2"></label>
                         <select class="col-xs-10" id="selectVariableFamily"></select>
                     </div>
                     <div class="radioDiv row" id="selectVaribleFamilyButton" style="display: none">
-                        <button type="button" class="btn btn-primary" id="variableFamilyButton" onclick="searchVariables()">Buscar variables</button>
+                        <button type="button" class="btn btn-primary" id="searchVariablesButton" onclick="searchVariables()"></button>
                         <div id="loaderVariable" class="loader" style="display: none"></div>
                     </div>
                     <div class="selectDiv row radioDiv" style="display: none">
-                        <label class="col-xs-2">Variables:</label>
+                        <label id="variables" class="col-xs-2"></label>
                         <select class="col-xs-10" id="selectVariable"></select>
                     </div>
                     <div class="radioDiv row" id="selectVariableButton" style="display: none">
-                        <button type="button" class="btn btn-primary" id="variableButton" onclick="searchCodelists()">Buscar clasificaciones</button>
+                        <button type="button" class="btn btn-primary" id="searchCodelistsButton" onclick="searchCodelists()"></button>
                         <div id="loaderCodelist" class="loader" style="display: none"></div>
                     </div>
                     <div class="selectDiv row radioDiv" style="display: none">
-                        <label class="col-xs-2">Clasificaciones:</label>
+                        <label id="codelists" class="col-xs-2"></label>
                         <select class="col-xs-10" id="selectCodelist"></select>
                     </div>
 
                     <div class="row" id="divButton">
-                        <button type="button" class="btn btn-success col-xs-2 col-xs-offset-10" id="dataButton">Obtener datos</button>
+                        <button type="button" class="btn btn-success col-xs-2 col-xs-offset-10" id="dataButton"></button>
                     </div>
                     <div id="errorMsg"></div>
                 </form>
             </div>
             <div class="section">
                 <div class="text">
-                    <p>
-                        Este conector le permite cargar cualquiera de las clasificaciones que utiliza el ISTAC para codificar sus variables / conceptos.
-                        Estos datos se publican originalmente a través de la <a href="http://www.gobiernodecanarias.org/istac/api/structural-resources">API de Recursos Estructurales</a>.
-                    </p>
-                    <p>
-                        A la hora de seleccionar la clasificación que se desea obtener disponemos de varias opciones:
-                    </p>
+                    <p id="descCodelist"><a id="linkCodelistAPI"></a></p>
+                    <p id="codelistUse"></p>
                     <ol>
-                        <li>
-                            Introducir la URL de los datos que se desea cargar. 
-                            Esta URL debe ser una petición que devuelva los códigos de una clasificación y, por tanto, debe acabar en "/codes".
-                        </li>
-                        <li>
-                            Navegar por distintos criterios para seleccionar el recurso que desea cargar.
-                        </li>
+                        <li id="liUrlCodelist"></li>
+                        <li id="liCriteriaCodelist"></li>
                 </div>
             </div>
         </div>

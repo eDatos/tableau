@@ -95,14 +95,14 @@
             switch($('input[name="datatype"]:checked').val()) {
                 case 'url':
                     urlIndicator = $('#inputUrl').val();
-                    tableau.connectionName = "Indicador: ";
+                    tableau.connectionName = text['es'].indicator.name;
                     break;
                 case 'indicator':
                     urlIndicator = $('#inputEndpointIndicator').val() + '/indicators/' + $('#selectIndicator').val() + '/data';
                     if ($('#selectIndicator').val() == null || $('#selectIndicator').val() == undefined || $('#selectIndicator').val().length == 0) {
                         urlIndicator = '';
                     }
-                    tableau.connectionName = "Indicador: ";
+                    tableau.connectionName = text['es'].indicator.name;
                     break;
                 case 'indicatorInstance':
                     urlIndicator = $('#inputEndpointIndicatorSystem').val() + '/indicatorsSystems/' + $('#selectIndicatorSystem').val() + '/indicatorsInstances/' +
@@ -110,7 +110,7 @@
                         if ($('#selectIndicatorInstance').val() == null || $('#selectIndicatorInstance').val() == undefined || $('#selectIndicatorInstance').val().length == 0) {
                             urlIndicator = '';
                         }
-                        tableau.connectionName = "Instancia de indicador: ";
+                        tableau.connectionName = text['es'].indicator.instance;
                     break;
             }
             var urlObj = {
@@ -146,9 +146,11 @@
                     tableau.connectionName = tableau.connectionName + resp.title.__default__;
                     tableau.connectionData = JSON.stringify(urlObj);
                     tableau.submit();
+                }).error(function() {
+                    $("#errorMsg").html(errorMsg['es'].error.submit);
                 });
             } else {
-                $('#errorMsg').html("La URL del indicador está incompleta o no es correcta");
+                $('#errorMsg').html(errorMsg['es'].error.indicator.url);
             }
         });
     });
