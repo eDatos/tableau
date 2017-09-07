@@ -1,10 +1,10 @@
 var errorMsg;
-$.getJSON("../../translate/error.json", function(resp) {
+$.getJSON("/translate/error.json", function(resp) {
     errorMsg = resp;
 });
 
 var text;
-$.getJSON("../../translate/text.json", function(resp) {
+$.getJSON("/translate/text.json", function(resp) {
     text = resp;
     $("#titleForm").text(text['es'].form.title);
     $("#labelIndicatorUrl").append(text['es'].indicator.url);
