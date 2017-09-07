@@ -52,7 +52,6 @@
             table.appendRows(tableData);
             doneCallback();
         }, function() {
-            $("#errorMsg").html("La url indicada no existe");
             doneCallback();
         })
     };
@@ -64,14 +63,14 @@
             switch($('input[name="datatype"]:checked').val()) {
                 case 'url':
                     urlDataset = $('#inputUrl').val();
-                    tableau.connectionName = "Cubo: ";
+                    tableau.connectionName = text['es'].dataset.name;
                     break;
                 case 'variableFamily':
                     urlDataset = $('#selectCodelist').val() + '/codes';
                     if ($('#selectCodelist').val() == null || $('#selectCodelist').val() == undefined || $('#selectCodelist').val().length == 0) {
                         urlDataset = '';
                     }
-                    tableau.connectionName = "Clasificación: ";
+                    tableau.connectionName = text['es'].dataset.name;
                     break;
             }
             var urlObj = {
@@ -124,9 +123,11 @@
                     urlObj.dimensions = dimensions;
                     tableau.connectionData = JSON.stringify(urlObj);
                     tableau.submit();
+                }).error(function() {
+                    $("#errorMsg").html(errorMsg['es'].error.submit);
                 });
             } else {
-                $('#errorMsg').html("La URL del indicador está incompleta o no es correcta");
+                $('#errorMsg').html(errorMsg['es'].error.dataset.url);
             }
         });
     });

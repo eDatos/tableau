@@ -10,6 +10,7 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" crossorigin="anonymous"></script>
         <script src="https://connectors.tableau.com/libs/tableauwdc-2.2.latest.js" type="text/javascript"></script>
         <script src="js/app/main.js" type="text/javascript"></script>
+        <script src="js/app/translate.js" type="text/javascript"></script>
         <script>
             $(function() {
                 $("#headerTemplate").load("templates/header.html", function() {
@@ -22,25 +23,16 @@
         <div id="headerTemplate"></div>
         <div class="content">
             <div class="section">
-                <h3>ISTAC Web Data Connector</h3>
+                <h3 id="titleWDC"></h3>
                 <div class="text">
-                    <p>
-                        Tableau es una herramienta que permite crear visualizaciones de manera muy rápida sobre cualquier conjunto de datos.
-                        Con esta herramienta podrá crear sus propios cuadros de mandos y aprovechar así la potencia que le brinda Tableau para realizar análisis sobre los datos.
-                    </p>
-                    <p>
-                        Los Web Data Connectors de Tableau permiten conectar la herramienta con datos externos para poder obtenerlos de manera automática y muy sencilla.
-                    </p>
-                    <p>
-                        El ISTAC ha desarrollado su propio conjunto de conectores webs para Tableau para simplificar la reutilización de la información que se publica.
-                    </p>
-                    <p>
-                        En concreto los conectores disponibles están destinados a los siguientes fines:
-                    </p>
+                    <p id="descTableau"></p>
+                    <p id="descWDC"></p>
+                    <p id="descIstac"></p>
+                    <p id="olConnectors"></p>
                     <ul>
-                        <li><a href="index.html">Indicadores</a>. Permite obtener datos de cualquier indicador y/o instancia de indicador que publica el ISTAC.</li>
-                        <li><a href="cubos.html">Cubos</a>. Permite obtener datos de cualquier dataset y/o consulta publicada por el ISTAC.</li>
-                        <li><a href="clasificaciones.html">Clasificaciones</a>.Permite obtener cualquier clasificación usada por el ISTAC para codificar sus datasets y consultas</li>
+                        <li id="liIndicators"><a id="aIndicators" href="index.html"></a></li>
+                        <li id="liDatasets"><a id="aDatasets" href="cubos.html"></a></li>
+                        <li id="liCodelists"><a id="aCodelists" href="clasificaciones.html"></a></li>
                 </div>
             </div>
         </div>

@@ -1,0 +1,80 @@
+{
+    "es": {
+        "indicator": {
+            "name": "Indicador: ",
+            "instance": "Instancia de indicador: ",
+            "navbar": "Indicadores",
+            "url": "URL del indicador",
+            "selectIndicator": "Seleccionar indicador",
+            "search": "Buscar indicadores",
+            "indicators": "Indicadores",
+            "selectInstance": "Seleccionar instancia de indicador",
+            "searchSystems": "Buscar sistemas de indicadores",
+            "systems": "Sistemas de indicadores:",
+            "searchInstances": "Buscar instancias de indicadores",
+            "instances": "Instancias de indicadores",
+            "showGranularity": "Añadir las columnas \"Granularidad geográfica\" y \"Granularidad temporal\"",
+            "showLabels": "Añadir las etiquetas geográficas y temporales al conjunto de datos",
+            "desc": "Este conector le permite cargar los datos de un indicador o de una instancia de indicador. Estos datos se publican originalmente a través de la ",
+            "apiLink": "http://www.gobiernodecanarias.org/istac/api/indicators/v1.0",
+            "api": "API de indicadores",
+            "use": "A la hora de seleccionar los datos del indicador a cargar tiene varias opciones:",
+            "li": {
+                "url": "Introducir la URL de los datos que desea cargar. Esta URL debe ser una petición de las que finalizan en \"data\" de la API anteriormente mencionada.",
+                "criteria": "Navegador por distintos criterios para seleccionar el recurso que desea cargar."
+            }
+        },
+        "codelist": {
+            "name": "Clasificación: ",
+            "navbar": "Clasificaciones",
+            "url": "URL de la clasificación",
+            "selectVariable": "Seleccionar variable",
+            "searchVariableFamilies": "Buscar familias de variables",
+            "families": "Familias de variables:",
+            "searchVariables": "Buscar variables",
+            "variables": "Variables:",
+            "searchCodelists": "Buscar clasificaciones",
+            "codelists": "Clasificaciones:",
+            "desc": "Este conector le permite cargar cualquiera de las clasificaciones que utiliza el ISTAC para codificar sus variables / conceptos. Estos datos se publican originalmente a través de la ",
+            "apiLink": "http://www.gobiernodecanarias.org/istac/api/structural-resources",
+            "api": "API de Recursos Estructurales",
+            "use": "A la hora de seleccionar la clasificación que se desea obtener disponemos de varias opciones:",
+            "li": {
+                "url": "Introducir la URL de los datos que se desea cargar. Esta URL debe ser una petición que devuelva los códigos de una clasificación y, por tanto, debe acabar en \"/codes\".",
+                "criteria": "Navegar por distintos criterios para seleccionar el recurso que desea cargar."
+            }
+        },
+        "dataset": {
+            "name": "Cubo: ",
+            "navbar": "Cubos",
+            "url": "URL del cubo",
+            "desc": "Este conector le permite cargar los datos de un dataset o una consulta. Estos datos se publican originalmente a través de la ",
+            "apiLink": "http://estadisticas.arte-consultores.com/statistical-resources/v1.0",
+            "api": "API de Recursos Estadísticos",
+            "use": "A la hora de seleccionar los datos a cargar disponemos de varias opciones:",
+            "li": {
+                "url": "Introducir la URL de los datos que se desean cargar. Esta URL debe ser una petición para obtener un dataset o una query de la API. Además, en el caso de los datasets podrá hacer uso del parámetro \"dim\" para filtrar los datos a obtener y así reducir el tamaño de la respuesta.",
+                "operation": "Navegar por operación estadística para seleccionar el dataset o query que desea cargar."
+            }
+        },
+        "home": {
+            "title": "ISTAC Web Data Connector",
+            "descTableau": "Tableau es una herramienta que permite crear visualizaciones de manera muy rápida sobre cualquier conjunto de datos. Con esta herramienta podrá crear sus propios cuadros de mandos y aprovechar así la potencia que le brinda Tableau para realizar análisis sobre los datos.",
+            "descWDC": "Los Web Data Connectors de Tableau permiten conectar la herramienta con datos externos para poder obtenerlos de manera automática y muy sencilla.",
+            "descIstac": "El ISTAC ha desarrollado su propio conjunto de conectores webs para Tableau para simplificar la reutilización de la información que se publica.",
+            "olConnectors": "En concreto los conectores disponibles están destinados a los siguientes fines:",
+            "li": {
+                "indicators": ". Permite obtener datos de cualquier indicador y/o instancia de indicador que publica el ISTAC.",
+                "datasets": ". Permite obtener datos de cualquier dataset y/o consulta publicada por el ISTAC.",
+                "codelists": ". Permite obtener cualquier clasificación usada por el ISTAC para codificar sus datasets y consultas."
+            }
+        },
+        "form": {
+            "title": "Seleccione los datos que desea obtener:"
+        },
+        "url": "URL: ",
+        "endpoint": "Endpoint",
+        "responseFormat": "Formato de respuesta:",
+        "getData": "Obtener datos"
+    }
+}

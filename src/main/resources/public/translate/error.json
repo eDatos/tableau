@@ -1,0 +1,18 @@
+{
+    "es": {
+        "error": {
+            "endpoint": "El endpoint indicado no existe",
+            "request": "Ha ocurrido un error al realizar la petición",
+            "indicator": {
+                "url": "la URL del indicador no es válida"
+            },
+            "codelist": {
+                "url": "La URL de la clasificación no es válida"
+            },
+            "dataset": {
+                "url": "La URL del cubo no es válida"
+            },
+            "submit": "Ha ocurrido un error, es posible que la URL indicada sea incorrecta"
+        }
+    }
+}
