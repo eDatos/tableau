@@ -10,12 +10,18 @@ function chooseDataOption(radio) {
     $('#errorMsg').html("");
 }
 
+var endpoint;
+
 function searchIndicators() {
     $("#errorMsg").html("");
     $("#loaderIndicator").show();
     var indicators = [];
     $('#selectIndicator').html('').select2();
-    $.getJSON(document.getElementById("inputEndpointIndicator").value + "/indicators?limit=1000", function(resp) {
+    endpoint = document.getElementById("inputEndpointIndicator").value;
+    if (endpoint[endpoint.length - 1] == "/") {
+        endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
+    }
+    $.getJSON(endpoint + "/indicators?limit=1000", function(resp) {
         $('#errorMsg').html("");
         for (var i = 0; i < resp.items.length; i++) {
             indicators[i] = {id: resp.items[i].id, text: resp.items[i].title.__default__};
@@ -39,7 +45,11 @@ function searchIndicatorsSystems() {
     document.getElementById("selectIndicatorInstance").parentElement.style.display = "none";
     var indicatorsSystems = [];
     $('#selectIndicatorSystem').html('').select2();
-    $.getJSON(document.getElementById("inputEndpointIndicatorSystem").value + "/indicatorsSystems?limit=1000", function(resp) {
+    endpoint = document.getElementById("inputEndpointIndicatorSystem").value;
+    if (endpoint[endpoint.length - 1] == "/") {
+        endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
+    }
+    $.getJSON(endpoint + "/indicatorsSystems?limit=1000", function(resp) {
         $('#errorMsg').html("");
         for (var i = 0; i < resp.items.length; i++) {
             indicatorsSystems[i] = {id: resp.items[i].id, text: resp.items[i].title.__default__};
@@ -63,7 +73,7 @@ function searchIndicatorsInstances() {
     $("#loaderIndicatorInstance").show();
     var indicatorsInstances = [];
     $('#selectIndicatorInstance').html('').select2();
-    url = document.getElementById("inputEndpointIndicatorSystem").value + "/indicatorsSystems/" + document.getElementById("selectIndicatorSystem").value + "/indicatorsInstances?limit=1000";
+    url = endpoint + "/indicatorsSystems/" + document.getElementById("selectIndicatorSystem").value + "/indicatorsInstances?limit=1000";
     $.getJSON(url, function(resp){
         for (var i = 0; i < resp.items.length; i++) {
             indicatorsInstances[i] = {id: resp.items[i].id, text: resp.items[i].title.__default__};
@@ -88,7 +98,11 @@ function searchVariableFamilies() {
     $("#selectVariable").parent().hide();
     $("#selectCodelist").parent().hide();
     $('#selectVariableFamily').html('').select2();
-    url = document.getElementById("inputEndpointVariableFamily").value + "/variablefamilies.json?limit=1000";
+    endpoint = document.getElementById("inputEndpointVariableFamily").value;
+    if (endpoint[endpoint.length - 1] == "/") {
+        endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
+    }
+    url = endpoint + "/variablefamilies.json?limit=1000";
     $.getJSON(url, function(resp){
         for (var i = 0; i < resp.variableFamily.length; i++) {
             variableFamilies[i] = {id: resp.variableFamily[i].id, text: _.keyBy(resp.variableFamily[i].name.text, 'lang')['es'].value};
@@ -113,7 +127,7 @@ function searchVariables() {
     var variables = [];
     $("#selectCodelist").parent().hide();
     $("#selectVariable").html('').select2();
-    url = document.getElementById("inputEndpointVariableFamily").value + "/variablefamilies/" + document.getElementById("selectVariableFamily").value + "/variables.json?limit=1000";
+    url = endpoint + "/variablefamilies/" + document.getElementById("selectVariableFamily").value + "/variables.json?limit=1000";
     $.getJSON(url, function(resp) {
         for (var i = 0; i < resp.variable.length; i++) {
             variables[i] = {id: resp.variable[i].urn, text: _.keyBy(resp.variable[i].name.text, 'lang')['es'].value};
@@ -137,7 +151,7 @@ function searchCodelists() {
     $("#loaderCodelist").show();
     var codelists = [];
     $("#selectCodelist").html('').select2();
-    url = $("#inputEndpointVariableFamily").val() + '/codelists.json?limit=1000&query=VARIABLE_URN EQ "' + $("#selectVariable").val() +'" AND LATEST EQ "true"';
+    url = endpoint + '/codelists.json?limit=1000&query=VARIABLE_URN EQ "' + $("#selectVariable").val() +'" AND LATEST EQ "true"';
     $.getJSON(url, function(resp) {
         for (var i = 0; i < resp.codelist.length; i++) {
             codelists[i] = {id: resp.codelist[i].selfLink.href, text: _.keyBy(resp.codelist[i].name.text, 'lang')['es'].value};
@@ -160,7 +174,11 @@ function searchOperations() {
     $("#loaderOperation").show();
     var operations = [];
     $("#selectOperation").html('').select2();
-    $.getJSON($("#inputEndpointOperation").val() + "/operations.json?limit=1000", function(resp) {
+    endpoint = document.getElementById("inputEndpointOperation").value;
+    if (endpoint[endpoint.length - 1] == "/") {
+        endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
+    }
+    $.getJSON(endpoint + "/operations.json?limit=1000", function(resp) {
        for (var i = 0; i < resp.operation.length; i++) {
            operations[i] = {id: resp.operation[i].urn, text: _.keyBy(resp.operation[i].name.text, 'lang')['es'].value};
        }
@@ -183,7 +201,7 @@ function searchDatasets() {
     $("#loaderDataset").show();
     var datasets = [];
     $("#selectDataset").html('').select2();
-    url = $("#inputEndpointOperation").val().replace("operations", "statistical-resources") + "/datasets.json?limit=1000&query=STATISTICAL_OPERATION_URN EQ '" + $("#selectOperation").val() + "'";
+    url = endpoint.replace("operations", "statistical-resources") + "/datasets.json?limit=1000&query=STATISTICAL_OPERATION_URN EQ '" + $("#selectOperation").val() + "'";
     $.getJSON(url, function(resp) {
         if (resp.dataset) {
             for (var i = 0; i < resp.dataset.length; i++) {

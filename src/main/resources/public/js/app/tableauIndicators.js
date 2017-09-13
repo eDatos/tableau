@@ -98,14 +98,22 @@
                     tableau.connectionName = text['es'].indicator.name;
                     break;
                 case 'indicator':
-                    urlIndicator = $('#inputEndpointIndicator').val() + '/indicators/' + $('#selectIndicator').val() + '/data';
+                    var endpoint = document.getElementById("inputEndpointIndicator").value;
+                    if (endpoint[endpoint.length - 1] == "/") {
+                        endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
+                    }
+                    urlIndicator = endpoint + '/indicators/' + $('#selectIndicator').val() + '/data';
                     if ($('#selectIndicator').val() == null || $('#selectIndicator').val() == undefined || $('#selectIndicator').val().length == 0) {
                         urlIndicator = '';
                     }
                     tableau.connectionName = text['es'].indicator.name;
                     break;
                 case 'indicatorInstance':
-                    urlIndicator = $('#inputEndpointIndicatorSystem').val() + '/indicatorsSystems/' + $('#selectIndicatorSystem').val() + '/indicatorsInstances/' +
+                    var endpoint = document.getElementById("inputEndpointIndicatorSystem").value;
+                    if (endpoint[endpoint.length - 1] == "/") {
+                        endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
+                    }
+                    urlIndicator = endpoint + '/indicatorsSystems/' + $('#selectIndicatorSystem').val() + '/indicatorsInstances/' +
                         $('#selectIndicatorInstance').val() + '/data';
                         if ($('#selectIndicatorInstance').val() == null || $('#selectIndicatorInstance').val() == undefined || $('#selectIndicatorInstance').val().length == 0) {
                             urlIndicator = '';
