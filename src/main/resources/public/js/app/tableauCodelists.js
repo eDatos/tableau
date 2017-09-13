@@ -31,7 +31,7 @@
                 tableData.push({
                     "code": dataResponse.code[i].id,
                     "name": _.keyBy(dataResponse.code[i].name.text, 'lang')['es'].value,
-                    "parent": dataResponse.code[i].parent
+                    "parent": dataResponse.code[i].parent ? dataResponse.code[i].parent.substring(dataResponse.code[i].parent.lastIndexOf(".") + 1) : ''
                 });
             }
             
