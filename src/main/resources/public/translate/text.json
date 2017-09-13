@@ -55,7 +55,12 @@
             "li": {
                 "url": "Introducir la URL de los datos que se desean cargar. Esta URL debe ser una petición para obtener un dataset o una query de la API. Además, en el caso de los datasets podrá hacer uso del parámetro \"dim\" para filtrar los datos a obtener y así reducir el tamaño de la respuesta.",
                 "operation": "Navegar por operación estadística para seleccionar el dataset o query que desea cargar."
-            }
+            },
+            "selectOperation": "Seleccionar operación estadística",
+            "searchOperations": "Buscar operaciones",
+            "operations": "Operaciones estadísticas:",
+            "searchDatasets": "Buscar cubos",
+            "datasets": "Cubos: "
         },
         "home": {
             "title": "ISTAC Web Data Connector",
@@ -73,7 +78,7 @@
             "title": "Seleccione los datos que desea obtener:"
         },
         "url": "URL: ",
-        "endpoint": "Endpoint",
+        "endpoint": "Endpoint:",
         "responseFormat": "Formato de respuesta:",
         "getData": "Obtener datos"
     }
