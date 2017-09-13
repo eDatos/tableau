@@ -45,6 +45,11 @@ $.getJSON("translate/text.json", function(resp) {
     $("#aCodelists").text(text['es'].codelist.navbar);
 
     $("#labelDatasetUrl").append(text['es'].dataset.url);
+    $("#labelSelectOperation").append(text['es'].dataset.selectOperation);
+    $("#searchOperationsButton").text(text['es'].dataset.searchOperations);
+    $("#operations").text(text['es'].dataset.operations);
+    $("#searchDatasetsButton").text(text['es'].dataset.searchDatasets);
+    $("#datasets").text(text['es'].dataset.datasets);
     $("#descDataset").prepend(text['es'].dataset.desc);
     $("#linkDatasetAPI").attr("href", text['es'].dataset.apiLink);
     $("#linkDatasetAPI").text(text['es'].dataset.api);

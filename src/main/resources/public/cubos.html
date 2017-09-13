@@ -5,8 +5,10 @@
             <meta http-equiv="Cache-Control" content="no-store" />
             <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
             <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
             <link href="main.css" rel="stylesheet">
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" crossorigin="anonymous"></script>
             <script src="https://connectors.tableau.com/libs/tableauwdc-2.2.latest.js" type="text/javascript"></script>
             <script src="js/vendor/lodash.js" type="text/javascript"></script>
@@ -31,6 +33,28 @@
                         <div class="row radioDiv" id="url">
                             <label id="labelUrl" class="col-xs-2"></label>
                             <input class="col-xs-10" name="url" id="inputUrl" />
+                        </div>
+
+                        <label id="labelSelectOperation" class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="operation"></label>
+                        <div class="radioDiv row" id="operation" style="display: none">
+                            <label class="col-xs-2 labelEndpoint"></label>
+                            <input class="col-xs-10" name="endpoint" id="inputEndpointOperation" />
+                        </div>
+                        <div class="radioDiv row" style="display:none" id="operation">
+                            <button type="button" class="btn btn-primary" id="searchOperationsButton" onclick="searchOperations()"></button>
+                            <div id="loaderOperation" class="loader" style="display: none"></div>
+                        </div>
+                        <div class="selectDiv row radioDiv" style="display: none">
+                            <label id="operations" class="col-xs-2"></label>
+                            <select class="col-xs-10" id="selectOperation"></select>
+                        </div>
+                        <div class="radioDiv row" style="display:none" id="selectDatasetButton">
+                            <button type="button" class="btn btn-primary" id="searchDatasetsButton" onclick="searchDatasets()"></button>
+                            <div id="loaderDataset" class="loader" style="display: none"></div>
+                        </div>
+                        <div class="selectDiv row radioDiv" style="display: none">
+                            <label id="datasets" class="col-xs-2"></label>
+                            <select class="col-xs-10" id="selectDataset"></select>
                         </div>
 
                         <div class="row" id="divButton">

@@ -65,11 +65,8 @@
                     urlDataset = $('#inputUrl').val();
                     tableau.connectionName = text['es'].dataset.name;
                     break;
-                case 'variableFamily':
-                    urlDataset = $('#selectCodelist').val() + '/codes';
-                    if ($('#selectCodelist').val() == null || $('#selectCodelist').val() == undefined || $('#selectCodelist').val().length == 0) {
-                        urlDataset = '';
-                    }
+                case 'operation':
+                    urlDataset = $("#selectDataset").val() + "/~latest";
                     tableau.connectionName = text['es'].dataset.name;
                     break;
             }

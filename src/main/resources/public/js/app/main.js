@@ -154,3 +154,53 @@ function searchCodelists() {
         $("#errorMsg").html(errorMsg['es'].error.request);
     });
 }
+
+function searchOperations() {
+    $("#errorMsg").html("");
+    $("#loaderOperation").show();
+    var operations = [];
+    $("#selectOperation").html('').select2();
+    $.getJSON($("#inputEndpointOperation").val() + "/operations.json?limit=1000", function(resp) {
+       for (var i = 0; i < resp.operation.length; i++) {
+           operations[i] = {id: resp.operation[i].urn, text: _.keyBy(resp.operation[i].name.text, 'lang')['es'].value};
+       }
+       $("#selectOperation").select2({
+           data: operations,
+           dropdownAutoWidth: true,
+           width: '83.3%'
+       });
+       $("#loaderOperation").hide();
+       document.getElementById("selectOperation").parentElement.style.display = "block";
+       document.getElementById("selectDatasetButton").style.display = "block";
+    }).error(function() {
+        $("#loaderOperation").hide();
+        $("#errorMsg").html(errorMsg['es'].error.endpoint);
+    });
+}
+
+function searchDatasets() {
+    $("#errorMsg").html("");
+    $("#loaderDataset").show();
+    var datasets = [];
+    $("#selectDataset").html('').select2();
+    url = $("#inputEndpointOperation").val().replace("operations", "statistical-resources") + "/datasets.json?limit=1000&query=STATISTICAL_OPERATION_URN EQ '" + $("#selectOperation").val() + "'";
+    $.getJSON(url, function(resp) {
+        if (resp.dataset) {
+            for (var i = 0; i < resp.dataset.length; i++) {
+                datasets[i] = {
+                    id: resp.dataset[i].selfLink.href.substring (0, resp.dataset[i].selfLink.href.lastIndexOf('/')), 
+                    text: _.keyBy(resp.dataset[i].name.text, 'lang')['es'].value};
+            }
+        }
+        $("#selectDataset").select2({
+            data: _.uniqBy(datasets, 'id'),
+            dropdownAutoWidth: true,
+            width: '83.3%'
+        });
+        $("#loaderDataset").hide();
+        document.getElementById("selectDataset").parentElement.style.display = "block";
+    }).error(function() {
+        $("#loaderDataset").hide();
+        $("#errorMsg").html(errorMsg['es'].error.request);  
+    });
+}
