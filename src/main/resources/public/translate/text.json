@@ -15,6 +15,7 @@
             "instances": "Instancias de indicadores",
             "showGranularity": "Añadir las columnas \"Granularidad geográfica\" y \"Granularidad temporal\"",
             "showLabels": "Añadir las etiquetas geográficas y temporales al conjunto de datos",
+            "allLanguages": "Añadir todos los idiomas",
             "desc": "Este conector le permite cargar los datos de un indicador o de una instancia de indicador. Estos datos se publican originalmente a través de la ",
             "apiLink": "http://www.gobiernodecanarias.org/istac/api/indicators/v1.0",
             "api": "API de indicadores",
