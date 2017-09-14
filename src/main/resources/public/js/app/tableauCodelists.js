@@ -4,9 +4,9 @@
 
     myConnector.getSchema = function (schemaCallback) {
         var cols = [
-            { id : "code", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
-            { id : "name", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
-            { id : "parent", columnRole : "dimension", dataType : tableau.dataTypeEnum.string }
+            { id : "Codigo", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
+            { id : "Nombre", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
+            { id : "Padre", columnRole : "dimension", dataType : tableau.dataTypeEnum.string }
         ];
 
         var tableInfo = {
@@ -29,9 +29,9 @@
             var dataResponse = arguments[0];
             for (i = 0; i < dataResponse.code.length; i++) {
                 tableData.push({
-                    "code": dataResponse.code[i].id,
-                    "name": _.keyBy(dataResponse.code[i].name.text, 'lang')['es'].value,
-                    "parent": dataResponse.code[i].parent ? dataResponse.code[i].parent.substring(dataResponse.code[i].parent.lastIndexOf(".") + 1) : ''
+                    "Codigo": dataResponse.code[i].id,
+                    "Nombre": _.keyBy(dataResponse.code[i].name.text, 'lang')['es'].value,
+                    "Padre": dataResponse.code[i].parent ? dataResponse.code[i].parent.substring(dataResponse.code[i].parent.lastIndexOf(".") + 1) : ''
                 });
             }
             

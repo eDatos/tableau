@@ -4,27 +4,44 @@
 
     myConnector.getSchema = function (schemaCallback) {
         var urlObj = JSON.parse(tableau.connectionData);
-        /* Tableau no acepta espacios en los nombres de las columnas, por eso se reemplazan por _ */
+        
         var cols = [
-            { id : "geographical", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
-            { id : "time", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
-            { id : "measure", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
-            { id : urlObj.observationId, alias: urlObj.name, dataType : tableau.dataTypeEnum.float }
+            { id : "Codigo_medida", columnRole : "dimension", dataType : tableau.dataTypeEnum.string }
         ];
 
+        cols.push({ id : "Codigo_geografico", columnRole : "dimension", dataType : tableau.dataTypeEnum.string });
         if (urlObj.granularity) {
-            cols.push({ id : "geographicalGranularity", columnRole : "dimension", dataType : tableau.dataTypeEnum.string});
-            cols.push({ id : "timeGranularity", columnRole : "dimension", dataType : tableau.dataTypeEnum.string});
+            cols.push({ id : "Granularidad_geografica", columnRole : "dimension", dataType : tableau.dataTypeEnum.string});
         }
         if (urlObj.labels) {
-            cols.push({ id : "geographicalLabel", columnRole : "dimension", dataType : tableau.dataTypeEnum.string});
-            cols.push({ id : "timeLabel", columnRole : "dimension", dataType: tableau.dataTypeEnum.string});
+            if (!urlObj.allLanguages) {
+                cols.push({ id : "Etiqueta_geografica", columnRole : "dimension", dataType : tableau.dataTypeEnum.string});
+            } else {
+                for (i = 0; i < urlObj.geographicalLanguages.length; i++) {
+                    cols.push({ id : "Etiqueta_geografica_" + urlObj.geographicalLanguages[i], columnRole : "dimension", dataType : tableau.dataTypeEnum.string});
+                }
+            }
         }
+
+        cols.push({ id : "Codigo_temporal", columnRole : "dimension", dataType : tableau.dataTypeEnum.string });
+        if (urlObj.granularity) {
+            cols.push({ id : "Granularidad_temporal", columnRole : "dimension", dataType : tableau.dataTypeEnum.string});
+        }
+        if (urlObj.labels) {
+            if (!urlObj.allLanguages) {
+                cols.push({ id : "Etiqueta_temporal", columnRole : "dimension", dataType: tableau.dataTypeEnum.string});
+            } else {
+                for (i = 0; i < urlObj.timeLanguages.length; i++) {
+                    cols.push({ id : "Etiqueta_temporal_" + urlObj.timeLanguages[i], columnRole : "dimension", dataType: tableau.dataTypeEnum.string});
+                }
+            }
+        }
+        cols.push({ id : urlObj.observationId, alias: urlObj.name, dataType : tableau.dataTypeEnum.float });
 
         var tableInfo = {
             id : "indicatorData",
             alias : tableau.connectionName,
-            columns : _.sortBy(cols, 'id')
+            columns : cols
         };
     
         schemaCallback([tableInfo]);
@@ -64,17 +81,26 @@
                 for (var j = 0, lengthTime = dataResponse.dimension.TIME.representation.size; j < lengthTime; j++) {
                     for (var k = 0, lengthMeasure = dataResponse.dimension.MEASURE.representation.size; k < lengthMeasure; k++) {
                         var hash = {};
-                        hash.geographical = geographicalDimensions[i];
-                        hash.time = timeDimensions[j];
-                        hash.measure = measureDimensions[k];
+                        hash.Codigo_geografico = geographicalDimensions[i];
+                        hash.Codigo_temporal = timeDimensions[j];
+                        hash.Codigo_medida = measureDimensions[k];
                         hash[urlObj.observationId] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
                         if (urlObj.granularity) {
-                            hash.geographicalGranularity = indexedGeographicalRepresentations[hash.geographical].granularityCode;
-                            hash.timeGranularity = indexedTimeRepresentations[hash.time].granularityCode;
+                            hash.Granularidad_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].granularityCode;
+                            hash.Granularidad_temporal = indexedTimeRepresentations[hash.Codigo_temporal].granularityCode;
                         }
                         if (urlObj.labels) {
-                            hash.geographicalLabel = indexedGeographicalRepresentations[hash.geographical].title.__default__;
-                            hash.timeLabel = indexedTimeRepresentations[hash.time].title.__default__;
+                            if (!urlObj.allLanguages) {
+                                hash.Etiqueta_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].title.__default__;
+                                hash.Etiqueta_temporal = indexedTimeRepresentations[hash.Codigo_temporal].title.__default__;
+                            } else {
+                                for (l = 0; l < urlObj.geographicalLanguages.length; l++) {
+                                    hash['Etiqueta_geografica_' + urlObj.geographicalLanguages[l]] = indexedGeographicalRepresentations[hash.Codigo_geografico].title[urlObj.geographicalLanguages[l]];
+                                }
+                                for (l = 0; l < urlObj.timeLanguages.length; l++) {
+                                    hash['Etiqueta_temporal_' + urlObj.timeLanguages[l]] = indexedTimeRepresentations[hash.Codigo_temporal].title[urlObj.timeLanguages[l]];
+                                }
+                            }
                         }
                         tableData.push(hash);
                     }
@@ -124,7 +150,8 @@
             var urlObj = {
                 url: urlIndicator.trim(),
                 granularity: $('#showGranularity').is(':checked'),
-                labels: $('#showLabels').is(':checked')
+                labels: $('#showLabels').is(':checked'),
+                allLanguages: $('#allLanguages').is(':checked')
             };
 
             function isValidUrl(url) {
@@ -150,8 +177,28 @@
                 $('#errorMsg').html("");
                 $.getJSON(urlObj.url.substring(0, urlObj.url.indexOf('/data')), function(resp) {
                     urlObj.name = resp.title.__default__;
+                    // Tableau no acepta espacios en los nombres de las columnas, por eso se reemplazan por _
                     urlObj.observationId = removeAccents(_.replace(urlObj.name, new RegExp(" ", "g"), "_"));
                     tableau.connectionName = tableau.connectionName + resp.title.__default__;
+
+                    if (urlObj.allLanguages) {
+                        geographicalLanguages = [];
+                        for (i = 0; i < Object.keys(resp.dimension.GEOGRAPHICAL.representation[0].title).length; i++) {
+                            if (Object.keys(resp.dimension.GEOGRAPHICAL.representation[0].title)[i] != "__default__") {
+                                geographicalLanguages.push(Object.keys(resp.dimension.GEOGRAPHICAL.representation[0].title)[i]);
+                            }
+                        }
+                        urlObj.geographicalLanguages = geographicalLanguages;
+
+                        timeLanguages = [];
+                        for (i = 0; i < Object.keys(resp.dimension.TIME.representation[0].title).length; i++) {
+                            if (Object.keys(resp.dimension.TIME.representation[0].title)[i] != "__default__") {
+                                timeLanguages.push(Object.keys(resp.dimension.TIME.representation[0].title)[i]);
+                            }
+                        }
+                        urlObj.timeLanguages = timeLanguages;
+                    }
+
                     tableau.connectionData = JSON.stringify(urlObj);
                     tableau.submit();
                 }).error(function() {

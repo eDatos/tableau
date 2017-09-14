@@ -222,3 +222,12 @@ function searchDatasets() {
         $("#errorMsg").html(errorMsg['es'].error.request);  
     });
 }
+
+function enableAllLanguages() {
+    if ($("#showLabels").is(":checked")) {
+        $("#allLanguages").attr("disabled", false);
+    } else {
+        $("#allLanguages").attr("checked", false);
+        $("#allLanguages").attr("disabled", true);
+    }
+}
