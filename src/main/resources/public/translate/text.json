@@ -81,6 +81,7 @@
         "url": "URL: ",
         "endpoint": "Endpoint:",
         "responseFormat": "Formato de respuesta:",
-        "getData": "Obtener datos"
+        "getData": "Obtener datos",
+        "measureColumns": "Visualizar las medidas como columnas"
     }
 }

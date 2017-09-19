@@ -5,9 +5,15 @@
     myConnector.getSchema = function (schemaCallback) {
         var urlObj = JSON.parse(tableau.connectionData);
         
-        var cols = [
-            { id : "Codigo_medida", columnRole : "dimension", dataType : tableau.dataTypeEnum.string }
-        ];
+        var cols = [];
+
+        if (urlObj.showMeasureColumns) {
+            for (i = 0; i < urlObj.measureColumns.length; i++) {
+                cols.push({ id : "Medida_" + urlObj.measureColumns[i], columnRole : "dimension", dataType : tableau.dataTypeEnum.string })
+            }
+        } else {
+            cols.push({ id : "Codigo_medida", columnRole : "dimension", dataType : tableau.dataTypeEnum.string });
+        }
 
         cols.push({ id : "Codigo_geografico", columnRole : "dimension", dataType : tableau.dataTypeEnum.string });
         if (urlObj.granularity) {
@@ -36,7 +42,9 @@
                 }
             }
         }
-        cols.push({ id : urlObj.observationId, alias: urlObj.name, dataType : tableau.dataTypeEnum.float });
+        if (!urlObj.showMeasureColumns) {
+            cols.push({ id : urlObj.observationId, alias: urlObj.name, dataType : tableau.dataTypeEnum.float });
+        }
 
         var tableInfo = {
             id : "indicatorData",
@@ -79,12 +87,13 @@
             var measureDimensions = _.invert(dataResponse.dimension.MEASURE.representation.index);
             for (var i = 0, lengthGeographical = dataResponse.dimension.GEOGRAPHICAL.representation.size; i < lengthGeographical; i++) {
                 for (var j = 0, lengthTime = dataResponse.dimension.TIME.representation.size; j < lengthTime; j++) {
-                    for (var k = 0, lengthMeasure = dataResponse.dimension.MEASURE.representation.size; k < lengthMeasure; k++) {
+                    if (urlObj.showMeasureColumns) {
                         var hash = {};
                         hash.Codigo_geografico = geographicalDimensions[i];
                         hash.Codigo_temporal = timeDimensions[j];
-                        hash.Codigo_medida = measureDimensions[k];
-                        hash[urlObj.observationId] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
+                        for (var k = 0, lengthMeasure = dataResponse.dimension.MEASURE.representation.size; k < lengthMeasure; k++) {
+                            hash['Medida_' + measureDimensions[k]] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
+                        }
                         if (urlObj.granularity) {
                             hash.Granularidad_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].granularityCode;
                             hash.Granularidad_temporal = indexedTimeRepresentations[hash.Codigo_temporal].granularityCode;
@@ -103,6 +112,32 @@
                             }
                         }
                         tableData.push(hash);
+                    } else {
+                        for (var k = 0, lengthMeasure = dataResponse.dimension.MEASURE.representation.size; k < lengthMeasure; k++) {
+                            var hash = {};
+                            hash.Codigo_geografico = geographicalDimensions[i];
+                            hash.Codigo_temporal = timeDimensions[j];
+                            hash.Codigo_medida = measureDimensions[k];
+                            hash[urlObj.observationId] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
+                            if (urlObj.granularity) {
+                                hash.Granularidad_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].granularityCode;
+                                hash.Granularidad_temporal = indexedTimeRepresentations[hash.Codigo_temporal].granularityCode;
+                            }
+                            if (urlObj.labels) {
+                                if (!urlObj.allLanguages) {
+                                    hash.Etiqueta_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].title.__default__;
+                                    hash.Etiqueta_temporal = indexedTimeRepresentations[hash.Codigo_temporal].title.__default__;
+                                } else {
+                                    for (l = 0; l < urlObj.geographicalLanguages.length; l++) {
+                                        hash['Etiqueta_geografica_' + urlObj.geographicalLanguages[l]] = indexedGeographicalRepresentations[hash.Codigo_geografico].title[urlObj.geographicalLanguages[l]];
+                                    }
+                                    for (l = 0; l < urlObj.timeLanguages.length; l++) {
+                                        hash['Etiqueta_temporal_' + urlObj.timeLanguages[l]] = indexedTimeRepresentations[hash.Codigo_temporal].title[urlObj.timeLanguages[l]];
+                                    }
+                                }
+                            }
+                            tableData.push(hash);
+                        }
                     }
                 }
             }
@@ -151,7 +186,8 @@
                 url: urlIndicator.trim(),
                 granularity: $('#showGranularity').is(':checked'),
                 labels: $('#showLabels').is(':checked'),
-                allLanguages: $('#allLanguages').is(':checked')
+                allLanguages: $('#allLanguages').is(':checked'),
+                showMeasureColumns: $('#measureColumns').is(':checked')
             };
 
             function isValidUrl(url) {
@@ -197,6 +233,14 @@
                             }
                         }
                         urlObj.timeLanguages = timeLanguages;
+                    }
+
+                    if (urlObj.showMeasureColumns) {
+                        measureColumns = [];
+                        for (i = 0; i < resp.dimension.MEASURE.representation.length; i++) {
+                            measureColumns[i] = resp.dimension.MEASURE.representation[i].code;
+                        }
+                        urlObj.measureColumns = measureColumns;
                     }
 
                     tableau.connectionData = JSON.stringify(urlObj);
