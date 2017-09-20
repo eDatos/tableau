@@ -4,11 +4,19 @@
 
     myConnector.getSchema = function (schemaCallback) {
         var urlObj = JSON.parse(tableau.connectionData);
-        var cols = [
-            { id : urlObj.observationId, alias: urlObj.name, dataType : tableau.dataTypeEnum.float }
-        ];
+        var cols = [];
         for (i = 0; i < Object.keys(urlObj.dimensions).length; i++) {
-            cols.push({ id : urlObj.dimensions[i].id, alias: urlObj.dimensions[i].label, columnRole : "dimension", dataType : tableau.dataTypeEnum.string })
+            if (urlObj.measureColumns && urlObj.dimensions[i].id == urlObj.measureColumns.dimension) {
+                for (j = 0; j < urlObj.measureColumns.values.length; j++) {
+                    cols.push({ id : urlObj.measureColumns.values[j], columnRole : "dimension", dataType : tableau.dataTypeEnum.float });
+                }
+            } else {
+                cols.push({ id : urlObj.dimensions[i].id, alias: urlObj.dimensions[i].label, columnRole : "dimension", dataType : tableau.dataTypeEnum.string });
+            }
+        }
+
+        if (!urlObj.measureColumns) {
+            cols.push({ id : urlObj.observationId, alias: urlObj.name, dataType : tableau.dataTypeEnum.float });
         }
 
         var tableInfo = {
@@ -36,7 +44,10 @@
             }
             for ( i = 0; i < observations.length; i++) {
                 var hash = {};
-                hash[urlObj.observationId] = observations[i];
+                var copyHash = {};
+                if (!urlObj.measureColumns) {
+                    hash[urlObj.observationId] = observations[i];
+                }
                 var remaining = i;
                 var subtotal = total;
                 for (j = 0; j < dataResponse.data.dimensions.total; j++) {
@@ -44,12 +55,30 @@
                     subtotal = Math.floor(subtotal / totalDimension);
                     indDimension = Math.floor(remaining / subtotal);
                     remaining = remaining % subtotal;
-                    hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
+                    if (urlObj.measureColumns) {
+                        if (urlObj.measureColumns.dimension == urlObj.dimensions[j].id) {
+                            copyHash[_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code] = observations[i];
+                        } else {
+                            hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
+                            copyHash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
+                        }
+                    } else {
+                        hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
+                    }
                 }
-                tableData.push(hash);
+                if (urlObj.measureColumns) {
+                    var keyHash = _.values(hash).join(',');
+                    if (tableData[keyHash]) {
+                        _.extend(tableData[keyHash], copyHash);
+                    } else {
+                        tableData[keyHash] = copyHash;
+                    }
+                } else {
+                    tableData.push(hash);
+                }
             }
-            
-            table.appendRows(tableData);
+
+            table.appendRows(_.values(tableData));
             doneCallback();
         }, function() {
             doneCallback();
@@ -71,7 +100,8 @@
                     break;
             }
             var urlObj = {
-                url: urlDataset.trim()
+                url: urlDataset.trim(),
+                showMeasureColumns: $('#measureColumns').is(':checked')
             };
 
             function isValidUrl(url) {
@@ -110,6 +140,19 @@
                     tableau.connectionName = tableau.connectionName + _.keyBy(resp.name.text, 'lang')['es'].value;
                     urlObj.name = _.keyBy(resp.name.text, 'lang')['es'].value;
                     urlObj.observationId = removeAccents(_.replace(urlObj.name, new RegExp(" ", "g"), "_"));
+
+                    if (urlObj.showMeasureColumns) {
+                        var measureColumns = {};
+                        var dimension = _.keyBy(resp.metadata.dimensions.dimension, 'type')['MEASURE_DIMENSION'];
+                        measureColumns.dimension = dimension.id;
+                        var values = [];
+                        for (i = 0; i < dimension.dimensionValues.value.length; i++) {
+                            values[i] = dimension.dimensionValues.value[i].id;
+                        }
+                        measureColumns.values = values;
+                        urlObj.measureColumns = measureColumns;
+                    }
+
                     var dimensions = {};
                     for (i = 0; i < resp.metadata.dimensions.total; i++) {
                         dimensions[i] = {
@@ -117,6 +160,7 @@
                             label: _.keyBy(resp.metadata.dimensions.dimension[i].name.text, 'lang')['es'].value
                         }
                     }
+
                     urlObj.dimensions = dimensions;
                     tableau.connectionData = JSON.stringify(urlObj);
                     tableau.submit();
