@@ -156,7 +156,7 @@
             switch($('input[name="datatype"]:checked').val()) {
                 case 'url':
                     urlIndicator = $('#inputUrl').val();
-                    tableau.connectionName = text['es'].indicator.name;
+                    tableau.connectionName = text[language].indicator.name;
                     break;
                 case 'indicator':
                     var endpoint = properties.endpoint.indicators;
@@ -167,7 +167,7 @@
                     if ($('#selectIndicator').val() == null || $('#selectIndicator').val() == undefined || $('#selectIndicator').val().length == 0) {
                         urlIndicator = '';
                     }
-                    tableau.connectionName = text['es'].indicator.name;
+                    tableau.connectionName = text[language].indicator.name;
                     break;
                 case 'indicatorInstance':
                     var endpoint =  properties.endpoint.indicators;
@@ -179,7 +179,7 @@
                         if ($('#selectIndicatorInstance').val() == null || $('#selectIndicatorInstance').val() == undefined || $('#selectIndicatorInstance').val().length == 0) {
                             urlIndicator = '';
                         }
-                        tableau.connectionName = text['es'].indicator.instance;
+                        tableau.connectionName = text[language].indicator.instance;
                     break;
             }
             var urlObj = {
@@ -246,10 +246,10 @@
                     tableau.connectionData = JSON.stringify(urlObj);
                     tableau.submit();
                 }).error(function() {
-                    $("#errorMsg").html(errorMsg['es'].error.submit);
+                    $("#errorMsg").html(errorMsg[language].error.submit);
                 });
             } else {
-                $('#errorMsg').html(errorMsg['es'].error.indicator.url);
+                $('#errorMsg').html(errorMsg[language].error.indicator.url);
             }
         });
     });

@@ -92,11 +92,11 @@
             switch($('input[name="datatype"]:checked').val()) {
                 case 'url':
                     urlDataset = $('#inputUrl').val();
-                    tableau.connectionName = text['es'].dataset.name;
+                    tableau.connectionName = text[language].dataset.name;
                     break;
                 case 'operation':
                     urlDataset = $("#selectDataset").val() + "/~latest";
-                    tableau.connectionName = text['es'].dataset.name;
+                    tableau.connectionName = text[language].dataset.name;
                     break;
             }
             var urlObj = {
@@ -137,8 +137,8 @@
                     }
                 }
                 $.getJSON(urlObj.url, function(resp) {
-                    tableau.connectionName = tableau.connectionName + _.keyBy(resp.name.text, 'lang')['es'].value;
-                    urlObj.name = _.keyBy(resp.name.text, 'lang')['es'].value;
+                    tableau.connectionName = tableau.connectionName + _.keyBy(resp.name.text, 'lang')[language].value;
+                    urlObj.name = _.keyBy(resp.name.text, 'lang')[language].value;
                     urlObj.observationId = removeAccents(_.replace(urlObj.name, new RegExp(" ", "g"), "_"));
 
                     if (urlObj.showMeasureColumns) {
@@ -157,7 +157,7 @@
                     for (i = 0; i < resp.metadata.dimensions.total; i++) {
                         dimensions[i] = {
                             id: resp.metadata.dimensions.dimension[i].id, 
-                            label: _.keyBy(resp.metadata.dimensions.dimension[i].name.text, 'lang')['es'].value
+                            label: _.keyBy(resp.metadata.dimensions.dimension[i].name.text, 'lang')[language].value
                         }
                     }
 
@@ -165,10 +165,10 @@
                     tableau.connectionData = JSON.stringify(urlObj);
                     tableau.submit();
                 }).error(function() {
-                    $("#errorMsg").html(errorMsg['es'].error.submit);
+                    $("#errorMsg").html(errorMsg[language].error.submit);
                 });
             } else {
-                $('#errorMsg').html(errorMsg['es'].error.dataset.url);
+                $('#errorMsg').html(errorMsg[language].error.dataset.url);
             }
         });
     });

@@ -44,7 +44,7 @@
                         hash['Nombre_' + urlObj.languages[j]] = _.keyBy(dataResponse.code[i].name.text, 'lang')[urlObj.languages[j]].value;
                     }
                 } else {
-                    hash.Nombre = _.keyBy(dataResponse.code[i].name.text, 'lang')['es'].value;
+                    hash.Nombre = _.keyBy(dataResponse.code[i].name.text, 'lang')[language].value;
                 }
                 tableData.push(hash);
             }
@@ -63,14 +63,14 @@
             switch($('input[name="datatype"]:checked').val()) {
                 case 'url':
                     urlCodelist = $('#inputUrl').val();
-                    tableau.connectionName = text['es'].codelist.name;
+                    tableau.connectionName = text[language].codelist.name;
                     break;
                 case 'variableFamily':
                     urlCodelist = $('#selectCodelist').val() + '/codes';
                     if ($('#selectCodelist').val() == null || $('#selectCodelist').val() == undefined || $('#selectCodelist').val().length == 0) {
                         urlCodelist = '';
                     }
-                    tableau.connectionName = text['es'].codelist.name;
+                    tableau.connectionName = text[language].codelist.name;
                     break;
             }
             var urlObj = {
@@ -89,7 +89,7 @@
                     urlObj.url = urlObj.url + ".json";
                 }
                 $.getJSON(urlObj.url.substring(0, urlObj.url.indexOf('/codes')), function(resp) {
-                    tableau.connectionName = tableau.connectionName + _.keyBy(resp.name.text, 'lang')['es'].value;
+                    tableau.connectionName = tableau.connectionName + _.keyBy(resp.name.text, 'lang')[language].value;
                     if (urlObj.allLanguages) {
                         languages = [];
                         for (i = 0; i < resp.name.text.length; i++) {
@@ -100,10 +100,10 @@
                     tableau.connectionData = JSON.stringify(urlObj);
                     tableau.submit();
                 }).error(function() {
-                    $("#errorMsg").html(errorMsg['es'].error.submit);
+                    $("#errorMsg").html(errorMsg[language].error.submit);
                 });
             } else {
-                $('#errorMsg').html(errorMsg['es'].error.codelist.url);
+                $('#errorMsg').html(errorMsg[language].error.codelist.url);
             }
         });
     });
