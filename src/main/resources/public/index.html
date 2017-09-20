@@ -36,31 +36,17 @@
                     </div>
 
                     <label id="labelSelectIndicator" class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="indicator"></label>
-                    <div class="radioDiv row" id="indicator" style="display: none">
-                        <label class="col-xs-2 labelEndpoint"></label>
-                        <input class="col-xs-10" name="endpoint" id="inputEndpointIndicator" />
-                    </div>
-                    <div class="radioDiv row" style="display:none" id="indicator">
-                        <button type="button" class="btn btn-primary" id="searchIndicatorsButton" onclick="searchIndicators()"></button>
-                        <div id="loaderIndicator" class="loader" style="display: none"></div>
-                    </div>
-                    <div class="selectDiv row radioDiv" style="display: none">
+                    <div id="loaderIndicator" class="loader first-loader" style="display: none"></div>
+                    <div class="selectDiv row radioDiv" id="indicator" style="display: none">
                         <label id="indicators" class="col-xs-2"></label>
-                        <select class="col-xs-10" id="selectIndicator"></select>
+                        <select class="col-xs-10" id="selectIndicator" style="width: 83.3%"></select>
                     </div>
 
                     <label id="labelIndicatorInstance" class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="indicatorInstance"></label>
-                    <div class="row radioDiv" id="indicatorInstance" style="display: none">
-                        <label class="col-xs-2 labelEndpoint"></label>
-                        <input class="col-xs-10" name="endpoint" id="inputEndpointIndicatorSystem" />
-                    </div>
-                    <div class="radioDiv row" id="indicatorInstance" style="display:none">
-                        <button type="button" class="btn btn-primary" id="searchIndicatorSystemsButton" onclick="searchIndicatorsSystems()"></button>
-                        <div id="loaderIndicatorSystem" class="loader" style="display: none"></div>
-                    </div>
-                    <div class="selectDiv row radioDiv" style="display: none">
+                    <div id="loaderIndicatorSystem" class="loader first-loader" style="display: none"></div>
+                    <div class="selectDiv row radioDiv" id="indicatorInstance" style="display: none">
                         <label id="indicatorSystems" class="col-xs-2"></label>
-                        <select class="col-xs-10" id="selectIndicatorSystem"></select>
+                        <select class="col-xs-10" id="selectIndicatorSystem" style="width: 83.3%"></select>
                     </div>
                     <div class="radioDiv row" id="selectIndicatorSystemButton" style="display: none">
                         <button type="button" class="btn btn-primary" id="searchIndicatorInstancesButton" onclick="searchIndicatorsInstances()"></button>

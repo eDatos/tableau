@@ -36,17 +36,10 @@
                         </div>
 
                         <label id="labelSelectOperation" class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="operation"></label>
-                        <div class="radioDiv row" id="operation" style="display: none">
-                            <label class="col-xs-2 labelEndpoint"></label>
-                            <input class="col-xs-10" name="endpoint" id="inputEndpointOperation" />
-                        </div>
-                        <div class="radioDiv row" style="display:none" id="operation">
-                            <button type="button" class="btn btn-primary" id="searchOperationsButton" onclick="searchOperations()"></button>
-                            <div id="loaderOperation" class="loader" style="display: none"></div>
-                        </div>
-                        <div class="selectDiv row radioDiv" style="display: none">
+                        <div id="loaderOperation" class="loader first-loader" style="display: none"></div>
+                        <div class="selectDiv row radioDiv" id="operation" style="display: none">
                             <label id="operations" class="col-xs-2"></label>
-                            <select class="col-xs-10" id="selectOperation"></select>
+                            <select class="col-xs-10" id="selectOperation" style="width: 83.3%"></select>
                         </div>
                         <div class="radioDiv row" style="display:none" id="selectDatasetButton">
                             <button type="button" class="btn btn-primary" id="searchDatasetsButton" onclick="searchDatasets()"></button>

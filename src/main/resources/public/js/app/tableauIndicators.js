@@ -159,7 +159,7 @@
                     tableau.connectionName = text['es'].indicator.name;
                     break;
                 case 'indicator':
-                    var endpoint = document.getElementById("inputEndpointIndicator").value;
+                    var endpoint = properties.endpoint.indicators;
                     if (endpoint[endpoint.length - 1] == "/") {
                         endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
                     }
@@ -170,7 +170,7 @@
                     tableau.connectionName = text['es'].indicator.name;
                     break;
                 case 'indicatorInstance':
-                    var endpoint = document.getElementById("inputEndpointIndicatorSystem").value;
+                    var endpoint =  properties.endpoint.indicators;
                     if (endpoint[endpoint.length - 1] == "/") {
                         endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
                     }

@@ -36,17 +36,10 @@
                     </div>
 
                     <label id="selectVariableLabel" class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="variableFamily"></label>
-                    <div class="radioDiv row" id="variableFamily" style="display: none">
-                        <label class="col-xs-2 labelEndpoint">Endpoint: </label>
-                        <input class="col-xs-10" name="endpoint" id="inputEndpointVariableFamily" />
-                    </div>
-                    <div class="radioDiv row" style="display:none" id="variableFamily">
-                        <button type="button" class="btn btn-primary" id="searchVariableFamiliesButton" onclick="searchVariableFamilies()"></button>
-                        <div id="loaderVariableFamily" class="loader" style="display: none"></div>
-                    </div>
-                    <div class="selectDiv row radioDiv" style="display: none">
+                    <div id="loaderVariableFamily" class="loader first-loader" style="display: none"></div>
+                    <div class="selectDiv row radioDiv" id="variableFamily" style="display: none">
                         <label id="families" class="col-xs-2"></label>
-                        <select class="col-xs-10" id="selectVariableFamily"></select>
+                        <select class="col-xs-10" id="selectVariableFamily" style="width: 83.3%"></select>
                     </div>
                     <div class="radioDiv row" id="selectVaribleFamilyButton" style="display: none">
                         <button type="button" class="btn btn-primary" id="searchVariablesButton" onclick="searchVariables()"></button>
