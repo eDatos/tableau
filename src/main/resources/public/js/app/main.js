@@ -1,9 +1,28 @@
+var properties;
+$.getJSON("config/application.json", function(resp) {
+    properties = resp;
+});
+
 function chooseDataOption(radio) {
     var radioDivs = document.getElementsByClassName("radioDiv");
     for (var i = 0; i < radioDivs.length; i++) {
         if (radioDivs[i].id != radio.value) {
             radioDivs[i].style.display = "none";
         } else {
+            switch(radioDivs[i].id) {
+                case "indicator":
+                    searchIndicators();
+                    break;
+                case "indicatorInstance":
+                    searchIndicatorsSystems();
+                    break;
+                case "variableFamily":
+                    searchVariableFamilies();
+                    break;
+                case "operation":
+                    searchOperations();
+                    break;
+            }
             radioDivs[i].style.display = "block";
         }
     }
@@ -17,7 +36,7 @@ function searchIndicators() {
     $("#loaderIndicator").show();
     var indicators = [];
     $('#selectIndicator').html('').select2();
-    endpoint = document.getElementById("inputEndpointIndicator").value;
+    endpoint = properties.endpoint.indicators;
     if (endpoint[endpoint.length - 1] == "/") {
         endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
     }
@@ -32,7 +51,6 @@ function searchIndicators() {
             width: '83.3%'
         });
         $("#loaderIndicator").hide();
-        document.getElementById("selectIndicator").parentElement.style.display = "block";
     }).error(function() {
         $("#loaderIndicator").hide();
         $('#errorMsg').html(errorMsg['es'].error.endpoint);
@@ -45,7 +63,7 @@ function searchIndicatorsSystems() {
     document.getElementById("selectIndicatorInstance").parentElement.style.display = "none";
     var indicatorsSystems = [];
     $('#selectIndicatorSystem').html('').select2();
-    endpoint = document.getElementById("inputEndpointIndicatorSystem").value;
+    endpoint = properties.endpoint.indicators;
     if (endpoint[endpoint.length - 1] == "/") {
         endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
     }
@@ -60,7 +78,6 @@ function searchIndicatorsSystems() {
             width: '83.3%'
         });
         $("#loaderIndicatorSystem").hide();
-        document.getElementById("selectIndicatorSystem").parentElement.style.display = "block";
         document.getElementById("selectIndicatorSystemButton").style.display = "block";
     }).error(function() {
         $("#loaderIndicatorSystem").hide();
@@ -98,7 +115,7 @@ function searchVariableFamilies() {
     $("#selectVariable").parent().hide();
     $("#selectCodelist").parent().hide();
     $('#selectVariableFamily').html('').select2();
-    endpoint = document.getElementById("inputEndpointVariableFamily").value;
+    endpoint = properties.endpoint['structural-resources'];
     if (endpoint[endpoint.length - 1] == "/") {
         endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
     }
@@ -113,7 +130,6 @@ function searchVariableFamilies() {
             width: '83.3%'
         });
         $("#loaderVariableFamily").hide();
-        document.getElementById("selectVariableFamily").parentElement.style.display = "block";
         document.getElementById("selectVaribleFamilyButton").style.display = "block";
     }).error(function() {
         $("#loaderVariableFamily").hide();
@@ -174,7 +190,7 @@ function searchOperations() {
     $("#loaderOperation").show();
     var operations = [];
     $("#selectOperation").html('').select2();
-    endpoint = document.getElementById("inputEndpointOperation").value;
+    endpoint = properties.endpoint.operations;
     if (endpoint[endpoint.length - 1] == "/") {
         endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
     }
@@ -201,7 +217,11 @@ function searchDatasets() {
     $("#loaderDataset").show();
     var datasets = [];
     $("#selectDataset").html('').select2();
-    url = endpoint.replace("operations", "statistical-resources") + "/datasets.json?limit=1000&query=STATISTICAL_OPERATION_URN EQ '" + $("#selectOperation").val() + "'";
+    endpoint = properties.endpoint['statistical-resources'];
+    if (endpoint[endpoint.length - 1] == "/") {
+        endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
+    }
+    url = endpoint + "/datasets.json?limit=1000&query=STATISTICAL_OPERATION_URN EQ '" + $("#selectOperation").val() + "'";
     $.getJSON(url, function(resp) {
         if (resp.dataset) {
             for (var i = 0; i < resp.dataset.length; i++) {
