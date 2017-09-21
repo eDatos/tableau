@@ -46,12 +46,9 @@
                     <div id="loaderIndicatorSystem" class="loader first-loader" style="display: none"></div>
                     <div class="selectDiv row radioDiv" id="indicatorInstance" style="display: none">
                         <label id="indicatorSystems" class="col-xs-2"></label>
-                        <select class="col-xs-10" id="selectIndicatorSystem" style="width: 83.3%"></select>
+                        <select class="col-xs-10" id="selectIndicatorSystem" style="width: 83.3%" onchange="searchIndicatorsInstances()"></select>
                     </div>
-                    <div class="radioDiv row" id="selectIndicatorSystemButton" style="display: none">
-                        <button type="button" class="btn btn-primary" id="searchIndicatorInstancesButton" onclick="searchIndicatorsInstances()"></button>
-                        <div id="loaderIndicatorInstance" class="loader" style="display: none"></div>
-                    </div>
+                    <div id="loaderIndicatorInstance" class="loader" style="display: none"></div>
                     <div class="selectDiv row radioDiv" style="display: none">
                         <label id="indicatorInstances" class="col-xs-2"></label>
                         <select class="col-xs-10" id="selectIndicatorInstance"></select>

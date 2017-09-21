@@ -199,7 +199,11 @@
                 $('#errorMsg').html("");
                 $.getJSON(urlObj.url.substring(0, urlObj.url.indexOf('/data')), function(resp) {
                     urlObj.name = resp.title.__default__;
-                    urlObj.observationId = resp.code;
+                    if ($('input[name="datatype"]:checked').val() != "indicatorInstance") {
+                        urlObj.observationId = resp.code;
+                    } else {
+                        urlObj.observationId = resp.subjectCode;
+                    }
                     tableau.connectionName = tableau.connectionName + resp.title.__default__;
 
                     if (urlObj.allLanguages) {
