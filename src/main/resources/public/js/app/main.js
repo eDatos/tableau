@@ -1,5 +1,5 @@
 var properties;
-$.getJSON("config/application.json", function(resp) {
+$.getJSON("config/properties.json", function(resp) {
     properties = resp;
 });
 
