@@ -39,20 +39,14 @@
                     <div id="loaderVariableFamily" class="loader first-loader" style="display: none"></div>
                     <div class="selectDiv row radioDiv" id="variableFamily" style="display: none">
                         <label id="families" class="col-xs-2"></label>
-                        <select class="col-xs-10" id="selectVariableFamily" style="width: 83.3%"></select>
+                        <select class="col-xs-10" id="selectVariableFamily" style="width: 83.3%" onchange="searchVariables()"></select>
                     </div>
-                    <div class="radioDiv row" id="selectVaribleFamilyButton" style="display: none">
-                        <button type="button" class="btn btn-primary" id="searchVariablesButton" onclick="searchVariables()"></button>
-                        <div id="loaderVariable" class="loader" style="display: none"></div>
-                    </div>
+                    <div id="loaderVariable" class="loader" style="display: none"></div>
                     <div class="selectDiv row radioDiv" style="display: none">
                         <label id="variables" class="col-xs-2"></label>
-                        <select class="col-xs-10" id="selectVariable"></select>
+                        <select class="col-xs-10" id="selectVariable" onchange="searchCodelists()"></select>
                     </div>
-                    <div class="radioDiv row" id="selectVariableButton" style="display: none">
-                        <button type="button" class="btn btn-primary" id="searchCodelistsButton" onclick="searchCodelists()"></button>
-                        <div id="loaderCodelist" class="loader" style="display: none"></div>
-                    </div>
+                    <div id="loaderCodelist" class="loader" style="display: none"></div>
                     <div class="selectDiv row radioDiv" style="display: none">
                         <label id="codelists" class="col-xs-2"></label>
                         <select class="col-xs-10" id="selectCodelist"></select>

@@ -195,26 +195,15 @@
                 return url.match(".+/data$") != null;
             }
 
-            function removeAccents(string) {
-                string = _.replace(string, new RegExp("á", "g"), "a");
-                string = _.replace(string, new RegExp("Á", "g"), "A");
-                string = _.replace(string, new RegExp("é", "g"), "e");
-                string = _.replace(string, new RegExp("É", "g"), "E");
-                string = _.replace(string, new RegExp("í", "g"), "i");
-                string = _.replace(string, new RegExp("Í", "g"), "I");
-                string = _.replace(string, new RegExp("ó", "g"), "o");
-                string = _.replace(string, new RegExp("Ó", "g"), "O");
-                string = _.replace(string, new RegExp("ú", "g"), "u");
-                string = _.replace(string, new RegExp("Ú", "g"), "U");
-                return string;
-            }
-
             if (isValidUrl(urlObj.url)) {
                 $('#errorMsg').html("");
                 $.getJSON(urlObj.url.substring(0, urlObj.url.indexOf('/data')), function(resp) {
                     urlObj.name = resp.title.__default__;
-                    // Tableau no acepta espacios en los nombres de las columnas, por eso se reemplazan por _
-                    urlObj.observationId = removeAccents(_.replace(urlObj.name, new RegExp(" ", "g"), "_"));
+                    if ($('input[name="datatype"]:checked').val() != "indicatorInstance") {
+                        urlObj.observationId = resp.code;
+                    } else {
+                        urlObj.observationId = resp.subjectCode;
+                    }
                     tableau.connectionName = tableau.connectionName + resp.title.__default__;
 
                     if (urlObj.allLanguages) {

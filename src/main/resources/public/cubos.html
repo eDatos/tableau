@@ -39,12 +39,9 @@
                         <div id="loaderOperation" class="loader first-loader" style="display: none"></div>
                         <div class="selectDiv row radioDiv" id="operation" style="display: none">
                             <label id="operations" class="col-xs-2"></label>
-                            <select class="col-xs-10" id="selectOperation" style="width: 83.3%"></select>
+                            <select class="col-xs-10" id="selectOperation" style="width: 83.3%" onchange="searchDatasets()"></select>
                         </div>
-                        <div class="radioDiv row" style="display:none" id="selectDatasetButton">
-                            <button type="button" class="btn btn-primary" id="searchDatasetsButton" onclick="searchDatasets()"></button>
-                            <div id="loaderDataset" class="loader" style="display: none"></div>
-                        </div>
+                        <div id="loaderDataset" class="loader" style="display: none"></div>
                         <div class="selectDiv row radioDiv" style="display: none">
                             <label id="datasets" class="col-xs-2"></label>
                             <select class="col-xs-10" id="selectDataset"></select>

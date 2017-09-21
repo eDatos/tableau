@@ -109,21 +109,6 @@
                 return url.match(".+") != null;
             }
 
-            function removeAccents(string) {
-                string = _.replace(string, new RegExp("á", "g"), "a");
-                string = _.replace(string, new RegExp("Á", "g"), "A");
-                string = _.replace(string, new RegExp("é", "g"), "e");
-                string = _.replace(string, new RegExp("É", "g"), "E");
-                string = _.replace(string, new RegExp("í", "g"), "i");
-                string = _.replace(string, new RegExp("Í", "g"), "I");
-                string = _.replace(string, new RegExp("ó", "g"), "o");
-                string = _.replace(string, new RegExp("Ó", "g"), "O");
-                string = _.replace(string, new RegExp("ú", "g"), "u");
-                string = _.replace(string, new RegExp("Ú", "g"), "U");
-                string = _.replace(string, new RegExp("[^a-zA-Z0-9_]", "g"), "");
-                return string;
-            }
-
             if (isValidUrl(urlObj.url)) {
                 $('#errorMsg').html("");
                 urlObj.url = urlObj.url.replace("&fields=-metadata", "");
@@ -139,7 +124,7 @@
                 $.getJSON(urlObj.url, function(resp) {
                     tableau.connectionName = tableau.connectionName + _.keyBy(resp.name.text, 'lang')[language].value;
                     urlObj.name = _.keyBy(resp.name.text, 'lang')[language].value;
-                    urlObj.observationId = removeAccents(_.replace(urlObj.name, new RegExp(" ", "g"), "_"));
+                    urlObj.observationId = resp.id;
 
                     if (urlObj.showMeasureColumns) {
                         var measureColumns = {};

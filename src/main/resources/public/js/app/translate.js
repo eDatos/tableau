@@ -1,4 +1,4 @@
-var language = navigator.language;
+var language = navigator.language.substr(0, 2);
 
 var errorMsg;
 $.getJSON("translate/error.json", function(resp) {
