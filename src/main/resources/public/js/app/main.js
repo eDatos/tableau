@@ -53,7 +53,7 @@ function searchIndicators() {
         $("#loaderIndicator").hide();
     }).error(function() {
         $("#loaderIndicator").hide();
-        $('#errorMsg').html(errorMsg['es'].error.endpoint);
+        $('#errorMsg').html(errorMsg[language].error.endpoint);
     });
 }
 
@@ -81,7 +81,7 @@ function searchIndicatorsSystems() {
         document.getElementById("selectIndicatorSystemButton").style.display = "block";
     }).error(function() {
         $("#loaderIndicatorSystem").hide();
-        $('#errorMsg').html(errorMsg['es'].error.endpoint);
+        $('#errorMsg').html(errorMsg[language].error.endpoint);
     });
 }
 
@@ -104,7 +104,7 @@ function searchIndicatorsInstances() {
         document.getElementById("selectIndicatorInstance").parentElement.style.display = "block";
     }).error(function() {
         $("#loaderVariableFamily").hide();
-        $('#errorMsg').html(errorMsg['es'].error.request);
+        $('#errorMsg').html(errorMsg[language].error.request);
     });
 }
 
@@ -122,7 +122,7 @@ function searchVariableFamilies() {
     url = endpoint + "/variablefamilies.json?limit=1000";
     $.getJSON(url, function(resp){
         for (var i = 0; i < resp.variableFamily.length; i++) {
-            variableFamilies[i] = {id: resp.variableFamily[i].id, text: _.keyBy(resp.variableFamily[i].name.text, 'lang')['es'].value};
+            variableFamilies[i] = {id: resp.variableFamily[i].id, text: _.keyBy(resp.variableFamily[i].name.text, 'lang')[language].value};
         }
         $('#selectVariableFamily').select2({
             data: variableFamilies,
@@ -133,7 +133,7 @@ function searchVariableFamilies() {
         document.getElementById("selectVaribleFamilyButton").style.display = "block";
     }).error(function() {
         $("#loaderVariableFamily").hide();
-        $('#errorMsg').html(errorMsg['es'].error.endpoint);
+        $('#errorMsg').html(errorMsg[language].error.endpoint);
     });
 }
 
@@ -146,7 +146,7 @@ function searchVariables() {
     url = endpoint + "/variablefamilies/" + document.getElementById("selectVariableFamily").value + "/variables.json?limit=1000";
     $.getJSON(url, function(resp) {
         for (var i = 0; i < resp.variable.length; i++) {
-            variables[i] = {id: resp.variable[i].urn, text: _.keyBy(resp.variable[i].name.text, 'lang')['es'].value};
+            variables[i] = {id: resp.variable[i].urn, text: _.keyBy(resp.variable[i].name.text, 'lang')[language].value};
         }
         $("#selectVariable").select2({
             data: variables,
@@ -158,7 +158,7 @@ function searchVariables() {
         document.getElementById("selectVariableButton").style.display = "block";
     }).error(function() {
         $("#loaderCodelist").hide();
-        $("#errorMsg").html(errorMsg['es'].error.request);
+        $("#errorMsg").html(errorMsg[language].error.request);
     });
 }
 
@@ -170,7 +170,7 @@ function searchCodelists() {
     url = endpoint + '/codelists.json?limit=1000&query=VARIABLE_URN EQ "' + $("#selectVariable").val() +'" AND LATEST EQ "true"';
     $.getJSON(url, function(resp) {
         for (var i = 0; i < resp.codelist.length; i++) {
-            codelists[i] = {id: resp.codelist[i].selfLink.href, text: _.keyBy(resp.codelist[i].name.text, 'lang')['es'].value};
+            codelists[i] = {id: resp.codelist[i].selfLink.href, text: _.keyBy(resp.codelist[i].name.text, 'lang')[language].value};
         }
         $("#selectCodelist").select2({
             data: codelists,
@@ -181,7 +181,7 @@ function searchCodelists() {
         document.getElementById("selectCodelist").parentElement.style.display = "block";
     }).error(function() {
         $("#loaderCodelist").hide();
-        $("#errorMsg").html(errorMsg['es'].error.request);
+        $("#errorMsg").html(errorMsg[language].error.request);
     });
 }
 
@@ -196,7 +196,7 @@ function searchOperations() {
     }
     $.getJSON(endpoint + "/operations.json?limit=1000", function(resp) {
        for (var i = 0; i < resp.operation.length; i++) {
-           operations[i] = {id: resp.operation[i].urn, text: _.keyBy(resp.operation[i].name.text, 'lang')['es'].value};
+           operations[i] = {id: resp.operation[i].urn, text: _.keyBy(resp.operation[i].name.text, 'lang')[language].value};
        }
        $("#selectOperation").select2({
            data: operations,
@@ -208,7 +208,7 @@ function searchOperations() {
        document.getElementById("selectDatasetButton").style.display = "block";
     }).error(function() {
         $("#loaderOperation").hide();
-        $("#errorMsg").html(errorMsg['es'].error.endpoint);
+        $("#errorMsg").html(errorMsg[language].error.endpoint);
     });
 }
 
@@ -227,7 +227,7 @@ function searchDatasets() {
             for (var i = 0; i < resp.dataset.length; i++) {
                 datasets[i] = {
                     id: resp.dataset[i].selfLink.href.substring (0, resp.dataset[i].selfLink.href.lastIndexOf('/')), 
-                    text: _.keyBy(resp.dataset[i].name.text, 'lang')['es'].value};
+                    text: _.keyBy(resp.dataset[i].name.text, 'lang')[language].value};
             }
         }
         $("#selectDataset").select2({
@@ -239,7 +239,7 @@ function searchDatasets() {
         document.getElementById("selectDataset").parentElement.style.display = "block";
     }).error(function() {
         $("#loaderDataset").hide();
-        $("#errorMsg").html(errorMsg['es'].error.request);  
+        $("#errorMsg").html(errorMsg[language].error.request);  
     });
 }
 
