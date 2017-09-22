@@ -92,7 +92,7 @@
                         hash.Codigo_geografico = geographicalDimensions[i];
                         hash.Codigo_temporal = timeDimensions[j];
                         for (var k = 0, lengthMeasure = dataResponse.dimension.MEASURE.representation.size; k < lengthMeasure; k++) {
-                            hash[urlObj.observationId + '_' + measureDimensions[k]] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
+                            hash[urlObj.observationId + '_' + text[language].indicator.measures[measureDimensions[k]]] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
                         }
                         if (urlObj.granularity) {
                             hash.Granularidad_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].granularityCode;
@@ -227,7 +227,7 @@
                     if (urlObj.showMeasureColumns) {
                         measureColumns = [];
                         for (i = 0; i < resp.dimension.MEASURE.representation.length; i++) {
-                            measureColumns[i] = resp.dimension.MEASURE.representation[i].code;
+                            measureColumns[i] = text[language].indicator.measures[resp.dimension.MEASURE.representation[i].code];
                         }
                         urlObj.measureColumns = measureColumns;
                     }
