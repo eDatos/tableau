@@ -8,7 +8,7 @@
         for (i = 0; i < Object.keys(urlObj.dimensions).length; i++) {
             if (urlObj.measureColumns && urlObj.dimensions[i].id == urlObj.measureColumns.dimension) {
                 for (j = 0; j < urlObj.measureColumns.values.length; j++) {
-                    cols.push({ id : urlObj.measureColumns.values[j], columnRole : "dimension", dataType : tableau.dataTypeEnum.float });
+                    cols.push({ id : urlObj.measureColumns.dimension + "_" + urlObj.measureColumns.values[j], columnRole : "dimension", dataType : tableau.dataTypeEnum.float });
                 }
             } else {
                 cols.push({ id : urlObj.dimensions[i].id, alias: urlObj.dimensions[i].label, columnRole : "dimension", dataType : tableau.dataTypeEnum.string });
@@ -57,7 +57,7 @@
                     remaining = remaining % subtotal;
                     if (urlObj.measureColumns) {
                         if (urlObj.measureColumns.dimension == urlObj.dimensions[j].id) {
-                            copyHash[_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code] = observations[i];
+                            copyHash[urlObj.measureColumns.dimension + "_" + _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code] = observations[i];
                         } else {
                             hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
                             copyHash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
