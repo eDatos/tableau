@@ -29,15 +29,15 @@
                 <div class="section" id="selectData">
                     <form>
                         <h4 id="titleForm"></h4>
-                        <label id="labelDatasetUrl" class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="url" checked></label>
-                        <div class="row radioDiv" id="url">
+                        <label id="labelDatasetUrl" class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="url"></label>
+                        <div class="row radioDiv" id="url" style="display: none">
                             <label id="labelUrl" class="col-xs-2"></label>
                             <input class="col-xs-10" name="url" id="inputUrl" />
                         </div>
 
-                        <label id="labelSelectOperation" class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="operation"></label>
+                        <label id="labelSelectOperation" class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="operation" checked></label>
                         <div id="loaderOperation" class="loader first-loader" style="display: none"></div>
-                        <div class="selectDiv row radioDiv" id="operation" style="display: none">
+                        <div class="selectDiv row radioDiv" id="operation">
                             <label id="operations" class="col-xs-2"></label>
                             <select class="col-xs-10" id="selectOperation" style="width: 83.3%" onchange="searchDatasets()"></select>
                         </div>
