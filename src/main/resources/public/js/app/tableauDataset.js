@@ -8,7 +8,7 @@
         for (i = 0; i < Object.keys(urlObj.dimensions).length; i++) {
             if (urlObj.measureColumns && urlObj.dimensions[i].id == urlObj.measureColumns.dimension) {
                 for (j = 0; j < urlObj.measureColumns.values.length; j++) {
-                    cols.push({ id : urlObj.measureColumns.dimension + "_" + urlObj.measureColumns.values[j], alias: urlObj.measureColumns.values[j].label, 
+                    cols.push({ id : urlObj.measureColumns.dimension + "_" + urlObj.measureColumns.values[j].id, alias: urlObj.measureColumns.values[j].label, 
                         columnRole : "dimension", dataType : tableau.dataTypeEnum.float });
                 }
             } else {
