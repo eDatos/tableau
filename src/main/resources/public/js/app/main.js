@@ -208,13 +208,13 @@ function searchOperations() {
     if (endpoint[endpoint.length - 1] == "/") {
         endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
     }
-    $.getJSON(endpoint + "/operations.json?limit=1000", function(resp) {
+    $.getJSON(endpoint + "/operations.json?query=STATUS EQ \"" + properties.operations.status.production + "\"&limit=1000", function(resp) {
         if (resp.operation) {
             for (var i = 0; i < resp.operation.length; i++) {
                 operations[i] = {id: resp.operation[i].urn, text: _.keyBy(resp.operation[i].name.text, 'lang')[language].value};
             }
         }
-        $("#selectOperation").select2({
+        $("#selectOperation").select2({ 
             data: operations,
             dropdownAutoWidth: true,
             width: '83.3%'

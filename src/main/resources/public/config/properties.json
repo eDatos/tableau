@@ -4,5 +4,10 @@
         "indicators": "http://www.gobiernodecanarias.org/istac/api/indicators/v1.0/",
         "structural-resources": "http://estadisticas.arte-consultores.com/structural-resources/v1.0/",
         "statistical-resources": "http://estadisticas.arte-consultores.com/statistical-resources/v1.0/"
+    },
+    "operations": {
+        "status": {
+            "production": "PRODUCTION"
+        }
     }
 }
