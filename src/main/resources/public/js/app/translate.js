@@ -54,6 +54,7 @@ $.getJSON("translate/text.json", function(resp) {
     $("#operations").text(text[language].dataset.operations);
     $("#searchDatasetsButton").text(text[language].dataset.searchDatasets);
     $("#datasets").text(text[language].dataset.datasets);
+    $("#labelShowLabelsDataset").append(text[language].dataset.labels);
     $("#descDataset").prepend(text[language].dataset.desc);
     $("#linkDatasetAPI").attr("href", text[language].dataset.apiLink);
     $("#linkDatasetAPI").text(text[language].dataset.api);

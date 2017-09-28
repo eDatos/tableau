@@ -8,10 +8,15 @@
         for (i = 0; i < Object.keys(urlObj.dimensions).length; i++) {
             if (urlObj.measureColumns && urlObj.dimensions[i].id == urlObj.measureColumns.dimension) {
                 for (j = 0; j < urlObj.measureColumns.values.length; j++) {
-                    cols.push({ id : urlObj.measureColumns.dimension + "_" + urlObj.measureColumns.values[j], columnRole : "dimension", dataType : tableau.dataTypeEnum.float });
+                    cols.push({ id : urlObj.measureColumns.dimension + "_" + urlObj.measureColumns.values[j].id, alias: urlObj.measureColumns.values[j].label, 
+                        columnRole : "dimension", dataType : tableau.dataTypeEnum.float });
                 }
             } else {
                 cols.push({ id : urlObj.dimensions[i].id, alias: urlObj.dimensions[i].label, columnRole : "dimension", dataType : tableau.dataTypeEnum.string });
+                if (urlObj.labels) {
+                    cols.push({ id : "Etiqueta_" + urlObj.dimensions[i].id, alias: "Etiqueta " + urlObj.dimensions[i].label, columnRole : "dimension", 
+                        dataType : tableau.dataTypeEnum.string });
+                }
             }
         }
 
@@ -22,7 +27,7 @@
         var tableInfo = {
             id : "indicatorData",
             alias : tableau.connectionName,
-            columns : _.sortBy(cols, 'id')
+            columns : cols
         };
     
         schemaCallback([tableInfo]);
@@ -61,9 +66,18 @@
                         } else {
                             hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
                             copyHash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
+                            if (urlObj.labels) {
+                                representation = _.keyBy(dataResponse.metadata.dimensions.dimension[j].dimensionValues.value, 'id')[hash[urlObj.dimensions[j].id]];
+                                hash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
+                                copyHash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
+                            }
                         }
                     } else {
                         hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
+                        if (urlObj.labels) {
+                            representation = _.keyBy(dataResponse.metadata.dimensions.dimension[j].dimensionValues.value, 'id')[hash[urlObj.dimensions[j].id]];
+                            hash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
+                        }
                     }
                 }
                 if (urlObj.measureColumns) {
@@ -101,7 +115,8 @@
             }
             var urlObj = {
                 url: urlDataset.trim(),
-                showMeasureColumns: $('#measureColumns').is(':checked')
+                showMeasureColumns: $('#measureColumns').is(':checked'),
+                labels: $('#showLabels').is(':checked')
             };
 
             function isValidUrl(url) {
@@ -132,7 +147,10 @@
                         measureColumns.dimension = dimension.id;
                         var values = [];
                         for (i = 0; i < dimension.dimensionValues.value.length; i++) {
-                            values[i] = dimension.dimensionValues.value[i].id;
+                            values[i] = {
+                                id: dimension.dimensionValues.value[i].id,
+                                label: _.keyBy(dimension.dimensionValues.value[i].name.text, 'lang')['es'].value
+                            };
                         }
                         measureColumns.values = values;
                         urlObj.measureColumns = measureColumns;

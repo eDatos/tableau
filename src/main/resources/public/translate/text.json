@@ -68,7 +68,8 @@
             "searchOperations": "Buscar operaciones",
             "operations": "Operaciones estadísticas:",
             "searchDatasets": "Buscar cubos",
-            "datasets": "Cubos: "
+            "datasets": "Cubos: ",
+            "labels": "Añadir las etiquetas de las dimensiones al conjunto de datos"
         },
         "home": {
             "title": "ISTAC Web Data Connector",
