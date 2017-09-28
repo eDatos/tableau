@@ -90,7 +90,8 @@
         "endpoint": "Endpoint:",
         "responseFormat": "Formato de respuesta:",
         "getData": "Obtener datos",
-        "measureColumns": "Visualizar las medidas como columnas"
+        "measureColumns": "Visualizar las medidas como columnas",
+        "legalWarning": "Aviso legal"
     },
     "en": {
         "indicator": {
@@ -175,6 +176,7 @@
         "endpoint": "Endpoint:",
         "responseFormat": "Response format:",
         "getData": "Get data",
-        "measureColumns": "View measures as columns"
+        "measureColumns": "View measures as columns",
+        "legalWarning": "Legal warning"
     }
 }
