@@ -1,16 +1,18 @@
 var properties;
 $.getJSON("config/properties.json", function(resp) {
     properties = resp;
-    switch($("input[name='datatype']:checked")[0].value) {
-        case "indicator": 
-            $("#labelSelectIndicator").ready(searchIndicators());
-            break;
-        case "variableFamily":
-            $("#selectVariableLabel").ready(searchVariableFamilies());
-            break;
-        case "operation":
-            $("#labelSelectOperation").ready(searchOperations());
-            break;
+    if ($("input[name='datatype']:checked")[0]) {
+        switch($("input[name='datatype']:checked")[0].value) {
+            case "indicator": 
+                $("#labelSelectIndicator").ready(searchIndicators());
+                break;
+            case "variableFamily":
+                $("#selectVariableLabel").ready(searchVariableFamilies());
+                break;
+            case "operation":
+                $("#labelSelectOperation").ready(searchOperations());
+                break;
+        }
     }
 });
 
