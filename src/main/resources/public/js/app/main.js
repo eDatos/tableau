@@ -1,19 +1,21 @@
 var properties;
 $.getJSON("config/properties.json", function(resp) {
     properties = resp;
-    if ($("input[name='datatype']:checked")[0]) {
-        switch($("input[name='datatype']:checked")[0].value) {
-            case "indicator": 
-                $("#labelSelectIndicator").ready(searchIndicators());
-                break;
-            case "variableFamily":
-                $("#selectVariableLabel").ready(searchVariableFamilies());
-                break;
-            case "operation":
-                $("#labelSelectOperation").ready(searchOperations());
-                break;
+    $("form").ready(function() {
+        if ($("input[name='datatype']:checked")[0]) {
+            switch($("input[name='datatype']:checked")[0].value) {
+                case "indicator": 
+                    $("#labelSelectIndicator").ready(searchIndicators());
+                    break;
+                case "variableFamily":
+                    $("#selectVariableLabel").ready(searchVariableFamilies());
+                    break;
+                case "operation":
+                    $("#labelSelectOperation").ready(searchOperations());
+                    break;
+            }
         }
-    }
+    });
 });
 
 function chooseDataOption(radio) {
