@@ -9,7 +9,7 @@
 
         if (urlObj.showMeasureColumns) {
             for (i = 0; i < urlObj.measureColumns.length; i++) {
-                cols.push({ id : urlObj.observationId + "_" + urlObj.measureColumns[i], columnRole : "dimension", dataType : tableau.dataTypeEnum.string })
+                cols.push({ id : urlObj.observationId + "_" + urlObj.measureColumns[i], dataType : tableau.dataTypeEnum.float })
             }
         } else {
             cols.push({ id : "Codigo_medida", columnRole : "dimension", dataType : tableau.dataTypeEnum.string });
