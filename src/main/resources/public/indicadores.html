@@ -1,0 +1,82 @@
+<html>
+    <head>
+        <title>WDC ISTAC</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="Cache-Control" content="no-store" />
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+        <link href="main.css" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" crossorigin="anonymous"></script>
+        <script src="https://connectors.tableau.com/libs/tableauwdc-2.2.latest.js" type="text/javascript"></script>
+        <script src="js/vendor/lodash.js" type="text/javascript"></script>
+        <script src="js/app/tableauIndicators.js" type="text/javascript"></script>
+        <script src="js/app/main.js" type="text/javascript"></script>
+        <script src="js/app/translate.js" type="text/javascript"></script>
+        <script>
+            $(function() {
+                $("#headerTemplate").load("templates/header.html", function() {
+                    $("#indicadores").addClass("active");
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div id="headerTemplate"></div>
+        <div class="content">
+            <div class="section" id="selectData">
+                <form>
+                    <h4 id="titleForm"></h4>
+                    <label id="labelIndicatorUrl" class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="url"></label>
+                    <div class="row radioDiv" id="url" style="display: none">
+                            <label id="labelUrl" class="col-xs-2"></label>
+                            <input class="col-xs-10" name="url" id="inputUrl" />
+                    </div>
+
+                    <label id="labelSelectIndicator" class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="indicator" checked></label>
+                    <div id="loaderIndicator" class="loader first-loader" style="display: none"></div>
+                    <div class="selectDiv row radioDiv" id="indicator">
+                        <label id="indicators" class="col-xs-2"></label>
+                        <select class="col-xs-10" id="selectIndicator" style="width: 83.3%"></select>
+                    </div>
+
+                    <label id="labelIndicatorInstance" class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="indicatorInstance"></label>
+                    <div id="loaderIndicatorSystem" class="loader first-loader" style="display: none"></div>
+                    <div class="selectDiv row radioDiv" id="indicatorInstance" style="display: none">
+                        <label id="indicatorSystems" class="col-xs-2"></label>
+                        <select class="col-xs-10" id="selectIndicatorSystem" style="width: 83.3%" onchange="searchIndicatorsInstances()"></select>
+                    </div>
+                    <div id="loaderIndicatorInstance" class="loader" style="display: none"></div>
+                    <div class="selectDiv row radioDiv" style="display: none">
+                        <label id="indicatorInstances" class="col-xs-2"></label>
+                        <select class="col-xs-10" id="selectIndicatorInstance"></select>
+                    </div>
+
+                    <div class="responseFormat">
+                        <h4 id="responseFormat"></h4>
+                        <label id="labelShowGranularity" class="radioLabel"><input type="checkbox" id="showGranularity"></label>
+                        <label id="labelShowLabels" class="radioLabel"><input type="checkbox" id="showLabels" onclick="enableAllLanguages()"></label>
+                        <label id="labelAllLanguages" class="radioLabel"><input type="checkbox" id="allLanguages" disabled></label>
+                        <label id="labelMeasureColumns" class="radioLabel"><input type="checkbox" id="measureColumns"></label>
+                    </div>
+                    <div class="row" id="divButton">
+                        <button type="button" class="btn btn-success col-xs-2 col-xs-offset-10" id="dataButton"></button>
+                    </div>
+                    <div id="errorMsg"></div>
+                </form>
+            </div>
+            <div class="section">
+                <div class="text">
+                    <p id="descIndicator"><a id="linkIndicatorAPI"></a></p>
+                    <p id="indicatorUse"></p>
+                    <ol>
+                        <li id="liUrlIndicator"></li>
+                        <li id="liCriteriaIndicator"></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

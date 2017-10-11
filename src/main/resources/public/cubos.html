@@ -5,13 +5,16 @@
             <meta http-equiv="Cache-Control" content="no-store" />
             <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
             <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
             <link href="main.css" rel="stylesheet">
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" crossorigin="anonymous"></script>
             <script src="https://connectors.tableau.com/libs/tableauwdc-2.2.latest.js" type="text/javascript"></script>
             <script src="js/vendor/lodash.js" type="text/javascript"></script>
             <script src="js/app/tableauDataset.js" type="text/javascript"></script>
             <script src="js/app/main.js" type="text/javascript"></script>
+            <script src="js/app/translate.js" type="text/javascript"></script>
             <script>
                 $(function() {
                     $("#headerTemplate").load("templates/header.html", function() {
@@ -25,35 +28,43 @@
             <div class="content">
                 <div class="section" id="selectData">
                     <form>
-                        <h4>Seleccione los datos que desea obtener:</h4>
-                        <label class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="url" checked>URL del indicador</label>
-                        <div class="row radioDiv" id="url">
-                            <label class="col-xs-2">URL: </label>
+                        <h4 id="titleForm"></h4>
+                        <label id="labelDatasetUrl" class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="url"></label>
+                        <div class="row radioDiv" id="url" style="display: none">
+                            <label id="labelUrl" class="col-xs-2"></label>
                             <input class="col-xs-10" name="url" id="inputUrl" />
                         </div>
 
+                        <label id="labelSelectOperation" class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="operation" checked></label>
+                        <div id="loaderOperation" class="loader first-loader" style="display: none"></div>
+                        <div class="selectDiv row radioDiv" id="operation">
+                            <label id="operations" class="col-xs-2"></label>
+                            <select class="col-xs-10" id="selectOperation" style="width: 83.3%" onchange="searchDatasets()"></select>
+                        </div>
+                        <div id="loaderDataset" class="loader" style="display: none"></div>
+                        <div class="selectDiv row radioDiv" style="display: none">
+                            <label id="datasets" class="col-xs-2"></label>
+                            <select class="col-xs-10" id="selectDataset"></select>
+                        </div>
+
+                        <div class="responseFormat">
+                            <h4 id="responseFormat"></h4>
+                            <label id="labelMeasureColumns" class="radioLabel"><input type="checkbox" id="measureColumns"></label>
+                            <label id="labelShowLabelsDataset" class="radioLabel"><input type="checkbox" id="showLabels"></label>
+                        </div>
+
                         <div class="row" id="divButton">
-                            <button type="button" class="btn btn-success col-xs-2 col-xs-offset-10" id="dataButton">Obtener datos</button>
+                            <button type="button" class="btn btn-success col-xs-2 col-xs-offset-10" id="dataButton"></button>
                         </div>
                         <div id="errorMsg"></div>
                     </form>
                 </div>
                 <div class="section">
-                    <p>
-                        Este conector le permite cargar los datos de un dataset o una consulta.
-                        Estos datos se publican originalmente a través de la <a href="http://estadisticas.arte-consultores.com/statistical-resources/v1.0">API de Recursos Estadísticos</a>.
-                    </p>
-                    <p>
-                        A la hora de seleccionar los datos a cargar disponemos de varias opciones:
-                    </p>
+                    <p id="descDataset"><a id="linkDatasetAPI"></a></p>
+                    <p id="datasetUse"></p>
                     <ol>
-                        <li>
-                            Introducir la URL de los datos que se desean cargar. Esta URL debe ser una petición para obtener un dataset o una query de la API. 
-                            Además, en el caso de los datasets podrá hacer uso del parámetro "dim" para filtrar los datos a obtener y así reducir el tamaño de la respuesta.
-                        </li>
-                        <li>
-                            Navegar por operación estadística para seleccionar el dataset o query que desea cargar.
-                        </li>
+                        <li id="liUrlDataset"></li>
+                        <li id="liOperationDataset"></li>
                     </ol>
                 </div>
             </div>

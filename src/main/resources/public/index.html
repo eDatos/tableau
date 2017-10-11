@@ -3,21 +3,18 @@
         <title>WDC ISTAC</title>
         <meta charset="UTF-8">
         <meta http-equiv="Cache-Control" content="no-store" />
+        <link rel="icon" type="image/png" href="favicon.ico" />
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
         <link href="main.css" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" crossorigin="anonymous"></script>
-        <script src="https://connectors.tableau.com/libs/tableauwdc-2.2.latest.js" type="text/javascript"></script>
-        <script src="js/vendor/lodash.js" type="text/javascript"></script>
-        <script src="js/app/tableauIndicators.js" type="text/javascript"></script>
         <script src="js/app/main.js" type="text/javascript"></script>
+        <script src="js/app/translate.js" type="text/javascript"></script>
         <script>
             $(function() {
                 $("#headerTemplate").load("templates/header.html", function() {
-                    $("#indicadores").addClass("active");
+                    $("#home").addClass("active");
                 });
             });
         </script>
@@ -25,75 +22,18 @@
     <body>
         <div id="headerTemplate"></div>
         <div class="content">
-            <div class="section" id="selectData">
-                <form>
-                    <h4>Seleccione los datos que desea obtener:</h4>
-                    <label class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="url" checked>URL del indicador</label>
-                    <div class="row radioDiv" id="url">
-                            <label class="col-xs-2">URL: </label>
-                            <input class="col-xs-10" name="url" id="inputUrl" />
-                    </div>
-
-                    <label class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="indicator">Seleccionar indicador</label>
-                    <div class="radioDiv row" id="indicator" style="display: none">
-                        <label class="col-xs-2">Endpoint: </label>
-                        <input class="col-xs-10" name="endpoint" id="inputEndpointIndicator" />
-                    </div>
-                    <div class="radioDiv row" style="display:none" id="indicator">
-                        <button type="button" class="btn btn-primary" id="endpointButton" onclick="searchIndicators()">Buscar indicadores</button>
-                        <div id="loaderIndicator" class="loader" style="display: none"></div>
-                    </div>
-                    <div class="selectDiv row radioDiv" style="display: none">
-                        <label class="col-xs-2">Indicadores:</label>
-                        <select class="col-xs-10" id="selectIndicator"></select>
-                    </div>
-
-                    <label class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="indicatorInstance">Seleccionar instancia de indicador</label>
-                    <div class="row radioDiv" id="indicatorInstance" style="display: none">
-                        <label class="col-xs-2">Endpoint: </label>
-                        <input class="col-xs-10" name="endpoint" id="inputEndpointIndicatorSystem" />
-                    </div>
-                    <div class="radioDiv row" id="indicatorInstance" style="display:none">
-                        <button type="button" class="btn btn-primary" id="endpointButton" onclick="searchIndicatorsSystems()">Buscar sistemas de indicadores</button>
-                        <div id="loaderIndicatorSystem" class="loader" style="display: none"></div>
-                    </div>
-                    <div class="selectDiv row radioDiv" style="display: none">
-                        <label class="col-xs-2">Sistemas de indicadores:</label>
-                        <select class="col-xs-10" id="selectIndicatorSystem"></select>
-                    </div>
-                    <div class="radioDiv row" id="selectIndicatorSystemButton" style="display: none">
-                        <button type="button" class="btn btn-primary" id="indicatorSystemButton" onclick="searchIndicatorsInstances()">Buscar instancias de indicadores</button>
-                        <div id="loaderIndicatorInstance" class="loader" style="display: none"></div>
-                    </div>
-                    <div class="selectDiv row radioDiv" style="display: none">
-                        <label class="col-xs-2">Instancias de indicadores:</label>
-                        <select class="col-xs-10" id="selectIndicatorInstance"></select>
-                    </div>
-
-                    <div class="responseFormat">
-                        <h4>Formato de respuesta:</h4>
-                        <label class="radioLabel"><input type="checkbox" id="showGranularity">Añadir las columnas "Granularidad geográfica" y "Granularidad temporal"</label>
-                        <label class="radioLabel"><input type="checkbox" id="showLabels">Añadir las etiquetas geográficas y temporales al conjunto de datos"</label>
-                    </div>
-                    <div class="row" id="divButton">
-                        <button type="button" class="btn btn-success col-xs-2 col-xs-offset-10" id="dataButton">Obtener datos</button>
-                    </div>
-                    <div id="errorMsg"></div>
-                </form>
-            </div>
             <div class="section">
+                <h3 id="titleWDC"></h3>
                 <div class="text">
-                    <p>
-                        Este conector le permite cargar los datos de un indicador o de una instancia de indicador. 
-                        Estos datos se publican originalmente a través de la <a href="http://www.gobiernodecanarias.org/istac/api/indicators/v1.0">API de Indicadores</a>.
-                    </p>
-                    <p>
-                        A la hora de seleccionar los datos del indicador a cargar tiene varias opciones:
-                    </p>
-                    <ol>
-                        <li>Introducir la URL de los datos que desea cargar. Esta URL debe ser una petición de las que finalizan en "/data" de la API anteriormente mencionada.</li>
-                        <li>Navegador por distintos criterios para seleccionar el recurso que desea cargar.</li>
-                    </ol>
+                    <p id="descTableau"></p>
+                    <p id="descWDC"></p>
+                    <p id="descIstac"></p>
+                    <p id="olConnectors"></p>
+                    <ul>
+                        <li id="liIndicators"><a id="aIndicators" href="indicadores.html"></a></li>
+                        <li id="liDatasets"><a id="aDatasets" href="cubos.html"></a></li>
+                        <li id="liCodelists"><a id="aCodelists" href="clasificaciones.html"></a></li>
+                    </ul>
                 </div>
             </div>
         </div>

@@ -3,11 +3,19 @@
     var urlCodelist;
 
     myConnector.getSchema = function (schemaCallback) {
+        var urlObj = JSON.parse(tableau.connectionData);
         var cols = [
-            { id : "code", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
-            { id : "name", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
-            { id : "parent", columnRole : "dimension", dataType : tableau.dataTypeEnum.string }
+            { id : "Codigo", columnRole : "dimension", dataType : tableau.dataTypeEnum.string },
+            { id : "Padre", columnRole : "dimension", dataType : tableau.dataTypeEnum.string }
         ];
+
+        if (urlObj.allLanguages) {
+            for (i = 0; i < urlObj.languages.length; i++) {
+                cols.push({ id : "Nombre_" + urlObj.languages[i], columnRole : "dimension", dataType : tableau.dataTypeEnum.string });
+            }
+        } else {
+            cols.push({ id : "Nombre", columnRole : "dimension", dataType : tableau.dataTypeEnum.string });
+        }
 
         var tableInfo = {
             id : "indicatorData",
@@ -28,11 +36,17 @@
             var tableData = [];
             var dataResponse = arguments[0];
             for (i = 0; i < dataResponse.code.length; i++) {
-                tableData.push({
-                    "code": dataResponse.code[i].id,
-                    "name": _.keyBy(dataResponse.code[i].name.text, 'lang')['es'].value,
-                    "parent": dataResponse.code[i].parent
-                });
+                var hash = {};
+                hash.Codigo = dataResponse.code[i].id;
+                hash.Padre = dataResponse.code[i].parent ? dataResponse.code[i].parent.substring(dataResponse.code[i].parent.lastIndexOf(".") + 1) : '';
+                if (urlObj.allLanguages) {
+                    for (j = 0; j < urlObj.languages.length; j++) {
+                        hash['Nombre_' + urlObj.languages[j]] = _.keyBy(dataResponse.code[i].name.text, 'lang')[urlObj.languages[j]].value;
+                    }
+                } else {
+                    hash.Nombre = _.keyBy(dataResponse.code[i].name.text, 'lang')[language].value;
+                }
+                tableData.push(hash);
             }
             
             table.appendRows(tableData);
@@ -49,18 +63,19 @@
             switch($('input[name="datatype"]:checked').val()) {
                 case 'url':
                     urlCodelist = $('#inputUrl').val();
-                    tableau.connectionName = "Clasificación: ";
+                    tableau.connectionName = text[language].codelist.name;
                     break;
                 case 'variableFamily':
                     urlCodelist = $('#selectCodelist').val() + '/codes';
                     if ($('#selectCodelist').val() == null || $('#selectCodelist').val() == undefined || $('#selectCodelist').val().length == 0) {
                         urlCodelist = '';
                     }
-                    tableau.connectionName = "Clasificación: ";
+                    tableau.connectionName = text[language].codelist.name;
                     break;
             }
             var urlObj = {
-                url: urlCodelist.trim()
+                url: urlCodelist.trim(),
+                allLanguages: $('#allLanguages').is(':checked')
             };
 
             function isValidUrl(url) {
@@ -70,16 +85,25 @@
 
             if (isValidUrl(urlObj.url)) {
                 $('#errorMsg').html("");
-                tableau.connectionData = JSON.stringify(urlObj);
                 if (urlObj.url.indexOf(".json") == -1) {
                     urlObj.url = urlObj.url + ".json";
                 }
                 $.getJSON(urlObj.url.substring(0, urlObj.url.indexOf('/codes')), function(resp) {
-                    tableau.connectionName = tableau.connectionName + _.keyBy(resp.name.text, 'lang')['es'].value;
+                    tableau.connectionName = tableau.connectionName + _.keyBy(resp.name.text, 'lang')[language].value;
+                    if (urlObj.allLanguages) {
+                        languages = [];
+                        for (i = 0; i < resp.name.text.length; i++) {
+                            languages[i] = resp.name.text[i].lang;
+                        }
+                        urlObj.languages = languages;
+                    }
+                    tableau.connectionData = JSON.stringify(urlObj);
                     tableau.submit();
+                }).error(function() {
+                    $("#errorMsg").html(errorMsg[language].error.submit);
                 });
             } else {
-                $('#errorMsg').html("La URL del indicador está incompleta o no es correcta");
+                $('#errorMsg').html(errorMsg[language].error.codelist.url);
             }
         });
     });

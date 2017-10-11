@@ -150,8 +150,13 @@ h3 {
     -webkit-animation: spin 1s linear infinite;
     animation: spin 1s linear infinite;
     float: right;
-    margin: 2%;
+    margin: 0%;
 }
+
+.first-loader {
+    margin-top: 1%;
+}
+
 
 @-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg); }
