@@ -29,7 +29,12 @@
             }
         }
 
-        cols.push({ id : "Codigo_temporal", columnRole : "dimension", dataType : tableau.dataTypeEnum.string });
+        if (urlObj.recodeDates) {
+            cols.push({ id : "Codigo_temporal", columnRole : "dimension", dataType : tableau.dataTypeEnum.date });
+        } else {
+            cols.push({ id : "Codigo_temporal", columnRole : "dimension", dataType : tableau.dataTypeEnum.string });
+        }
+
         if (urlObj.granularity) {
             cols.push({ id : "Granularidad_temporal", columnRole : "dimension", dataType : tableau.dataTypeEnum.string});
         }
@@ -59,14 +64,14 @@
         var urlObj = JSON.parse(tableau.connectionData);
         var promises = [];
 
-        if (urlObj.granularity || urlObj.labels) {
+        if (urlObj.granularity || urlObj.labels || urlObj.recodeDates) {
             promises.push($.getJSON(urlObj.url.substring(0, urlObj.url.indexOf('/data'))));
         }
         promises.push($.getJSON(urlObj.url));
         
         $.when.apply($, promises).then(function() {
             var indexArguments = 0;
-            if (urlObj.granularity || urlObj.labels) {
+            if (urlObj.granularity || urlObj.labels || urlObj.recodeDates) {
                 var dimensions = arguments[indexArguments][0].dimension;
                 
                 var indexedGeographicalRepresentations = _.keyBy(dimensions.GEOGRAPHICAL.representation, 'code');
@@ -90,49 +95,70 @@
                     if (urlObj.showMeasureColumns) {
                         var hash = {};
                         hash.Codigo_geografico = geographicalDimensions[i];
-                        hash.Codigo_temporal = timeDimensions[j];
+
+                        if (urlObj.recodeDates) {
+                            var granularity = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
+                            var date = timeDimensions[j];
+                            hash.Codigo_temporal = recodeDates(date, granularity);
+                        } else {
+                            hash.Codigo_temporal = timeDimensions[j];
+                        }
+
                         for (var k = 0, lengthMeasure = dataResponse.dimension.MEASURE.representation.size; k < lengthMeasure; k++) {
                             hash[urlObj.observationId + '_' + text[language].indicator.measures[measureDimensions[k]]] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
                         }
+
                         if (urlObj.granularity) {
                             hash.Granularidad_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].granularityCode;
-                            hash.Granularidad_temporal = indexedTimeRepresentations[hash.Codigo_temporal].granularityCode;
+                            hash.Granularidad_temporal = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
                         }
+                        
                         if (urlObj.labels) {
                             if (!urlObj.allLanguages) {
                                 hash.Etiqueta_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].title.__default__;
-                                hash.Etiqueta_temporal = indexedTimeRepresentations[hash.Codigo_temporal].title.__default__;
+                                hash.Etiqueta_temporal = indexedTimeRepresentations[timeDimensions[j]].title.__default__;
                             } else {
                                 for (l = 0; l < urlObj.geographicalLanguages.length; l++) {
                                     hash['Etiqueta_geografica_' + urlObj.geographicalLanguages[l]] = indexedGeographicalRepresentations[hash.Codigo_geografico].title[urlObj.geographicalLanguages[l]];
                                 }
                                 for (l = 0; l < urlObj.timeLanguages.length; l++) {
-                                    hash['Etiqueta_temporal_' + urlObj.timeLanguages[l]] = indexedTimeRepresentations[hash.Codigo_temporal].title[urlObj.timeLanguages[l]];
+                                    hash['Etiqueta_temporal_' + urlObj.timeLanguages[l]] = indexedTimeRepresentations[timeDimensions[j]].title[urlObj.timeLanguages[l]];
                                 }
                             }
                         }
                         tableData.push(hash);
+
                     } else {
                         for (var k = 0, lengthMeasure = dataResponse.dimension.MEASURE.representation.size; k < lengthMeasure; k++) {
                             var hash = {};
                             hash.Codigo_geografico = geographicalDimensions[i];
-                            hash.Codigo_temporal = timeDimensions[j];
+                            
+                            if (urlObj.recodeDates) {
+                                var granularity = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
+                                var date = timeDimensions[j];
+                                hash.Codigo_temporal = recodeDates(date, granularity);
+                            } else {
+                                hash.Codigo_temporal = timeDimensions[j];
+                            }
+
                             hash.Codigo_medida = measureDimensions[k];
                             hash[urlObj.observationId] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
+
                             if (urlObj.granularity) {
                                 hash.Granularidad_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].granularityCode;
-                                hash.Granularidad_temporal = indexedTimeRepresentations[hash.Codigo_temporal].granularityCode;
+                                hash.Granularidad_temporal = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
                             }
+
                             if (urlObj.labels) {
                                 if (!urlObj.allLanguages) {
                                     hash.Etiqueta_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].title.__default__;
-                                    hash.Etiqueta_temporal = indexedTimeRepresentations[hash.Codigo_temporal].title.__default__;
+                                    hash.Etiqueta_temporal = indexedTimeRepresentations[timeDimensions[j]].title.__default__;
                                 } else {
                                     for (l = 0; l < urlObj.geographicalLanguages.length; l++) {
                                         hash['Etiqueta_geografica_' + urlObj.geographicalLanguages[l]] = indexedGeographicalRepresentations[hash.Codigo_geografico].title[urlObj.geographicalLanguages[l]];
                                     }
                                     for (l = 0; l < urlObj.timeLanguages.length; l++) {
-                                        hash['Etiqueta_temporal_' + urlObj.timeLanguages[l]] = indexedTimeRepresentations[hash.Codigo_temporal].title[urlObj.timeLanguages[l]];
+                                        hash['Etiqueta_temporal_' + urlObj.timeLanguages[l]] = indexedTimeRepresentations[timeDimensions[j]].title[urlObj.timeLanguages[l]];
                                     }
                                 }
                             }
@@ -148,6 +174,59 @@
             doneCallback();
         })
     };
+
+    function recodeDates(date, granularity) {
+        switch(granularity) {
+            case "YEARLY": {
+                if (date.match(new RegExp(START + GPE_YEARLY_PATTERN + END))) {
+                    return "01-01-" + date;
+                }
+                break;
+            }
+            case "BIYEARLY": {
+                if (date.match(new RegExp(START + GPE_BIYEARLY_PATTERN + END))) {
+                    var year = date.match(new RegExp(START + GPE_BIYEARLY_PATTERN + END))[1];
+                    var month = (date.match(new RegExp(START + GPE_BIYEARLY_PATTERN + END))[2] - 1) * 6;
+                    return "01-" + (month + 1) + "-" + year;
+                }
+                break;
+            }
+            case "QUARTERLY": {
+                if (date.match(new RegExp(START + GPE_QUARTERLY_PATTERN + END))) {
+                    var year = date.match(new RegExp(START + GPE_QUARTERLY_PATTERN + END))[1];
+                    var month = (date.match(new RegExp(START + GPE_QUARTERLY_PATTERN + END))[2] - 1) * 3;
+                    return "01-" + (month + 1) + "-" + year;
+                }
+                break;
+            }
+            case "MONTHLY": {
+                if (date.match(new RegExp(START + GPE_MONTHLY_PATTERN + END))) {
+                    var year = date.match(new RegExp(START + GPE_MONTHLY_PATTERN + END))[1];
+                    var month = date.match(new RegExp(START + GPE_MONTHLY_PATTERN + END))[2];
+                    return "01-" + month + "-" + year;
+                }
+                break;
+            }
+            case "WEEKLY": {
+                if (date.match(new RegExp(START + GPE_WEEKLY_PATTERN + END))) {
+                    var year = date.match(new RegExp(START + GPE_WEEKLY_PATTERN + END))[1];
+                    var day = (date.match(new RegExp(START + GPE_WEEKLY_PATTERN + END))[2] - 1) * 7;
+                    var month = new Date(year, "", day).getMonth();
+                    return (day + 1) + "-" + (month + 1) + "-" + year;
+                }
+                break;
+            }
+            case "DAILY": {
+                if (date.match(new RegExp(START + GPE_DAILY_PATTERN + END))) {
+                    var year = date.match(new RegExp(START + GPE_DAILY_PATTERN + END))[1];
+                    var month = date.match(new RegExp(START + GPE_DAILY_PATTERN + END))[2];
+                    var day = date.match(new RegExp(START + GPE_DAILY_PATTERN + END))[3];
+                    return day + "-" + month + "-" + year;
+                }
+                break;
+            }
+        }
+    }
 
     tableau.registerConnector(myConnector);
 
@@ -187,7 +266,8 @@
                 granularity: $('#showGranularity').is(':checked'),
                 labels: $('#showLabels').is(':checked'),
                 allLanguages: $('#allLanguages').is(':checked'),
-                showMeasureColumns: $('#measureColumns').is(':checked')
+                showMeasureColumns: $('#measureColumns').is(':checked'),
+                recodeDates: $('#recodeDates').is(':checked')
             };
 
             function isValidUrl(url) {

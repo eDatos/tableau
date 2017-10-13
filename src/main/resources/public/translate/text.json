@@ -91,7 +91,8 @@
         "responseFormat": "Formato de respuesta:",
         "getData": "Obtener datos",
         "measureColumns": "Visualizar las medidas como columnas",
-        "legalWarning": "Aviso legal"
+        "legalWarning": "Aviso legal",
+        "recodeDates": "Recodificar las fechas"
     },
     "en": {
         "indicator": {
@@ -177,6 +178,7 @@
         "responseFormat": "Response format:",
         "getData": "Get data",
         "measureColumns": "View measures as columns",
-        "legalWarning": "Legal warning"
+        "legalWarning": "Legal warning",
+        "recodeDates": "Recode dates"
     }
 }
