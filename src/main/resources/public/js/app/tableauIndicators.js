@@ -211,8 +211,8 @@
                 if (date.match(new RegExp(START + GPE_WEEKLY_PATTERN + END))) {
                     var year = date.match(new RegExp(START + GPE_WEEKLY_PATTERN + END))[1];
                     var day = (date.match(new RegExp(START + GPE_WEEKLY_PATTERN + END))[2] - 1) * 7;
-                    var month = new Date(year, "", day).getMonth();
-                    return (day + 1) + "-" + (month + 1) + "-" + year;
+                    var date = new Date(year, "", day + 1);
+                    return date.getDate() + "-" + (date.getMonth() + 1) + "-" + year;
                 }
                 break;
             }
@@ -226,6 +226,8 @@
                 break;
             }
         }
+
+        return calculateDate(date);
     }
 
     tableau.registerConnector(myConnector);
