@@ -27,6 +27,7 @@ $.getJSON("translate/text.json", function(resp) {
     $("#labelShowLabels").append(text[language].indicator.showLabels);
     $("#labelAllLanguages").append(text[language].indicator.allLanguages);
     $("#labelMeasureColumns").append(text[language].measureColumns);
+    $("#labelRecodeDates").append(text[language].recodeDates);
     $("#dataButton").text(text[language].getData);
     $("#descIndicator").prepend(text[language].indicator.desc);
     $("#linkIndicatorAPI").attr("href", text[language].indicator.apiLink);
