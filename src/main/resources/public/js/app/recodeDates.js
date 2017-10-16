@@ -68,7 +68,6 @@ const PATTERN_TIME_RANGE                    = START + TIME_RANGE_TYPE + END;
 
 function calculateDate(time) {
     date = null;
-    time = "2013-07-24";
     if (isTimeRange(time)) {
         date = calculateTimeRangePeriod(time);
     } else if (isReportingTimePeriod(time)) {
