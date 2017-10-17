@@ -12,7 +12,11 @@
                         dataType : tableau.dataTypeEnum.float });
                 }
             } else {
-                cols.push({ id : urlObj.dimensions[i].id, alias: urlObj.dimensions[i].label, columnRole : "dimension", dataType : tableau.dataTypeEnum.string });
+                if (urlObj.recodeDates && urlObj.timeDimension == urlObj.dimensions[i].id) {
+                    cols.push({ id : urlObj.dimensions[i].id, alias: urlObj.dimensions[i].label, columnRole : "dimension", dataType : tableau.dataTypeEnum.date });
+                } else {
+                    cols.push({ id : urlObj.dimensions[i].id, alias: urlObj.dimensions[i].label, columnRole : "dimension", dataType : tableau.dataTypeEnum.string });
+                }
                 if (urlObj.labels) {
                     cols.push({ id : "Etiqueta_" + urlObj.dimensions[i].id, alias: "Etiqueta " + urlObj.dimensions[i].label, columnRole : "dimension", 
                         dataType : tableau.dataTypeEnum.string });
@@ -64,16 +68,27 @@
                         if (urlObj.measureColumns.dimension == urlObj.dimensions[j].id) {
                             copyHash[urlObj.measureColumns.dimension + "_" + _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code] = observations[i];
                         } else {
-                            hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
-                            copyHash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
-                            if (urlObj.labels) {
-                                representation = _.keyBy(dataResponse.metadata.dimensions.dimension[j].dimensionValues.value, 'id')[hash[urlObj.dimensions[j].id]];
-                                hash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
-                                copyHash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
+                            if (urlObj.recodeDates && urlObj.dimensions[j].id == urlObj.timeDimension) {
+                                date = calculateDate(_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code);
+                                hash[urlObj.dimensions[j].id] = date;
+                                copyHash[urlObj.dimensions[j].id] = date;
+                            } else {
+                                hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
+                                copyHash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
+                                if (urlObj.labels) {
+                                    representation = _.keyBy(dataResponse.metadata.dimensions.dimension[j].dimensionValues.value, 'id')[hash[urlObj.dimensions[j].id]];
+                                    hash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
+                                    copyHash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
+                                }
                             }
                         }
                     } else {
-                        hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
+                        if (urlObj.recodeDates && urlObj.dimensions[j].id == urlObj.timeDimension) {
+                            date = calculateDate(_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code)
+                            hash[urlObj.dimensions[j].id] = date;
+                        } else {
+                            hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
+                        }
                         if (urlObj.labels) {
                             representation = _.keyBy(dataResponse.metadata.dimensions.dimension[j].dimensionValues.value, 'id')[hash[urlObj.dimensions[j].id]];
                             hash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
@@ -116,7 +131,8 @@
             var urlObj = {
                 url: urlDataset.trim(),
                 showMeasureColumns: $('#measureColumns').is(':checked'),
-                labels: $('#showLabels').is(':checked')
+                labels: $('#showLabels').is(':checked'),
+                recodeDates: $('#recodeDates').is(':checked')
             };
 
             function isValidUrl(url) {
@@ -162,6 +178,10 @@
                             id: resp.metadata.dimensions.dimension[i].id, 
                             label: _.keyBy(resp.metadata.dimensions.dimension[i].name.text, 'lang')[language].value
                         }
+                    }
+
+                    if (urlObj.recodeDates) {
+                        urlObj.timeDimension = _.keyBy(resp.metadata.dimensions.dimension, 'type')['TIME_DIMENSION'].id;
                     }
 
                     urlObj.dimensions = dimensions;
