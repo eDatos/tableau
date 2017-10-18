@@ -30,10 +30,9 @@
         }
 
         if (urlObj.recodeDates) {
-            cols.push({ id : "Codigo_temporal", columnRole : "dimension", dataType : tableau.dataTypeEnum.date });
-        } else {
-            cols.push({ id : "Codigo_temporal", columnRole : "dimension", dataType : tableau.dataTypeEnum.string });
+            cols.push({ id : "Fecha", columnRole : "dimension", dataType : tableau.dataTypeEnum.date });
         }
+        cols.push({ id : "Codigo_temporal", columnRole : "dimension", dataType : tableau.dataTypeEnum.string });
 
         if (urlObj.granularity) {
             cols.push({ id : "Granularidad_temporal", columnRole : "dimension", dataType : tableau.dataTypeEnum.string});
@@ -99,10 +98,9 @@
                         if (urlObj.recodeDates) {
                             var granularity = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
                             var date = timeDimensions[j];
-                            hash.Codigo_temporal = recodeDates(date, granularity);
-                        } else {
-                            hash.Codigo_temporal = timeDimensions[j];
+                            hash.Fecha = recodeDates(date, granularity);
                         }
+                        hash.Codigo_temporal = timeDimensions[j];
 
                         for (var k = 0, lengthMeasure = dataResponse.dimension.MEASURE.representation.size; k < lengthMeasure; k++) {
                             hash[urlObj.observationId + '_' + text[language].indicator.measures[measureDimensions[k]]] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
@@ -136,10 +134,9 @@
                             if (urlObj.recodeDates) {
                                 var granularity = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
                                 var date = timeDimensions[j];
-                                hash.Codigo_temporal = recodeDates(date, granularity);
-                            } else {
-                                hash.Codigo_temporal = timeDimensions[j];
+                                hash.Fecha = recodeDates(date, granularity);
                             }
+                            hash.Codigo_temporal = timeDimensions[j];
 
                             hash.Codigo_medida = measureDimensions[k];
                             hash[urlObj.observationId] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];

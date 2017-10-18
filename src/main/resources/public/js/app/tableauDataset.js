@@ -13,10 +13,10 @@
                 }
             } else {
                 if (urlObj.recodeDates && urlObj.timeDimension == urlObj.dimensions[i].id) {
-                    cols.push({ id : urlObj.dimensions[i].id, alias: urlObj.dimensions[i].label, columnRole : "dimension", dataType : tableau.dataTypeEnum.date });
-                } else {
-                    cols.push({ id : urlObj.dimensions[i].id, alias: urlObj.dimensions[i].label, columnRole : "dimension", dataType : tableau.dataTypeEnum.string });
+                    cols.push({ id : "Fecha", alias: "Fecha", columnRole : "dimension", dataType : tableau.dataTypeEnum.date });
                 }
+                cols.push({ id : urlObj.dimensions[i].id, alias: urlObj.dimensions[i].label, columnRole : "dimension", dataType : tableau.dataTypeEnum.string });
+
                 if (urlObj.labels) {
                     cols.push({ id : "Etiqueta_" + urlObj.dimensions[i].id, alias: "Etiqueta " + urlObj.dimensions[i].label, columnRole : "dimension", 
                         dataType : tableau.dataTypeEnum.string });
@@ -70,25 +70,23 @@
                         } else {
                             if (urlObj.recodeDates && urlObj.dimensions[j].id == urlObj.timeDimension) {
                                 date = calculateDate(_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code);
-                                hash[urlObj.dimensions[j].id] = date;
-                                copyHash[urlObj.dimensions[j].id] = date;
-                            } else {
-                                hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
-                                copyHash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
-                                if (urlObj.labels) {
-                                    representation = _.keyBy(dataResponse.metadata.dimensions.dimension[j].dimensionValues.value, 'id')[hash[urlObj.dimensions[j].id]];
-                                    hash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
-                                    copyHash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
-                                }
+                                hash["Fecha"] = date;
+                                copyHash["Fecha"] = date;
+                            }
+                            hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
+                            copyHash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
+                            if (urlObj.labels) {
+                                representation = _.keyBy(dataResponse.metadata.dimensions.dimension[j].dimensionValues.value, 'id')[hash[urlObj.dimensions[j].id]];
+                                hash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
+                                copyHash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
                             }
                         }
                     } else {
                         if (urlObj.recodeDates && urlObj.dimensions[j].id == urlObj.timeDimension) {
                             date = calculateDate(_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code)
-                            hash[urlObj.dimensions[j].id] = date;
-                        } else {
-                            hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
+                            hash["Fecha"] = date;
                         }
+                        hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
                         if (urlObj.labels) {
                             representation = _.keyBy(dataResponse.metadata.dimensions.dimension[j].dimensionValues.value, 'id')[hash[urlObj.dimensions[j].id]];
                             hash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;

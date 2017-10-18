@@ -92,7 +92,7 @@
         "getData": "Obtener datos",
         "measureColumns": "Visualizar las medidas como columnas",
         "legalWarning": "Aviso legal",
-        "recodeDates": "Recodificar las fechas"
+        "recodeDates": "Incluir campo calculado con fecha a partir de periodos de referencia"
     },
     "en": {
         "indicator": {
