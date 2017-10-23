@@ -20,10 +20,19 @@
                 cols.push({ id: urlObj.dimensions[i].id, alias: urlObj.dimensions[i].label, columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
 
                 if (urlObj.labels) {
-                    cols.push({
-                        id: "Etiqueta_" + urlObj.dimensions[i].id, alias: "Etiqueta " + urlObj.dimensions[i].label, columnRole: "dimension",
-                        dataType: tableau.dataTypeEnum.string
-                    });
+                    if (urlObj.allLanguages) {
+                        for (j = 0; j < urlObj.languages.length; j++) {
+                            cols.push({
+                                id: "Etiqueta_" + urlObj.dimensions[i].id + "_" + urlObj.languages[j], alias: "Etiqueta " + urlObj.dimensions[i].label + "_" + urlObj.languages[j], columnRole: "dimension",
+                                dataType: tableau.dataTypeEnum.string
+                            });
+                        }
+                    } else {
+                        cols.push({
+                            id: "Etiqueta_" + urlObj.dimensions[i].id, alias: "Etiqueta " + urlObj.dimensions[i].label, columnRole: "dimension",
+                            dataType: tableau.dataTypeEnum.string
+                        });
+                    }
                 }
             }
         }
@@ -81,8 +90,20 @@
                             copyHash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
                             if (urlObj.labels) {
                                 representation = _.keyBy(dataResponse.metadata.dimensions.dimension[j].dimensionValues.value, 'id')[hash[urlObj.dimensions[j].id]];
-                                hash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
-                                copyHash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
+                                if (urlObj.allLanguages) {
+                                    for (k = 0; k < urlObj.languages.length; k++) {
+                                        if (_.keyBy(representation.name.text, 'lang')[urlObj.languages[k]]) {
+                                            hash["Etiqueta_" + urlObj.dimensions[j].id + "_" + urlObj.languages[k]] = _.keyBy(representation.name.text, 'lang')[urlObj.languages[k]].value;
+                                            copyHash["Etiqueta_" + urlObj.dimensions[j].id + "_" + urlObj.languages[k]] = _.keyBy(representation.name.text, 'lang')[urlObj.languages[k]].value;
+                                        } else {
+                                            hash["Etiqueta_" + urlObj.dimensions[j].id + "_" + urlObj.languages[k]] = '';
+                                            copyHash["Etiqueta_" + urlObj.dimensions[j].id + "_" + urlObj.languages[k]] = '';
+                                        }
+                                    }
+                                } else {
+                                    hash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
+                                    copyHash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
+                                }
                             }
                         }
                     } else {
@@ -93,7 +114,17 @@
                         hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
                         if (urlObj.labels) {
                             representation = _.keyBy(dataResponse.metadata.dimensions.dimension[j].dimensionValues.value, 'id')[hash[urlObj.dimensions[j].id]];
-                            hash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
+                            if (urlObj.allLanguages) {
+                                for (k = 0; k < urlObj.languages.length; k++) {
+                                    if (_.keyBy(representation.name.text, 'lang')[urlObj.languages[k]]) {
+                                        hash["Etiqueta_" + urlObj.dimensions[j].id + "_" + urlObj.languages[k]] = _.keyBy(representation.name.text, 'lang')[urlObj.languages[k]].value;
+                                    } else {
+                                        hash["Etiqueta_" + urlObj.dimensions[j].id + "_" + urlObj.languages[k]] = '';
+                                    }
+                                }
+                            } else {
+                                hash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
+                            }
                         }
                     }
                 }
@@ -134,7 +165,8 @@
                 url: urlDataset.trim(),
                 showMeasureColumns: $('#measureColumns').is(':checked'),
                 labels: $('#showLabels').is(':checked'),
-                recodeDates: $('#recodeDates').is(':checked')
+                recodeDates: $('#recodeDates').is(':checked'),
+                allLanguages: $('#allLanguages').is(':checked')
             };
 
             function isValidUrl(url) {
@@ -184,6 +216,10 @@
 
                     if (urlObj.recodeDates) {
                         urlObj.timeDimension = _.keyBy(resp.metadata.dimensions.dimension, 'type')['TIME_DIMENSION'].id;
+                    }
+
+                    if (urlObj.allLanguages) {
+                        urlObj.languages = resp.selectedLanguages.language;
                     }
 
                     urlObj.dimensions = dimensions;
