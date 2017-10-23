@@ -1,3 +1,11 @@
+// Based on 
+//  SDMX:
+//   org.siemac.metamac.core.common.util.SdmxTimeUtils
+//   org.siemac.metamac.core.common.constants.shared.SDMXCommonRegExpV2_1
+//   org.siemac.metamac.core.common.constants.shared.XsdDataTypesRegExp
+//  GPE:
+//   es.gobcan.istac.indicators.core.serviceimpl.util.GpeTimeUtils
+
 const START                                 = "^";
 const END                                   = "$";
 const GROUP_LEFT                            = "(";
