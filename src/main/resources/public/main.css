@@ -24,6 +24,10 @@
 	margin-right: auto;
 }
 
+.topImage {
+    width: 245px;
+}
+
 .bottom {
 	border-top: 2px solid rgb(214, 214, 214);
     position: relative;
