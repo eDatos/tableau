@@ -18,6 +18,16 @@ $.getJSON("config/properties.json", function(resp) {
     });
 });
 
+function onDownloadDecodeSelected(downloadDecodeRadio) {
+    $("#formContainer").show();
+    if(downloadDecodeRadio.value == "decode") {
+        $("#selectVariableLabel, #downloadContainer, #url, #labelCodelistUrl").hide();
+        $("#selectVariableInput").trigger('change');
+    } else {
+        $("#selectVariableLabel, #downloadContainer, #url, #labelCodelistUrl").show();
+    }
+}
+
 function chooseDataOption(radio) {
     var radioDivs = document.getElementsByClassName("radioDiv");
     $(".first-loader:visible").hide();

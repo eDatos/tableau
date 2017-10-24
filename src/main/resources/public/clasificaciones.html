@@ -29,35 +29,45 @@
         <div class="content">
             <div class="section" id="selectData">
                 <form>
-                    <h4 id="titleForm"></h4>
-                    <label id="labelCodelistUrl" class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="url"></label>
-                    <div class="row radioDiv" id="url" style="display: none">
-                            <label id="labelUrl" class="col-xs-2"></label>
-                            <input class="col-xs-10" name="url" id="inputUrl" />
+                    <div id="downloadDecodeContainer">
+                        <h4 id="downloadDecodeLabel"></h4>
+                        <label id="labelDownloadCodelist" class="radioLabel"><input type="radio" name="downloadDecode" onchange="onDownloadDecodeSelected(this)" value="download"></label>
+                        <label id="labelDecodeCodelist" class="radioLabel"><input type="radio" name="downloadDecode" onchange="onDownloadDecodeSelected(this)" value="decode"></label>
                     </div>
+                    <div id="formContainer" style="display: none;">
+                        <h4 id="titleForm"></h4>
+                        <label id="labelCodelistUrl" class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="url"></label>
+                        <div class="row radioDiv" id="url" style="display: none">
+                                <label id="labelUrl" class="col-xs-2"></label>
+                                <input class="col-xs-10" name="url" id="inputUrl" />
+                        </div>
 
-                    <label id="selectVariableLabel" class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="variableFamily" checked></label>
-                    <div id="loaderVariableFamily" class="loader first-loader" style="display: none"></div>
-                    <div class="selectDiv row radioDiv" id="variableFamily">
-                        <label id="families" class="col-xs-2"></label>
-                        <select class="col-xs-10" id="selectVariableFamily" style="width: 83.3%" onchange="searchVariables()"></select>
+                        <label id="selectVariableLabel" class="radioLabel"><input id="selectVariableInput" type="radio" name="datatype" onchange="chooseDataOption(this)" value="variableFamily" checked></label>
+                        <div id="loaderVariableFamily" class="loader first-loader" style="display: none"></div>
+                        <div class="selectDiv row radioDiv" id="variableFamily">
+                            <label id="families" class="col-xs-2"></label>
+                            <select class="col-xs-10" id="selectVariableFamily" style="width: 83.3%" onchange="searchVariables()"></select>
+                        </div>
+                        <div id="loaderVariable" class="loader" style="display: none"></div>
+                        <div class="selectDiv row radioDiv" style="display: none">
+                            <label id="variables" class="col-xs-2"></label>
+                            <select class="col-xs-10" id="selectVariable" onchange="searchCodelists()"></select>
+                        </div>
+                        <div id="loaderCodelist" class="loader" style="display: none"></div>
+                        <div class="selectDiv row radioDiv" style="display: none">
+                            <label id="codelists" class="col-xs-2"></label>
+                            <select class="col-xs-10" id="selectCodelist" onchange="updateDecodeCodelists()"></select>
+                        </div>
+                        <div id="loaderDecode" class="loader" style="display: none"></div>                        
+                        <div class="selectDiv row radioDiv" style="display: none">
+                            <label id="decodeCodelists" class="col-xs-2"></label>
+                            <select class="col-xs-10" id="selectDecodeCodelist"></select>
+                        </div>
                     </div>
-                    <div id="loaderVariable" class="loader" style="display: none"></div>
-                    <div class="selectDiv row radioDiv" style="display: none">
-                        <label id="variables" class="col-xs-2"></label>
-                        <select class="col-xs-10" id="selectVariable" onchange="searchCodelists()"></select>
-                    </div>
-                    <div id="loaderCodelist" class="loader" style="display: none"></div>
-                    <div class="selectDiv row radioDiv" style="display: none">
-                        <label id="codelists" class="col-xs-2"></label>
-                        <select class="col-xs-10" id="selectCodelist"></select>
-                    </div>
-
                     <div class="responseFormat">
                         <h4 id="responseFormat"></h4>
                         <label id="labelAllLanguages" class="radioLabel"><input type="checkbox" id="allLanguages"></label>
                     </div>
-
                     <div class="row" id="divButton">
                         <button type="button" class="btn btn-success col-xs-2 col-xs-offset-10" id="dataButton"></button>
                     </div>

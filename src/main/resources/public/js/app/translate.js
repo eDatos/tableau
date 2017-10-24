@@ -64,6 +64,9 @@ $.getJSON("translate/text.json", function(resp) {
     $("#liUrlDataset").text(text[language].dataset.li.url);
     $("#liOperationDataset").text(text[language].dataset.li.operation);
 
+    $("#downloadDecodeLabel").append(text[language].codelist.downloadDecodeLabel);
+    $("#labelDownloadCodelist").append(text[language].codelist.downloadCodelistOption);
+    $("#labelDecodeCodelist").append(text[language].codelist.decodeCodelistOption);    
     $("#labelCodelistUrl").append(text[language].codelist.url);
     $("#selectVariableLabel").append(text[language].codelist.selectVariable);
     $("#searchVariableFamiliesButton").text(text[language].codelist.searchVariableFamilies);
