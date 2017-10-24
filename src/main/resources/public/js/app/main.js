@@ -56,7 +56,7 @@ function searchIndicators() {
     if (endpoint[endpoint.length - 1] == "/") {
         endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
     }
-    $.getJSON(endpoint + "/indicators?limit=1000", function(resp) {
+    $.getJSON(endpoint + "/indicators?limit=1000&orderBy=ID ASC", function(resp) {
         $('#errorMsg').html("");
         if (resp.items) {
             for (var i = 0; i < resp.items.length; i++) {
@@ -64,7 +64,7 @@ function searchIndicators() {
             }
         }
         $('#selectIndicator').select2({
-            data: indicators,
+            data: _.sortBy(indicators, 'text'),
             dropdownAutoWidth : true,            
             width: '83.3%'
         });
@@ -85,7 +85,7 @@ function searchIndicatorsSystems() {
     if (endpoint[endpoint.length - 1] == "/") {
         endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
     }
-    $.getJSON(endpoint + "/indicatorsSystems?limit=1000", function(resp) {
+    $.getJSON(endpoint + "/indicatorsSystems?limit=1000&orderBy=ID ASC", function(resp) {
         $('#errorMsg').html("");
         if (resp.items) {
             for (var i = 0; i < resp.items.length; i++) {
@@ -93,7 +93,7 @@ function searchIndicatorsSystems() {
             }
         }
         $('#selectIndicatorSystem').select2({
-            data: indicatorsSystems,
+            data: _.sortBy(indicatorsSystems, 'text'),
             dropdownAutoWidth : true,            
             width: '83.3%'
         });
@@ -111,7 +111,7 @@ function searchIndicatorsInstances() {
     document.getElementById("selectIndicatorInstance").parentElement.style.display = "block";
     var indicatorsInstances = [];
     $('#selectIndicatorInstance').html('').select2();
-    url = endpoint + "/indicatorsSystems/" + document.getElementById("selectIndicatorSystem").value + "/indicatorsInstances?limit=1000";
+    url = endpoint + "/indicatorsSystems/" + document.getElementById("selectIndicatorSystem").value + "/indicatorsInstances?limit=1000&orderBy=ID ASC";
     $.getJSON(url, function(resp){
         if (resp.items) {
             for (var i = 0; i < resp.items.length; i++) {
@@ -119,7 +119,7 @@ function searchIndicatorsInstances() {
             }
         }
         $('#selectIndicatorInstance').select2({
-            data: indicatorsInstances,
+            data: _.sortBy(indicatorsInstances, 'text'),
             dropdownAutoWidth : true,            
             width: '83.3%'
         });
@@ -141,7 +141,7 @@ function searchVariableFamilies() {
     if (endpoint[endpoint.length - 1] == "/") {
         endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
     }
-    url = endpoint + "/variablefamilies.json?limit=1000";
+    url = endpoint + "/variablefamilies.json?limit=1000&orderBy=ID ASC";
     $.getJSON(url, function(resp){
         if (resp.variableFamily) {
             for (var i = 0; i < resp.variableFamily.length; i++) {
@@ -149,7 +149,7 @@ function searchVariableFamilies() {
             }
         }
         $('#selectVariableFamily').select2({
-            data: variableFamilies,
+            data: _.sortBy(variableFamilies, 'text'),
             dropdownAutoWidth : true,            
             width: '83.3%'
         });
@@ -168,7 +168,7 @@ function searchVariables() {
     var variables = [];
     $("#selectCodelist").parent().hide();
     $("#selectVariable").html('').select2();
-    url = endpoint + "/variablefamilies/" + document.getElementById("selectVariableFamily").value + "/variables.json?limit=1000";
+    url = endpoint + "/variablefamilies/" + document.getElementById("selectVariableFamily").value + "/variables.json?limit=1000&orderBy=ID ASC";
     $.getJSON(url, function(resp) {
         if (resp.variable) {
             for (var i = 0; i < resp.variable.length; i++) {
@@ -176,7 +176,7 @@ function searchVariables() {
             }
         }
         $("#selectVariable").select2({
-            data: variables,
+            data: _.sortBy(variables, 'text'),
             dropdownAutoWidth : true,
             width: '83.3%'
         });
@@ -194,7 +194,7 @@ function searchCodelists() {
     document.getElementById("selectCodelist").parentElement.style.display = "block";
     var codelists = [];
     $("#selectCodelist").html('').select2();
-    url = endpoint + '/codelists.json?limit=1000&query=VARIABLE_URN EQ "' + $("#selectVariable").val() +'" AND LATEST EQ "true"';
+    url = endpoint + '/codelists.json?limit=1000&orderBy=ID ASC&query=VARIABLE_URN EQ "' + $("#selectVariable").val() +'" AND LATEST EQ "true"';
     $.getJSON(url, function(resp) {
         if (resp.codelist) {
             for (var i = 0; i < resp.codelist.length; i++) {
@@ -202,7 +202,7 @@ function searchCodelists() {
             }
         }
         $("#selectCodelist").select2({
-            data: codelists,
+            data: _.sortBy(codelists, 'text'),
             dropdownAutoWidth : true,
             width: '83.3%'
         });
@@ -223,14 +223,14 @@ function searchOperations() {
     if (endpoint[endpoint.length - 1] == "/") {
         endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
     }
-    $.getJSON(endpoint + "/operations.json?query=STATUS EQ \"" + properties.operations.status.production + "\"&limit=1000", function(resp) {
+    $.getJSON(endpoint + "/operations.json?query=STATUS EQ \"" + properties.operations.status.production + "\"&limit=1000&orderBy=ID ASC", function(resp) {
         if (resp.operation) {
             for (var i = 0; i < resp.operation.length; i++) {
                 operations[i] = {id: resp.operation[i].urn, text: _.keyBy(resp.operation[i].name.text, 'lang')[language].value};
             }
         }
         $("#selectOperation").select2({ 
-            data: operations,
+            data: _.sortBy(operations, 'text'),
             dropdownAutoWidth: true,
             width: '83.3%'
         });
@@ -251,7 +251,7 @@ function searchDatasets() {
     if (endpoint[endpoint.length - 1] == "/") {
         endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
     }
-    url = endpoint + "/datasets.json?limit=1000&query=STATISTICAL_OPERATION_URN EQ '" + $("#selectOperation").val() + "'";
+    url = endpoint + "/datasets.json?limit=1000&orderBy=ID ASC&query=STATISTICAL_OPERATION_URN EQ '" + $("#selectOperation").val() + "'";
     $.getJSON(url, function(resp) {
         if (resp.dataset) {
             for (var i = 0; i < resp.dataset.length; i++) {
@@ -261,7 +261,7 @@ function searchDatasets() {
             }
         }
         $("#selectDataset").select2({
-            data: _.uniqBy(datasets, 'id'),
+            data: _.sortBy(_.uniqBy(datasets, 'id'), 'text'),
             dropdownAutoWidth: true,
             width: '83.3%'
         });
