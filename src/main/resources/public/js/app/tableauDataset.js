@@ -5,6 +5,8 @@
     myConnector.getSchema = function (schemaCallback) {
         var urlObj = JSON.parse(tableau.connectionData);
         var cols = [];
+        var tables = [];
+
         for (i = 0; i < Object.keys(urlObj.dimensions).length; i++) {
             if (urlObj.measureColumns && urlObj.dimensions[i].id == urlObj.measureColumns.dimension) {
                 for (j = 0; j < urlObj.measureColumns.values.length; j++) {
@@ -14,17 +16,28 @@
                     });
                 }
             } else {
+                var dimensionCols = [];
+
                 if (urlObj.recodeDates && urlObj.timeDimension == urlObj.dimensions[i].id) {
-                    cols.push({ id: "Fecha", alias: "Fecha", columnRole: "dimension", dataType: tableau.dataTypeEnum.date });
+                    dimensionCols.push({ id: "Fecha", alias: "Fecha", columnRole: "dimension", dataType: tableau.dataTypeEnum.date });
                 }
+
                 cols.push({ id: urlObj.dimensions[i].id, alias: urlObj.dimensions[i].label, columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+                dimensionCols.push({ id: urlObj.dimensions[i].id, alias: urlObj.dimensions[i].label, columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
 
                 if (urlObj.labels) {
-                    cols.push({
+                    dimensionCols.push({
                         id: "Etiqueta_" + urlObj.dimensions[i].id, alias: "Etiqueta " + urlObj.dimensions[i].label, columnRole: "dimension",
                         dataType: tableau.dataTypeEnum.string
                     });
                 }
+
+                var table = {
+                    id: urlObj.dimensions[i].id,
+                    alias: urlObj.dimensions[i].label,
+                    cols: dimensionCols
+                }
+                tables.push(table);
             }
         }
 
@@ -37,8 +50,9 @@
             alias: tableau.connectionName,
             columns: cols
         };
+        tables.push(tableInfo);
 
-        schemaCallback([tableInfo]);
+        schemaCallback(tables);
     };
 
     myConnector.getData = function (table, doneCallback) {
