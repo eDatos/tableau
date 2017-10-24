@@ -35,7 +35,7 @@
                 var table = {
                     id: urlObj.dimensions[i].id,
                     alias: urlObj.dimensions[i].label,
-                    cols: dimensionCols
+                    columns: dimensionCols
                 }
                 tables.push(table);
             }
@@ -86,32 +86,34 @@
                         if (urlObj.measureColumns.dimension == urlObj.dimensions[j].id) {
                             copyHash[urlObj.measureColumns.dimension + "_" + _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code] = observations[i];
                         } else {
-                            if (urlObj.recodeDates && urlObj.dimensions[j].id == urlObj.timeDimension) {
+                            if (urlObj.recodeDates && urlObj.dimensions[j].id == urlObj.timeDimension && table.tableInfo.id === urlObj.timeDimension) {
                                 date = calculateDate(_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code);
                                 hash["Fecha"] = date;
                                 copyHash["Fecha"] = date;
                             }
-                            hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
-                            copyHash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
-                            if (urlObj.labels) {
+                            if (urlObj.dimensions[j].id === table.tableInfo.id || table.tableInfo.id === 'indicatorData') {
+                                hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
+                                copyHash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
+                            }
+                            if (urlObj.labels && urlObj.dimensions[j].id === table.tableInfo.id) {
                                 representation = _.keyBy(dataResponse.metadata.dimensions.dimension[j].dimensionValues.value, 'id')[hash[urlObj.dimensions[j].id]];
                                 hash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
                                 copyHash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
                             }
                         }
                     } else {
-                        if (urlObj.recodeDates && urlObj.dimensions[j].id == urlObj.timeDimension) {
+                        if (urlObj.recodeDates && urlObj.dimensions[j].id == urlObj.timeDimension && urlObj.timeDimension === table.tableInfo.id) {
                             date = calculateDate(_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code)
                             hash["Fecha"] = date;
                         }
                         hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
-                        if (urlObj.labels) {
+                        if (urlObj.labels && urlObj.dimensions[j].id === table.tableInfo.id) {
                             representation = _.keyBy(dataResponse.metadata.dimensions.dimension[j].dimensionValues.value, 'id')[hash[urlObj.dimensions[j].id]];
                             hash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
                         }
                     }
                 }
-                if (urlObj.measureColumns) {
+                if (urlObj.measureColumns && table.tableInfo.id === "indicatorData") {
                     var keyHash = _.values(hash).join(',');
                     if (tableData[keyHash]) {
                         _.extend(tableData[keyHash], copyHash);
