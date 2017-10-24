@@ -4,82 +4,117 @@
 
     myConnector.getSchema = function (schemaCallback) {
         var urlObj = JSON.parse(tableau.connectionData);
-        
+
         var cols = [];
+
+        cols.push({ id: "Codigo_geografico", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+        cols.push({ id: "Codigo_temporal", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
 
         if (urlObj.showMeasureColumns) {
             for (i = 0; i < urlObj.measureColumns.length; i++) {
-                cols.push({ id : urlObj.observationId + "_" + urlObj.measureColumns[i], dataType : tableau.dataTypeEnum.float })
+                cols.push({ id: urlObj.observationId + "_" + urlObj.measureColumns[i], dataType: tableau.dataTypeEnum.float })
             }
         } else {
-            cols.push({ id : "Codigo_medida", columnRole : "dimension", dataType : tableau.dataTypeEnum.string });
+            cols.push({ id: "Codigo_medida", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+            cols.push({ id: urlObj.observationId, alias: urlObj.name, dataType: tableau.dataTypeEnum.float });
+
+            var measureColumns = [];
+
+            measureColumns.push({ id: "Codigo_medida", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+
+            var tableMeasure = {
+                id: "measure",
+                alias: "Medida",
+                columns: measureColumns
+            }
         }
 
-        cols.push({ id : "Codigo_geografico", columnRole : "dimension", dataType : tableau.dataTypeEnum.string });
+        var geographicCols = [];
+        geographicCols.push({ id: "Codigo_geografico", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+
         if (urlObj.granularity) {
-            cols.push({ id : "Granularidad_geografica", columnRole : "dimension", dataType : tableau.dataTypeEnum.string});
+            geographicCols.push({ id: "Granularidad_geografica", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
         }
+
         if (urlObj.labels) {
             if (!urlObj.allLanguages) {
-                cols.push({ id : "Etiqueta_geografica", columnRole : "dimension", dataType : tableau.dataTypeEnum.string});
+                geographicCols.push({ id: "Etiqueta_geografica", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
             } else {
                 for (i = 0; i < urlObj.geographicalLanguages.length; i++) {
-                    cols.push({ id : "Etiqueta_geografica_" + urlObj.geographicalLanguages[i], columnRole : "dimension", dataType : tableau.dataTypeEnum.string});
+                    geographicCols.push({ id: "Etiqueta_geografica_" + urlObj.geographicalLanguages[i], columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
                 }
             }
         }
 
+        var tableGeographic = {
+            id: "geographic",
+            alias: "Geográfica",
+            columns: geographicCols
+        };
+
+        var timeCols = [];
+
         if (urlObj.recodeDates) {
-            cols.push({ id : "Fecha", columnRole : "dimension", dataType : tableau.dataTypeEnum.date });
+            timeCols.push({ id: "Fecha", columnRole: "dimension", dataType: tableau.dataTypeEnum.date });
         }
-        cols.push({ id : "Codigo_temporal", columnRole : "dimension", dataType : tableau.dataTypeEnum.string });
+        timeCols.push({ id: "Codigo_temporal", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
 
         if (urlObj.granularity) {
-            cols.push({ id : "Granularidad_temporal", columnRole : "dimension", dataType : tableau.dataTypeEnum.string});
+            timeCols.push({ id: "Granularidad_temporal", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
         }
         if (urlObj.labels) {
             if (!urlObj.allLanguages) {
-                cols.push({ id : "Etiqueta_temporal", columnRole : "dimension", dataType: tableau.dataTypeEnum.string});
+                timeCols.push({ id: "Etiqueta_temporal", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
             } else {
                 for (i = 0; i < urlObj.timeLanguages.length; i++) {
-                    cols.push({ id : "Etiqueta_temporal_" + urlObj.timeLanguages[i], columnRole : "dimension", dataType: tableau.dataTypeEnum.string});
+                    timeCols.push({ id: "Etiqueta_temporal_" + urlObj.timeLanguages[i], columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
                 }
             }
         }
-        if (!urlObj.showMeasureColumns) {
-            cols.push({ id : urlObj.observationId, alias: urlObj.name, dataType : tableau.dataTypeEnum.float });
-        }
+
+        var tableTime = {
+            id: "time",
+            alias: "Temporal",
+            columns: timeCols
+        };
 
         var tableInfo = {
-            id : "indicatorData",
-            alias : tableau.connectionName,
-            columns : cols
+            id: "indicatorData",
+            alias: tableau.connectionName,
+            columns: cols
         };
-    
-        schemaCallback([tableInfo]);
+
+        var tables = [tableInfo, tableGeographic, tableTime];
+
+        if (!urlObj.showMeasureColumns) {
+            tables.push(tableMeasure);
+        }
+
+        schemaCallback(tables);
     };
 
-    myConnector.getData = function(table, doneCallback) {
+    myConnector.getData = function (table, doneCallback) {
         var urlObj = JSON.parse(tableau.connectionData);
         var promises = [];
 
-        if (urlObj.granularity || urlObj.labels || urlObj.recodeDates) {
+        if ((urlObj.granularity || urlObj.labels || urlObj.recodeDates) && table.tableInfo.id != "indicatorData" && table.tableInfo.id != "measure") {
             promises.push($.getJSON(urlObj.url.substring(0, urlObj.url.indexOf('/data'))));
         }
         promises.push($.getJSON(urlObj.url));
-        
-        $.when.apply($, promises).then(function() {
+
+        $.when.apply($, promises).then(function () {
+
             var indexArguments = 0;
-            if (urlObj.granularity || urlObj.labels || urlObj.recodeDates) {
+            if ((urlObj.granularity || urlObj.labels || urlObj.recodeDates) && table.tableInfo.id != "indicatorData" && table.tableInfo.id != "measure") {
                 var dimensions = arguments[indexArguments][0].dimension;
-                
+
                 var indexedGeographicalRepresentations = _.keyBy(dimensions.GEOGRAPHICAL.representation, 'code');
                 var indexedTimeRepresentations = _.keyBy(dimensions.TIME.representation, 'code');
 
                 indexArguments++;
             }
             var tableData = [];
-            
+
             var dataResponse;
             if (indexArguments != 0) {
                 dataResponse = arguments[indexArguments][0];
@@ -93,34 +128,52 @@
                 for (var j = 0, lengthTime = dataResponse.dimension.TIME.representation.size; j < lengthTime; j++) {
                     if (urlObj.showMeasureColumns) {
                         var hash = {};
-                        hash.Codigo_geografico = geographicalDimensions[i];
+                        if (table.tableInfo.id == "indicatorData" || table.tableInfo.id == "geographic") {
+                            hash.Codigo_geografico = geographicalDimensions[i];
+                        }
 
-                        if (urlObj.recodeDates) {
+                        if (urlObj.recodeDates && table.tableInfo.id == "time") {
                             var granularity = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
                             var date = timeDimensions[j];
                             hash.Fecha = recodeDates(date, granularity);
                         }
-                        hash.Codigo_temporal = timeDimensions[j];
+                        if (table.tableInfo.id == "indicatorData" || table.tableInfo.id == "time") {
+                            hash.Codigo_temporal = timeDimensions[j];
+                        }
 
-                        for (var k = 0, lengthMeasure = dataResponse.dimension.MEASURE.representation.size; k < lengthMeasure; k++) {
-                            hash[urlObj.observationId + '_' + text[language].indicator.measures[measureDimensions[k]]] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
+                        if (table.tableInfo.id == "indicatorData") {
+                            for (var k = 0, lengthMeasure = dataResponse.dimension.MEASURE.representation.size; k < lengthMeasure; k++) {
+                                hash[urlObj.observationId + '_' + text[language].indicator.measures[measureDimensions[k]]] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
+                            }
                         }
 
                         if (urlObj.granularity) {
-                            hash.Granularidad_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].granularityCode;
-                            hash.Granularidad_temporal = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
+                            if (table.tableInfo.id == "geographic") {
+                                hash.Granularidad_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].granularityCode;
+                            }
+                            if (table.tableInfo.id == "time") {
+                                hash.Granularidad_temporal = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
+                            }
                         }
-                        
+
                         if (urlObj.labels) {
                             if (!urlObj.allLanguages) {
-                                hash.Etiqueta_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].title.__default__;
-                                hash.Etiqueta_temporal = indexedTimeRepresentations[timeDimensions[j]].title.__default__;
-                            } else {
-                                for (l = 0; l < urlObj.geographicalLanguages.length; l++) {
-                                    hash['Etiqueta_geografica_' + urlObj.geographicalLanguages[l]] = indexedGeographicalRepresentations[hash.Codigo_geografico].title[urlObj.geographicalLanguages[l]];
+                                if (table.tableInfo.id == "geographic") {
+                                    hash.Etiqueta_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].title.__default__;
                                 }
-                                for (l = 0; l < urlObj.timeLanguages.length; l++) {
-                                    hash['Etiqueta_temporal_' + urlObj.timeLanguages[l]] = indexedTimeRepresentations[timeDimensions[j]].title[urlObj.timeLanguages[l]];
+                                if (table.tableInfo.id == "time") {
+                                    hash.Etiqueta_temporal = indexedTimeRepresentations[timeDimensions[j]].title.__default__;
+                                }
+                            } else {
+                                if (table.tableInfo.id == "geographic") {
+                                    for (l = 0; l < urlObj.geographicalLanguages.length; l++) {
+                                        hash['Etiqueta_geografica_' + urlObj.geographicalLanguages[l]] = indexedGeographicalRepresentations[hash.Codigo_geografico].title[urlObj.geographicalLanguages[l]];
+                                    }
+                                }
+                                if (table.tableInfo.id == "time") {
+                                    for (l = 0; l < urlObj.timeLanguages.length; l++) {
+                                        hash['Etiqueta_temporal_' + urlObj.timeLanguages[l]] = indexedTimeRepresentations[timeDimensions[j]].title[urlObj.timeLanguages[l]];
+                                    }
                                 }
                             }
                         }
@@ -129,33 +182,54 @@
                     } else {
                         for (var k = 0, lengthMeasure = dataResponse.dimension.MEASURE.representation.size; k < lengthMeasure; k++) {
                             var hash = {};
-                            hash.Codigo_geografico = geographicalDimensions[i];
-                            
-                            if (urlObj.recodeDates) {
+                            if (table.tableInfo.id == "indicatorData" || table.tableInfo.id == "geographic") {
+                                hash.Codigo_geografico = geographicalDimensions[i];
+                            }
+
+                            if (urlObj.recodeDates && table.tableInfo.id == "time") {
                                 var granularity = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
                                 var date = timeDimensions[j];
                                 hash.Fecha = recodeDates(date, granularity);
                             }
-                            hash.Codigo_temporal = timeDimensions[j];
+                            if (table.tableInfo.id == "indicatorData" || table.tableInfo.id == "time") {
+                                hash.Codigo_temporal = timeDimensions[j];
+                            }
 
-                            hash.Codigo_medida = measureDimensions[k];
-                            hash[urlObj.observationId] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
+                            if (table.tableInfo.id == "indicatorData" || table.tableInfo.id == "measure") {
+                                hash.Codigo_medida = measureDimensions[k];
+                            }
+
+                            if (table.tableInfo.id == "indicatorData") {
+                                hash[urlObj.observationId] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
+                            }
 
                             if (urlObj.granularity) {
-                                hash.Granularidad_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].granularityCode;
-                                hash.Granularidad_temporal = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
+                                if (table.tableInfo.id == "geographic") {
+                                    hash.Granularidad_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].granularityCode;
+                                }
+                                if (table.tableInfo.id == "time") {
+                                    hash.Granularidad_temporal = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
+                                }
                             }
 
                             if (urlObj.labels) {
                                 if (!urlObj.allLanguages) {
-                                    hash.Etiqueta_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].title.__default__;
-                                    hash.Etiqueta_temporal = indexedTimeRepresentations[timeDimensions[j]].title.__default__;
-                                } else {
-                                    for (l = 0; l < urlObj.geographicalLanguages.length; l++) {
-                                        hash['Etiqueta_geografica_' + urlObj.geographicalLanguages[l]] = indexedGeographicalRepresentations[hash.Codigo_geografico].title[urlObj.geographicalLanguages[l]];
+                                    if (table.tableInfo.id == "geographic") {
+                                        hash.Etiqueta_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].title.__default__;
                                     }
-                                    for (l = 0; l < urlObj.timeLanguages.length; l++) {
-                                        hash['Etiqueta_temporal_' + urlObj.timeLanguages[l]] = indexedTimeRepresentations[timeDimensions[j]].title[urlObj.timeLanguages[l]];
+                                    if (table.tableInfo.id == "time") {
+                                        hash.Etiqueta_temporal = indexedTimeRepresentations[timeDimensions[j]].title.__default__;
+                                    }
+                                } else {
+                                    if (table.tableInfo.id == "geographic") {
+                                        for (l = 0; l < urlObj.geographicalLanguages.length; l++) {
+                                            hash['Etiqueta_geografica_' + urlObj.geographicalLanguages[l]] = indexedGeographicalRepresentations[hash.Codigo_geografico].title[urlObj.geographicalLanguages[l]];
+                                        }
+                                    }
+                                    if (table.tableInfo.id == "time") {
+                                        for (l = 0; l < urlObj.timeLanguages.length; l++) {
+                                            hash['Etiqueta_temporal_' + urlObj.timeLanguages[l]] = indexedTimeRepresentations[timeDimensions[j]].title[urlObj.timeLanguages[l]];
+                                        }
                                     }
                                 }
                             }
@@ -164,16 +238,16 @@
                     }
                 }
             }
-    
+
             table.appendRows(tableData);
             doneCallback();
-        }, function() {
+        }, function () {
             doneCallback();
         })
     };
 
     function recodeDates(date, granularity) {
-        switch(granularity) {
+        switch (granularity) {
             case "YEARLY": {
                 if (date.match(new RegExp(START + GPE_YEARLY_PATTERN + END))) {
                     return "01-01-" + date;
@@ -231,7 +305,7 @@
 
     $(document).ready(function () {
         $("#dataButton").click(function () {
-            switch($('input[name="datatype"]:checked').val()) {
+            switch ($('input[name="datatype"]:checked').val()) {
                 case 'url':
                     urlIndicator = $('#inputUrl').val();
                     tableau.connectionName = text[language].indicator.name;
@@ -248,16 +322,16 @@
                     tableau.connectionName = text[language].indicator.name;
                     break;
                 case 'indicatorInstance':
-                    var endpoint =  properties.endpoint.indicators;
+                    var endpoint = properties.endpoint.indicators;
                     if (endpoint[endpoint.length - 1] == "/") {
                         endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
                     }
                     urlIndicator = endpoint + '/indicatorsSystems/' + $('#selectIndicatorSystem').val() + '/indicatorsInstances/' +
                         $('#selectIndicatorInstance').val() + '/data';
-                        if ($('#selectIndicatorInstance').val() == null || $('#selectIndicatorInstance').val() == undefined || $('#selectIndicatorInstance').val().length == 0) {
-                            urlIndicator = '';
-                        }
-                        tableau.connectionName = text[language].indicator.instance;
+                    if ($('#selectIndicatorInstance').val() == null || $('#selectIndicatorInstance').val() == undefined || $('#selectIndicatorInstance').val().length == 0) {
+                        urlIndicator = '';
+                    }
+                    tableau.connectionName = text[language].indicator.instance;
                     break;
             }
             var urlObj = {
@@ -276,7 +350,7 @@
 
             if (isValidUrl(urlObj.url)) {
                 $('#errorMsg').html("");
-                $.getJSON(urlObj.url.substring(0, urlObj.url.indexOf('/data')), function(resp) {
+                $.getJSON(urlObj.url.substring(0, urlObj.url.indexOf('/data')), function (resp) {
                     urlObj.name = resp.title.__default__;
                     if ($('input[name="datatype"]:checked').val() != "indicatorInstance") {
                         urlObj.observationId = resp.code;
@@ -313,7 +387,7 @@
 
                     tableau.connectionData = JSON.stringify(urlObj);
                     tableau.submit();
-                }).error(function() {
+                }).error(function () {
                     $("#errorMsg").html(errorMsg[language].error.submit);
                 });
             } else {

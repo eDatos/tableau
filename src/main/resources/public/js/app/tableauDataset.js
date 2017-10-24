@@ -5,6 +5,8 @@
     myConnector.getSchema = function (schemaCallback) {
         var urlObj = JSON.parse(tableau.connectionData);
         var cols = [];
+        var tables = [];
+
         for (i = 0; i < Object.keys(urlObj.dimensions).length; i++) {
             if (urlObj.measureColumns && urlObj.dimensions[i].id == urlObj.measureColumns.dimension) {
                 for (j = 0; j < urlObj.measureColumns.values.length; j++) {
@@ -14,26 +16,37 @@
                     });
                 }
             } else {
+                var dimensionCols = [];
+
                 if (urlObj.recodeDates && urlObj.timeDimension == urlObj.dimensions[i].id) {
-                    cols.push({ id: "Fecha", alias: "Fecha", columnRole: "dimension", dataType: tableau.dataTypeEnum.date });
+                    dimensionCols.push({ id: "Fecha", alias: "Fecha", columnRole: "dimension", dataType: tableau.dataTypeEnum.date });
                 }
+
                 cols.push({ id: urlObj.dimensions[i].id, alias: urlObj.dimensions[i].label, columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+                dimensionCols.push({ id: urlObj.dimensions[i].id, alias: urlObj.dimensions[i].label, columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
 
                 if (urlObj.labels) {
                     if (urlObj.allLanguages) {
                         for (j = 0; j < urlObj.languages.length; j++) {
-                            cols.push({
+                            dimensionCols.push({
                                 id: "Etiqueta_" + urlObj.dimensions[i].id + "_" + urlObj.languages[j], alias: "Etiqueta " + urlObj.dimensions[i].label + "_" + urlObj.languages[j], columnRole: "dimension",
                                 dataType: tableau.dataTypeEnum.string
                             });
                         }
                     } else {
-                        cols.push({
+                        dimensionCols.push({
                             id: "Etiqueta_" + urlObj.dimensions[i].id, alias: "Etiqueta " + urlObj.dimensions[i].label, columnRole: "dimension",
                             dataType: tableau.dataTypeEnum.string
                         });
                     }
                 }
+
+                var table = {
+                    id: urlObj.dimensions[i].id,
+                    alias: urlObj.dimensions[i].label,
+                    columns: dimensionCols
+                }
+                tables.push(table);
             }
         }
 
@@ -46,8 +59,9 @@
             alias: tableau.connectionName,
             columns: cols
         };
+        tables.push(tableInfo);
 
-        schemaCallback([tableInfo]);
+        schemaCallback(tables);
     };
 
     myConnector.getData = function (table, doneCallback) {
@@ -81,14 +95,16 @@
                         if (urlObj.measureColumns.dimension == urlObj.dimensions[j].id) {
                             copyHash[urlObj.measureColumns.dimension + "_" + _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code] = observations[i];
                         } else {
-                            if (urlObj.recodeDates && urlObj.dimensions[j].id == urlObj.timeDimension) {
+                            if (urlObj.recodeDates && urlObj.dimensions[j].id == urlObj.timeDimension && table.tableInfo.id === urlObj.timeDimension) {
                                 date = calculateDate(_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code);
                                 hash["Fecha"] = date;
                                 copyHash["Fecha"] = date;
                             }
-                            hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
-                            copyHash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
-                            if (urlObj.labels) {
+                            if (urlObj.dimensions[j].id === table.tableInfo.id || table.tableInfo.id === 'indicatorData') {
+                                hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
+                                copyHash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
+                            }
+                            if (urlObj.labels && urlObj.dimensions[j].id === table.tableInfo.id) {
                                 representation = _.keyBy(dataResponse.metadata.dimensions.dimension[j].dimensionValues.value, 'id')[hash[urlObj.dimensions[j].id]];
                                 if (urlObj.allLanguages) {
                                     for (k = 0; k < urlObj.languages.length; k++) {
@@ -107,12 +123,12 @@
                             }
                         }
                     } else {
-                        if (urlObj.recodeDates && urlObj.dimensions[j].id == urlObj.timeDimension) {
+                        if (urlObj.recodeDates && urlObj.dimensions[j].id == urlObj.timeDimension && urlObj.timeDimension === table.tableInfo.id) {
                             date = calculateDate(_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code)
                             hash["Fecha"] = date;
                         }
                         hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
-                        if (urlObj.labels) {
+                        if (urlObj.labels && urlObj.dimensions[j].id === table.tableInfo.id) {
                             representation = _.keyBy(dataResponse.metadata.dimensions.dimension[j].dimensionValues.value, 'id')[hash[urlObj.dimensions[j].id]];
                             if (urlObj.allLanguages) {
                                 for (k = 0; k < urlObj.languages.length; k++) {
@@ -128,7 +144,7 @@
                         }
                     }
                 }
-                if (urlObj.measureColumns) {
+                if (urlObj.measureColumns && table.tableInfo.id === "indicatorData") {
                     var keyHash = _.values(hash).join(',');
                     if (tableData[keyHash]) {
                         _.extend(tableData[keyHash], copyHash);

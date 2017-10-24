@@ -24,6 +24,22 @@
 	margin-right: auto;
 }
 
+.topImage {
+    width: 245px;
+}
+
+.bottom {
+	border-top: 2px solid rgb(214, 214, 214);
+    position: relative;
+    top: 30px;    
+}
+
+.footerImage {
+    min-width: 4cm;
+    width: 6cm;
+}
+
+
 .section {
 	font-family: "Droid Sans", sans-serif;
 	font-size: 15px;
