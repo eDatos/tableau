@@ -8,42 +8,46 @@
         for (i = 0; i < Object.keys(urlObj.dimensions).length; i++) {
             if (urlObj.measureColumns && urlObj.dimensions[i].id == urlObj.measureColumns.dimension) {
                 for (j = 0; j < urlObj.measureColumns.values.length; j++) {
-                    cols.push({ id : urlObj.measureColumns.dimension + "_" + urlObj.measureColumns.values[j].id, alias: urlObj.measureColumns.values[j].label,
-                        dataType : tableau.dataTypeEnum.float });
+                    cols.push({
+                        id: urlObj.measureColumns.dimension + "_" + urlObj.measureColumns.values[j].id, alias: urlObj.measureColumns.values[j].label,
+                        dataType: tableau.dataTypeEnum.float
+                    });
                 }
             } else {
                 if (urlObj.recodeDates && urlObj.timeDimension == urlObj.dimensions[i].id) {
-                    cols.push({ id : "Fecha", alias: "Fecha", columnRole : "dimension", dataType : tableau.dataTypeEnum.date });
+                    cols.push({ id: "Fecha", alias: "Fecha", columnRole: "dimension", dataType: tableau.dataTypeEnum.date });
                 }
-                cols.push({ id : urlObj.dimensions[i].id, alias: urlObj.dimensions[i].label, columnRole : "dimension", dataType : tableau.dataTypeEnum.string });
+                cols.push({ id: urlObj.dimensions[i].id, alias: urlObj.dimensions[i].label, columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
 
                 if (urlObj.labels) {
-                    cols.push({ id : "Etiqueta_" + urlObj.dimensions[i].id, alias: "Etiqueta " + urlObj.dimensions[i].label, columnRole : "dimension", 
-                        dataType : tableau.dataTypeEnum.string });
+                    cols.push({
+                        id: "Etiqueta_" + urlObj.dimensions[i].id, alias: "Etiqueta " + urlObj.dimensions[i].label, columnRole: "dimension",
+                        dataType: tableau.dataTypeEnum.string
+                    });
                 }
             }
         }
 
         if (!urlObj.measureColumns) {
-            cols.push({ id : urlObj.observationId, alias: urlObj.name, dataType : tableau.dataTypeEnum.float });
+            cols.push({ id: urlObj.observationId, alias: urlObj.name, dataType: tableau.dataTypeEnum.float });
         }
 
         var tableInfo = {
-            id : "indicatorData",
-            alias : tableau.connectionName,
-            columns : cols
+            id: "indicatorData",
+            alias: tableau.connectionName,
+            columns: cols
         };
-    
+
         schemaCallback([tableInfo]);
     };
 
-    myConnector.getData = function(table, doneCallback) {
+    myConnector.getData = function (table, doneCallback) {
         var urlObj = JSON.parse(tableau.connectionData);
         var promises = [];
-        
+
         promises.push($.getJSON(urlObj.url));
-        
-        $.when.apply($, promises).then(function() {
+
+        $.when.apply($, promises).then(function () {
             var tableData = [];
             var dataResponse = arguments[0];
             var observations = dataResponse.data.observations.split(" | ");
@@ -51,7 +55,7 @@
             for (i = 0; i < Object.keys(urlObj.dimensions).length; i++) {
                 total = total * dataResponse.data.dimensions.dimension[i].representations.total;
             }
-            for ( i = 0; i < observations.length; i++) {
+            for (i = 0; i < observations.length; i++) {
                 var hash = {};
                 var copyHash = {};
                 if (!urlObj.measureColumns) {
@@ -107,7 +111,7 @@
 
             table.appendRows(_.values(tableData));
             doneCallback();
-        }, function() {
+        }, function () {
             doneCallback();
         })
     };
@@ -116,7 +120,7 @@
 
     $(document).ready(function () {
         $("#dataButton").click(function () {
-            switch($('input[name="datatype"]:checked').val()) {
+            switch ($('input[name="datatype"]:checked').val()) {
                 case 'url':
                     urlDataset = $('#inputUrl').val();
                     tableau.connectionName = text[language].dataset.name;
@@ -150,7 +154,7 @@
                         urlObj.url = urlObj.url + ".json";
                     }
                 }
-                $.getJSON(urlObj.url, function(resp) {
+                $.getJSON(urlObj.url, function (resp) {
                     tableau.connectionName = tableau.connectionName + _.keyBy(resp.name.text, 'lang')[language].value;
                     urlObj.name = _.keyBy(resp.name.text, 'lang')[language].value;
                     urlObj.observationId = resp.id;
@@ -173,7 +177,7 @@
                     var dimensions = {};
                     for (i = 0; i < resp.metadata.dimensions.total; i++) {
                         dimensions[i] = {
-                            id: resp.metadata.dimensions.dimension[i].id, 
+                            id: resp.metadata.dimensions.dimension[i].id,
                             label: _.keyBy(resp.metadata.dimensions.dimension[i].name.text, 'lang')[language].value
                         }
                     }
@@ -185,7 +189,7 @@
                     urlObj.dimensions = dimensions;
                     tableau.connectionData = JSON.stringify(urlObj);
                     tableau.submit();
-                }).error(function() {
+                }).error(function () {
                     $("#errorMsg").html(errorMsg[language].error.submit);
                 });
             } else {
