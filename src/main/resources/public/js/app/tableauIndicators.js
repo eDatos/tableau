@@ -96,146 +96,97 @@
     myConnector.getData = function (table, doneCallback) {
         var urlObj = JSON.parse(tableau.connectionData);
         var promises = [];
-
-        if ((urlObj.granularity || urlObj.labels || urlObj.recodeDates) && table.tableInfo.id != "indicatorData" && table.tableInfo.id != "measure") {
-            promises.push($.getJSON(urlObj.url.substring(0, urlObj.url.indexOf('/data'))));
-        }
-        promises.push($.getJSON(urlObj.url));
+        var isMainTable = table.tableInfo.id == "indicatorData";
+        if (isMainTable) {
+            promises.push($.getJSON(urlObj.url));
+         } else {
+             promises.push($.getJSON(urlObj.url.substring(0, urlObj.url.indexOf('/data'))));
+         }
+            
 
         $.when.apply($, promises).then(function () {
 
-            var indexArguments = 0;
-            if ((urlObj.granularity || urlObj.labels || urlObj.recodeDates) && table.tableInfo.id != "indicatorData" && table.tableInfo.id != "measure") {
-                var dimensions = arguments[indexArguments][0].dimension;
-
-                var indexedGeographicalRepresentations = _.keyBy(dimensions.GEOGRAPHICAL.representation, 'code');
-                var indexedTimeRepresentations = _.keyBy(dimensions.TIME.representation, 'code');
-
-                indexArguments++;
+            
+            if (isMainTable) {
+                var dataResponse = arguments[0];
+                var geographicalDimensions = _.invert(dataResponse.dimension.GEOGRAPHICAL.representation.index);    
+                var measureDimensions = _.invert(dataResponse.dimension.MEASURE.representation.index);
+                var timeDimensions = _.invert(dataResponse.dimension.TIME.representation.index);
+            } else {
+                var dimensions = arguments[0].dimension;
+                // var indexedGeographicalRepresentations = _.keyBy(dimensions.GEOGRAPHICAL.representation, 'code');
+                // var indexedTimeRepresentations = _.keyBy(dimensions.TIME.representation, 'code');
             }
             var tableData = [];
-
-            var dataResponse;
-            if (indexArguments != 0) {
-                dataResponse = arguments[indexArguments][0];
-            } else {
-                dataResponse = arguments[0];
-            }
-            var geographicalDimensions = _.invert(dataResponse.dimension.GEOGRAPHICAL.representation.index);
-            var timeDimensions = _.invert(dataResponse.dimension.TIME.representation.index);
-            var measureDimensions = _.invert(dataResponse.dimension.MEASURE.representation.index);
-            for (var i = 0, lengthGeographical = dataResponse.dimension.GEOGRAPHICAL.representation.size; i < lengthGeographical; i++) {
-                for (var j = 0, lengthTime = dataResponse.dimension.TIME.representation.size; j < lengthTime; j++) {
-                    if (urlObj.showMeasureColumns) {
-                        var hash = {};
-                        if (table.tableInfo.id == "indicatorData" || table.tableInfo.id == "geographic") {
+            if (isMainTable) {
+                for (var i = 0, lengthGeographical = dataResponse.dimension.GEOGRAPHICAL.representation.size; i < lengthGeographical; i++) {
+                    for (var j = 0, lengthTime = dataResponse.dimension.TIME.representation.size; j < lengthTime; j++) {
+                        if (urlObj.showMeasureColumns) {
+                            var hash = {};
                             hash.Codigo_geografico = geographicalDimensions[i];
-                        }
-
-                        if (urlObj.recodeDates && table.tableInfo.id == "time") {
-                            var granularity = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
-                            var date = timeDimensions[j];
-                            hash.Fecha = recodeDates(date, granularity);
-                        }
-                        if (table.tableInfo.id == "indicatorData" || table.tableInfo.id == "time") {
                             hash.Codigo_temporal = timeDimensions[j];
-                        }
-
-                        if (table.tableInfo.id == "indicatorData") {
                             for (var k = 0, lengthMeasure = dataResponse.dimension.MEASURE.representation.size; k < lengthMeasure; k++) {
                                 hash[urlObj.observationId + '_' + text[language].indicator.measures[measureDimensions[k]]] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
                             }
-                        }
-
-                        if (urlObj.granularity) {
-                            if (table.tableInfo.id == "geographic") {
-                                hash.Granularidad_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].granularityCode;
-                            }
-                            if (table.tableInfo.id == "time") {
-                                hash.Granularidad_temporal = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
-                            }
-                        }
-
-                        if (urlObj.labels) {
-                            if (!urlObj.allLanguages) {
-                                if (table.tableInfo.id == "geographic") {
-                                    hash.Etiqueta_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].title.__default__;
-                                }
-                                if (table.tableInfo.id == "time") {
-                                    hash.Etiqueta_temporal = indexedTimeRepresentations[timeDimensions[j]].title.__default__;
-                                }
-                            } else {
-                                if (table.tableInfo.id == "geographic") {
-                                    for (l = 0; l < urlObj.geographicalLanguages.length; l++) {
-                                        hash['Etiqueta_geografica_' + urlObj.geographicalLanguages[l]] = indexedGeographicalRepresentations[hash.Codigo_geografico].title[urlObj.geographicalLanguages[l]];
-                                    }
-                                }
-                                if (table.tableInfo.id == "time") {
-                                    for (l = 0; l < urlObj.timeLanguages.length; l++) {
-                                        hash['Etiqueta_temporal_' + urlObj.timeLanguages[l]] = indexedTimeRepresentations[timeDimensions[j]].title[urlObj.timeLanguages[l]];
-                                    }
-                                }
-                            }
-                        }
-                        tableData.push(hash);
-
-                    } else {
-                        for (var k = 0, lengthMeasure = dataResponse.dimension.MEASURE.representation.size; k < lengthMeasure; k++) {
-                            var hash = {};
-                            if (table.tableInfo.id == "indicatorData" || table.tableInfo.id == "geographic") {
-                                hash.Codigo_geografico = geographicalDimensions[i];
-                            }
-
-                            if (urlObj.recodeDates && table.tableInfo.id == "time") {
-                                var granularity = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
-                                var date = timeDimensions[j];
-                                hash.Fecha = recodeDates(date, granularity);
-                            }
-                            if (table.tableInfo.id == "indicatorData" || table.tableInfo.id == "time") {
-                                hash.Codigo_temporal = timeDimensions[j];
-                            }
-
-                            if (table.tableInfo.id == "indicatorData" || table.tableInfo.id == "measure") {
-                                hash.Codigo_medida = measureDimensions[k];
-                            }
-
-                            if (table.tableInfo.id == "indicatorData") {
-                                hash[urlObj.observationId] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
-                            }
-
-                            if (urlObj.granularity) {
-                                if (table.tableInfo.id == "geographic") {
-                                    hash.Granularidad_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].granularityCode;
-                                }
-                                if (table.tableInfo.id == "time") {
-                                    hash.Granularidad_temporal = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
-                                }
-                            }
-
-                            if (urlObj.labels) {
-                                if (!urlObj.allLanguages) {
-                                    if (table.tableInfo.id == "geographic") {
-                                        hash.Etiqueta_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].title.__default__;
-                                    }
-                                    if (table.tableInfo.id == "time") {
-                                        hash.Etiqueta_temporal = indexedTimeRepresentations[timeDimensions[j]].title.__default__;
-                                    }
-                                } else {
-                                    if (table.tableInfo.id == "geographic") {
-                                        for (l = 0; l < urlObj.geographicalLanguages.length; l++) {
-                                            hash['Etiqueta_geografica_' + urlObj.geographicalLanguages[l]] = indexedGeographicalRepresentations[hash.Codigo_geografico].title[urlObj.geographicalLanguages[l]];
-                                        }
-                                    }
-                                    if (table.tableInfo.id == "time") {
-                                        for (l = 0; l < urlObj.timeLanguages.length; l++) {
-                                            hash['Etiqueta_temporal_' + urlObj.timeLanguages[l]] = indexedTimeRepresentations[timeDimensions[j]].title[urlObj.timeLanguages[l]];
-                                        }
-                                    }
-                                }
-                            }
                             tableData.push(hash);
+                        } else {
+                            for (var k = 0, lengthMeasure = dataResponse.dimension.MEASURE.representation.size; k < lengthMeasure; k++) {
+                                var hash = {};
+                                hash.Codigo_geografico = geographicalDimensions[i];
+                                hash.Codigo_temporal = timeDimensions[j];
+                                hash.Codigo_medida = measureDimensions[k];
+                                hash[urlObj.observationId] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
+                                tableData.push(hash);
+                            }
                         }
                     }
+                }
+            } else if (table.tableInfo.id == "geographic"){
+                for (var i = 0, lengthGeographical = dimensions.GEOGRAPHICAL.representation.length; i < lengthGeographical; i++) {
+                    var hash = {};
+                    hash.Codigo_geografico = dimensions.GEOGRAPHICAL.representation[i].code;
+
+                    if (urlObj.granularity) {
+                        hash.Granularidad_geografica = dimensions.GEOGRAPHICAL.representation[i].granularityCode;
+                    }
+
+                    if (urlObj.labels) {
+                        if (!urlObj.allLanguages) {
+                            hash.Etiqueta_geografica = dimensions.GEOGRAPHICAL.representation[i].title.__default__;
+                        } else {
+                            for (l = 0; l < urlObj.geographicalLanguages.length; l++) {
+                                hash['Etiqueta_geografica_' + urlObj.geographicalLanguages[l]] = dimensions.GEOGRAPHICAL.representation[i].title[urlObj.geographicalLanguages[l]];
+                            }
+                        }
+                    }
+                    tableData.push(hash);
+                }
+            } else if (table.tableInfo.id == "time") {
+                for (var j = 0, lengthTime = dimensions.TIME.representation.length; j < lengthTime; j++) {
+                    var hash = {};
+
+                    if (urlObj.recodeDates) {
+                        var granularity = dimensions.TIME.representation[j].granularityCode;
+                        var date = dimensions.TIME.representation[j].code;
+                        hash.Fecha = recodeDates(date, granularity);
+                    }
+                    
+                    hash.Codigo_temporal = dimensions.TIME.representation[j].code;
+
+                    if (urlObj.granularity) {
+                            hash.Granularidad_temporal = dimensions.TIME.representation[j].granularityCode;
+                    }
+
+                    if (urlObj.labels) {
+                        if (!urlObj.allLanguages) {
+                            hash.Etiqueta_temporal = dimensions.TIME.representation[j].title.__default__;
+                        } else {
+                            for (l = 0; l < urlObj.timeLanguages.length; l++) {
+                                hash['Etiqueta_temporal_' + urlObj.timeLanguages[l]] = dimensions.TIME.representation[j].title[urlObj.timeLanguages[l]];
+                            }
+                        }
+                    }
+                    tableData.push(hash);
                 }
             }
 
@@ -245,7 +196,7 @@
             doneCallback();
         })
     };
-
+    
     function recodeDates(date, granularity) {
         switch (granularity) {
             case "YEARLY": {
