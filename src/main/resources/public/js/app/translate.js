@@ -75,6 +75,7 @@ $.getJSON("translate/text.json", function(resp) {
     $("#variables").text(text[language].codelist.variables);
     $("#searchCodelistsButton").text(text[language].codelist.searchCodelists);
     $("#codelists").text(text[language].codelist.codelists);
+    $("#decodeCodelists").append(text[language].codelist.decodeCodelists);
     $("#descCodelist").prepend(text[language].codelist.desc);
     $("#linkCodelistAPI").attr("href", text[language].codelist.apiLink);
     $("#linkCodelistAPI").text(text[language].codelist.api);
