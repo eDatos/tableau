@@ -55,7 +55,7 @@
         }
 
         var tableInfo = {
-            id: "indicatorData",
+            id: "datasetData",
             alias: tableau.connectionName,
             columns: cols
         };
@@ -78,83 +78,70 @@
             for (i = 0; i < Object.keys(urlObj.dimensions).length; i++) {
                 total = total * dataResponse.data.dimensions.dimension[i].representations.total;
             }
-            for (i = 0; i < observations.length; i++) {
-                var hash = {};
-                var copyHash = {};
-                if (!urlObj.measureColumns) {
-                    hash[urlObj.observationId] = observations[i];
-                }
-                var remaining = i;
-                var subtotal = total;
-                for (j = 0; j < dataResponse.data.dimensions.total; j++) {
-                    var totalDimension = dataResponse.data.dimensions.dimension[j].representations.total;
-                    subtotal = Math.floor(subtotal / totalDimension);
-                    indDimension = Math.floor(remaining / subtotal);
-                    remaining = remaining % subtotal;
-                    if (urlObj.measureColumns) {
-                        if (urlObj.measureColumns.dimension == urlObj.dimensions[j].id) {
-                            copyHash[urlObj.measureColumns.dimension + "_" + _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code] = observations[i];
-                        } else {
-                            if (urlObj.recodeDates && urlObj.dimensions[j].id == urlObj.timeDimension && table.tableInfo.id === urlObj.timeDimension) {
-                                date = calculateDate(_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code);
-                                hash["Fecha"] = date;
-                                copyHash["Fecha"] = date;
-                            }
-                            if (urlObj.dimensions[j].id === table.tableInfo.id || table.tableInfo.id === 'indicatorData') {
+            if (table.tableInfo.id == "datasetData") {
+                for (i = 0; i < observations.length; i++) {
+                    var hash = {};
+                    var copyHash = {};
+                    if (!urlObj.measureColumns) {
+                        hash[urlObj.observationId] = observations[i];
+                    }
+                    var remaining = i;
+                    var subtotal = total;
+
+                    for (j = 0; j < dataResponse.data.dimensions.total; j++) {
+                        var totalDimension = dataResponse.data.dimensions.dimension[j].representations.total;
+                        subtotal = Math.floor(subtotal / totalDimension);
+                        indDimension = Math.floor(remaining / subtotal);
+                        remaining = remaining % subtotal;
+                        if (urlObj.measureColumns) {
+                            if (urlObj.measureColumns.dimension == urlObj.dimensions[j].id) {
+                                copyHash[urlObj.measureColumns.dimension + "_" + _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code] = observations[i];
+                            } else {
                                 hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
                                 copyHash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
                             }
-                            if (urlObj.labels && urlObj.dimensions[j].id === table.tableInfo.id) {
-                                representation = _.keyBy(dataResponse.metadata.dimensions.dimension[j].dimensionValues.value, 'id')[hash[urlObj.dimensions[j].id]];
-                                if (urlObj.allLanguages) {
-                                    for (k = 0; k < urlObj.languages.length; k++) {
-                                        if (_.keyBy(representation.name.text, 'lang')[urlObj.languages[k]]) {
-                                            hash["Etiqueta_" + urlObj.dimensions[j].id + "_" + urlObj.languages[k]] = _.keyBy(representation.name.text, 'lang')[urlObj.languages[k]].value;
-                                            copyHash["Etiqueta_" + urlObj.dimensions[j].id + "_" + urlObj.languages[k]] = _.keyBy(representation.name.text, 'lang')[urlObj.languages[k]].value;
-                                        } else {
-                                            hash["Etiqueta_" + urlObj.dimensions[j].id + "_" + urlObj.languages[k]] = '';
-                                            copyHash["Etiqueta_" + urlObj.dimensions[j].id + "_" + urlObj.languages[k]] = '';
-                                        }
-                                    }
+                        } else {
+                            hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
+                        }
+                    }
+
+                    if (urlObj.measureColumns && table.tableInfo.id == "datasetData") {
+                        var keyHash = _.values(hash).join(',');
+                        if (tableData[keyHash]) {
+                            _.extend(tableData[keyHash], copyHash);
+                        } else {
+                            tableData[keyHash] = copyHash;
+                        }
+                    } else {
+                        tableData.push(hash);
+                    }
+                }
+            } else {
+                var dimension = _.keyBy(dataResponse.metadata.dimensions.dimension, "id")[table.tableInfo.id];
+                for(i = 0; i < dimension.dimensionValues.total; i++) {
+                    var hash = {};
+                    hash[table.tableInfo.id] = dimension.dimensionValues.value[i].id;
+                    if (urlObj.recodeDates && urlObj.timeDimension == table.tableInfo.id) {
+                        date = calculateDate(dimension.dimensionValues.value[i].id);
+                        hash["Fecha"] = date;
+                    }
+                    if (urlObj.labels) {
+                        var dimensionLabels = _.keyBy(dimension.dimensionValues.value[i].name.text, "lang");
+                        if (urlObj.allLanguages) {
+                            for (k = 0; k < urlObj.languages.length; k++) {
+                                if (dimensionLabels[urlObj.languages[k]]) {
+                                    hash["Etiqueta_" + dimension.id + "_" + urlObj.languages[k]] = dimensionLabels[urlObj.languages[k]].value;
                                 } else {
-                                    hash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
-                                    copyHash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
+                                    hash["Etiqueta_" + dimension.id + "_" + urlObj.languages[k]] = '';
                                 }
                             }
-                        }
-                    } else {
-                        if (urlObj.recodeDates && urlObj.dimensions[j].id == urlObj.timeDimension && urlObj.timeDimension === table.tableInfo.id) {
-                            date = calculateDate(_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code)
-                            hash["Fecha"] = date;
-                        }
-                        hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
-                        if (urlObj.labels && urlObj.dimensions[j].id === table.tableInfo.id) {
-                            representation = _.keyBy(dataResponse.metadata.dimensions.dimension[j].dimensionValues.value, 'id')[hash[urlObj.dimensions[j].id]];
-                            if (urlObj.allLanguages) {
-                                for (k = 0; k < urlObj.languages.length; k++) {
-                                    if (_.keyBy(representation.name.text, 'lang')[urlObj.languages[k]]) {
-                                        hash["Etiqueta_" + urlObj.dimensions[j].id + "_" + urlObj.languages[k]] = _.keyBy(representation.name.text, 'lang')[urlObj.languages[k]].value;
-                                    } else {
-                                        hash["Etiqueta_" + urlObj.dimensions[j].id + "_" + urlObj.languages[k]] = '';
-                                    }
-                                }
-                            } else {
-                                hash["Etiqueta_" + urlObj.dimensions[j].id] = _.keyBy(representation.name.text, 'lang')['es'].value;
-                            }
+                        } else {
+                            hash["Etiqueta_" + dimension.id.id] = dimensionLabels['es'].value;
                         }
                     }
-                }
-                if (urlObj.measureColumns && table.tableInfo.id === "indicatorData") {
-                    var keyHash = _.values(hash).join(',');
-                    if (tableData[keyHash]) {
-                        _.extend(tableData[keyHash], copyHash);
-                    } else {
-                        tableData[keyHash] = copyHash;
-                    }
-                } else {
                     tableData.push(hash);
-                }
-            }
+                }                
+            } 
 
             table.appendRows(_.values(tableData));
             doneCallback();
@@ -210,16 +197,20 @@
                     if (urlObj.showMeasureColumns) {
                         var measureColumns = {};
                         var dimension = _.keyBy(resp.metadata.dimensions.dimension, 'type')['MEASURE_DIMENSION'];
-                        measureColumns.dimension = dimension.id;
-                        var values = [];
-                        for (i = 0; i < dimension.dimensionValues.value.length; i++) {
-                            values[i] = {
-                                id: dimension.dimensionValues.value[i].id,
-                                label: _.keyBy(dimension.dimensionValues.value[i].name.text, 'lang')['es'].value
-                            };
+                        if (dimension) {
+                            measureColumns.dimension = dimension.id;
+                            var values = [];
+                            for (i = 0; i < dimension.dimensionValues.value.length; i++) {
+                                values[i] = {
+                                    id: dimension.dimensionValues.value[i].id,
+                                    label: _.keyBy(dimension.dimensionValues.value[i].name.text, 'lang')['es'].value
+                                };
+                            }
+                            measureColumns.values = values;
+                            urlObj.measureColumns = measureColumns;
+                        } else {
+                            urlObj.showMeasureColumns = false;
                         }
-                        measureColumns.values = values;
-                        urlObj.measureColumns = measureColumns;
                     }
 
                     var dimensions = {};
