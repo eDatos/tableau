@@ -23,8 +23,12 @@ function onDownloadDecodeSelected(downloadDecodeRadio) {
     if(downloadDecodeRadio.value == "decode") {
         $("#selectVariableLabel, #downloadContainer, #url, #labelCodelistUrl").hide();
         $("#selectVariableInput").trigger('change');
+        $("#labelCodelistUrl input").attr("checked", false);
+        $("#selectVariableInput").prop("checked", "checked");
+        $("#decodeWrapper").show();
     } else {
         $("#selectVariableLabel, #downloadContainer, #url, #labelCodelistUrl").show();
+        $("#decodeWrapper").hide();
     }
 }
 
@@ -50,6 +54,9 @@ function chooseDataOption(radio) {
                     break;
             }
             radioDivs[i].style.display = "block";
+            if ($("#labelDecodeCodelist input").is(":checked")) {
+                $("#decodeWrapper").hide();
+            }
         }
     }
     $('#errorMsg').html("");
@@ -230,18 +237,20 @@ function searchCodelists() {
 }
 
 function updateDecodelists() {
-    $("#errorMsg").html("");
-    $("#loaderDecode").show();
-    document.getElementById("selectDecodeCodelist").parentElement.style.display = "block";
-    $("#selectDecodeCodelist").html('').select2();
-    $("#selectDecodeCodelist").select2({
-        data: _.sortBy(_.filter(codelists, function(item) {
-            return item.id != $("#selectCodelist").val();
-        }), 'text'),
-        dropdownAutoWidth : true,
-        width: '83.3%'
-    });
-    $("#loaderDecode").hide();
+    if ($("#labelDecodeCodelist input").is(":checked")) {           
+        $("#errorMsg").html("");
+        $("#loaderDecode").show();
+        document.getElementById("selectDecodeCodelist").parentElement.style.display = "block";
+        $("#selectDecodeCodelist").html('').select2();
+        $("#selectDecodeCodelist").select2({
+            data: _.sortBy(_.filter(codelists, function(item) {
+                return item.id != $("#selectCodelist").val();
+            }), 'text'),
+            dropdownAutoWidth : true,
+            width: '83.3%'
+        });
+        $("#loaderDecode").hide();
+    }
 }
 
 function searchOperations() {

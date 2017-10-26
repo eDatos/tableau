@@ -59,9 +59,10 @@
                             <select class="col-xs-10" id="selectCodelist" onchange="updateDecodelists()"></select>
                         </div>
                         <div id="loaderDecode" class="loader" style="display: none"></div>                        
-                        <div class="selectDiv row radioDiv" style="display: none">
+                        <div id="decodeWrapper" class="selectDiv row radioDiv" style="display: none">
                             <label id="decodeCodelists" class="col-xs-2"></label>
                             <select class="col-xs-10" id="selectDecodeCodelist"></select>
+                            <span id="errorNotSelectedDecoded"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Debe seleccionar una clasificación a recodificar</span>
                         </div>
                     </div>
                     <div class="responseFormat">
