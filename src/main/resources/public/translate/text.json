@@ -43,6 +43,7 @@
             "variables": "Variables:",
             "searchCodelists": "Buscar clasificaciones",
             "codelists": "Clasificaciones:",
+            "decodeCodelists": "Clasificación a recodificar:",
             "desc": "Este conector le permite cargar cualquiera de las clasificaciones que utiliza el ISTAC para codificar sus variables / conceptos. Estos datos se publican originalmente a través de la ",
             "apiLink": "http://www.gobiernodecanarias.org/istac/api/structural-resources",
             "api": "API de Recursos Estructurales",
@@ -50,7 +51,10 @@
             "li": {
                 "url": "Introducir la URL de los datos que se desea cargar. Esta URL debe ser una petición que devuelva los códigos de una clasificación y, por tanto, debe acabar en \"/codes\".",
                 "criteria": "Navegar por distintos criterios para seleccionar el recurso que desea cargar."
-            }
+            },
+            "downloadDecodeLabel": "Indique la operación que desea realizar:",
+            "downloadCodelistOption": "Descargar una clasificación",
+            "decodeCodelistOption": "Recodificar una clasificación"
         },
         "dataset": {
             "name": "Cubo: ",
