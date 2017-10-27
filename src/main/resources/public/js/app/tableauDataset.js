@@ -168,6 +168,7 @@
                 url: urlDataset.trim(),
                 showMeasureColumns: $('#measureColumns').is(':checked'),
                 labels: $('#showLabels').is(':checked'),
+                starModel: $('#starModel').is(':checked'),
                 recodeDates: $('#recodeDates').is(':checked'),
                 allLanguages: $('#allLanguages').is(':checked')
             };
