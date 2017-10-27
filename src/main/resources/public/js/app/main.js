@@ -18,6 +18,20 @@ $.getJSON("config/properties.json", function(resp) {
     });
 });
 
+function onDownloadDecodeSelected(downloadDecodeRadio) {
+    $("#formContainer").show();
+    if(downloadDecodeRadio.value == "decode") {
+        $("#selectVariableLabel, #downloadContainer, #url, #labelCodelistUrl").hide();
+        $("#selectVariableInput").trigger('change');
+        $("#labelCodelistUrl input").attr("checked", false);
+        $("#selectVariableInput").prop("checked", "checked");
+        $("#decodeWrapper").show();
+    } else {
+        $("#selectVariableLabel, #downloadContainer, #url, #labelCodelistUrl").show();
+        $("#decodeWrapper").hide();
+    }
+}
+
 function chooseDataOption(radio) {
     var radioDivs = document.getElementsByClassName("radioDiv");
     $(".first-loader:visible").hide();
@@ -40,6 +54,9 @@ function chooseDataOption(radio) {
                     break;
             }
             radioDivs[i].style.display = "block";
+            if ($("#labelDecodeCodelist input").is(":checked")) {
+                $("#decodeWrapper").hide();
+            }
         }
     }
     $('#errorMsg').html("");
@@ -188,11 +205,13 @@ function searchVariables() {
     });
 }
 
+var codelists = [];
+
 function searchCodelists() {
     $("#errorMsg").html("");
     $("#loaderCodelist").show();
     document.getElementById("selectCodelist").parentElement.style.display = "block";
-    var codelists = [];
+    codelists = [];
     $("#selectCodelist").html('').select2();
     url = endpoint + '/codelists.json?limit=1000&orderBy=ID ASC&query=VARIABLE_URN EQ "' + $("#selectVariable").val() +'" AND LATEST EQ "true"';
     $.getJSON(url, function(resp) {
@@ -206,11 +225,32 @@ function searchCodelists() {
             dropdownAutoWidth : true,
             width: '83.3%'
         });
+        if ($("#labelDecodeCodelist input").is(":checked")) {
+            updateDecodelists();
+        }
         $("#loaderCodelist").hide();
     }).error(function() {
         $("#loaderCodelist").hide();
         $("#errorMsg").html(errorMsg[language].error.request);
     });
+    
+}
+
+function updateDecodelists() {
+    if ($("#labelDecodeCodelist input").is(":checked")) {           
+        $("#errorMsg").html("");
+        $("#loaderDecode").show();
+        document.getElementById("selectDecodeCodelist").parentElement.style.display = "block";
+        $("#selectDecodeCodelist").html('').select2();
+        $("#selectDecodeCodelist").select2({
+            data: _.sortBy(_.filter(codelists, function(item) {
+                return item.id != $("#selectCodelist").val();
+            }), 'text'),
+            dropdownAutoWidth : true,
+            width: '83.3%'
+        });
+        $("#loaderDecode").hide();
+    }
 }
 
 function searchOperations() {

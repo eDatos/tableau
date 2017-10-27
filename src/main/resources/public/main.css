@@ -145,14 +145,28 @@
     margin-bottom: 2%;
 }
 
+
 #errorMsg {
-    color: red;
+    color: #CD3030;
     font-weight: 600;
     text-align: center;
 }
 
 h3 {
     margin-top: 5%;
+}
+
+#decodeWrapper {
+    overflow: hidden;
+}
+
+#errorNotSelectedDecoded {
+    transition: all 0.2s linear;
+    float: right;
+    padding-top: 10px;
+    color: #CD3030;
+    position: relative;
+    right: -350px;
 }
 
 /* Spinner */
@@ -182,10 +196,4 @@ h3 {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
-}
-
-/* END Spinner */
-
-.responseFormat {
-    margin-top: 3%;
 }
