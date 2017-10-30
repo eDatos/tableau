@@ -17,7 +17,7 @@
 
             if (urlObj.showMeasureColumns) {
                 for (i = 0; i < urlObj.measureColumns.length; i++) {
-                    cols.push({ id: urlObj.observationId + "_" + urlObj.measureColumns[i], dataType: tableau.dataTypeEnum.float })
+                    cols.push({ id: _capitalize(urlObj.observationId) + urlObj.measureColumns[i], dataType: tableau.dataTypeEnum.float });
                 }
             } else {
                 cols.push({ id: "Codigo_medida", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
@@ -65,7 +65,7 @@
             });
             if (urlObj.showMeasureColumns) {
                 for (i = 0; i < urlObj.measureColumns.length; i++) {
-                    mainCols.push({ id: urlObj.observationId + "_" + urlObj.measureColumns[i], dataType: tableau.dataTypeEnum.float })
+                    mainCols.push({ id: _capitalize(urlObj.observationId) + urlObj.measureColumns[i], dataType: tableau.dataTypeEnum.float });
                 }
             } else {
                 mainCols.push({ id: "Codigo_medida", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
@@ -133,7 +133,7 @@
                             hash.Codigo_geografico = geographicalDimensions[i];
                             hash.Codigo_temporal = timeDimensions[j];
                             for (var k = 0, lengthMeasure = dataResponse.dimension.MEASURE.representation.size; k < lengthMeasure; k++) {
-                                hash[urlObj.observationId + '_' + text[language].indicator.measures[measureDimensions[k]]] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
+                                hash[_capitalize(urlObj.observationId) + text[language].indicator.measures[measureDimensions[k]]] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
                             }
                             tableData.push(hash);
                         } else {
@@ -216,7 +216,7 @@
                             hash.Codigo_temporal = timeDimensions[j];
     
                             for (var k = 0, lengthMeasure = dataResponse.dimension.MEASURE.representation.size; k < lengthMeasure; k++) {
-                                hash[urlObj.observationId + '_' + text[language].indicator.measures[measureDimensions[k]]] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
+                                hash[_capitalize(urlObj.observationId) + text[language].indicator.measures[measureDimensions[k]]] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
                             }
     
                             if (urlObj.granularity) {
@@ -436,6 +436,10 @@
             }
         });
     });
+
+    function _capitalize(value) {
+        return value.charAt(0).toUpperCase() + value.substring(1).toLowerCase();
+    }
 
     function _buildCols(urlObj, columnsId, languages) {
         var returnCols = [];
