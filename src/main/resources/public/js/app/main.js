@@ -19,15 +19,11 @@ $.getJSON("config/properties.json", function(resp) {
 });
 
 function onDownloadDecodeSelected(downloadDecodeRadio) {
-    $("#formContainer").show();
-    if(downloadDecodeRadio.value == "decode") {
-        $("#selectVariableLabel, #downloadContainer, #url, #labelCodelistUrl").hide();
-        $("#selectVariableInput").trigger('change');
-        $("#labelCodelistUrl input").attr("checked", false);
-        $("#selectVariableInput").prop("checked", "checked");
+    if ($("#" + downloadDecodeRadio.id).is(":checked")) {
+        searchCodelists();
+        updateDecodelists();
         $("#decodeWrapper").show();
     } else {
-        $("#selectVariableLabel, #downloadContainer, #url, #labelCodelistUrl").show();
         $("#decodeWrapper").hide();
     }
 }
@@ -39,6 +35,14 @@ function chooseDataOption(radio) {
         if (radioDivs[i].id != radio.value) {
             radioDivs[i].style.display = "none";
         } else {
+            if ($("#clasificaciones").hasClass("active")) {
+                if (radioDivs[i].id == "url") {
+                    $("#decode").attr("checked", false);
+                    $("#decode").attr("disabled", true);
+                } else {
+                    $("#decode").attr("disabled", false);
+                }
+            }
             switch(radioDivs[i].id) {
                 case "indicator":
                     searchIndicators();
@@ -225,7 +229,7 @@ function searchCodelists() {
             dropdownAutoWidth : true,
             width: '83.3%'
         });
-        if ($("#labelDecodeCodelist input").is(":checked")) {
+        if ($("#decode").is(":checked")) {
             updateDecodelists();
         }
         $("#loaderCodelist").hide();
@@ -237,20 +241,18 @@ function searchCodelists() {
 }
 
 function updateDecodelists() {
-    if ($("#labelDecodeCodelist input").is(":checked")) {           
-        $("#errorMsg").html("");
-        $("#loaderDecode").show();
-        document.getElementById("selectDecodeCodelist").parentElement.style.display = "block";
-        $("#selectDecodeCodelist").html('').select2();
-        $("#selectDecodeCodelist").select2({
-            data: _.sortBy(_.filter(codelists, function(item) {
-                return item.id != $("#selectCodelist").val();
-            }), 'text'),
-            dropdownAutoWidth : true,
-            width: '83.3%'
-        });
-        $("#loaderDecode").hide();
-    }
+    $("#errorMsg").html("");
+    $("#loaderDecode").show();
+    document.getElementById("selectDecodeCodelist").parentElement.style.display = "block";
+    $("#selectDecodeCodelist").html('').select2();
+    $("#selectDecodeCodelist").select2({
+        data: _.sortBy(_.filter(codelists, function(item) {
+            return item.id != $("#selectCodelist").val();
+        }), 'text'),
+        dropdownAutoWidth : true,
+        width: '83.3%'
+    });
+    $("#loaderDecode").hide();
 }
 
 function searchOperations() {
