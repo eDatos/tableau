@@ -97,7 +97,9 @@
         "measureColumns": "Visualizar las medidas como columnas",
         "legalWarning": "Aviso legal",
         "starModel" : "Modelo estrella",
-        "recodeDates": "Incluir campo calculado con fecha a partir de periodos de referencia"
+        "recodeDates": "Incluir campo calculado con fecha a partir de periodos de referencia",
+        "dataModel": "Modelo de datos",
+        "labeling": "Etiquetado"
     },
     "en": {
         "indicator": {
@@ -185,6 +187,8 @@
         "measureColumns": "View measures as columns",
         "legalWarning": "Legal warning",
         "starModel": "Star model",
-        "recodeDates": "Recode dates"
+        "recodeDates": "Recode dates",
+        "dataModel": "Data model",
+        "labeling": "Labeling"
     }
 }
