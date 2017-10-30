@@ -4,92 +4,80 @@
 
     myConnector.getSchema = function (schemaCallback) {
         var urlObj = JSON.parse(tableau.connectionData);
+        var tables = [];
 
-        var cols = [];
+        var columnsTime = ['Codigo_temporal', 'Granularidad_temporal', 'Etiqueta_temporal', 'Fecha'];
+        var columnsGeographic = ['Codigo_geografico', 'Granularidad_geografica', 'Etiqueta_geografica'];
+        
+        if (urlObj.starModel) {
+            var cols = [];
 
-        cols.push({ id: "Codigo_geografico", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
-        cols.push({ id: "Codigo_temporal", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+            cols.push({ id: "Codigo_geografico", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+            cols.push({ id: "Codigo_temporal", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
 
-        if (urlObj.showMeasureColumns) {
-            for (i = 0; i < urlObj.measureColumns.length; i++) {
-                cols.push({ id: urlObj.observationId + "_" + urlObj.measureColumns[i], dataType: tableau.dataTypeEnum.float })
+            if (urlObj.showMeasureColumns) {
+                for (i = 0; i < urlObj.measureColumns.length; i++) {
+                    cols.push({ id: urlObj.observationId + "_" + urlObj.measureColumns[i], dataType: tableau.dataTypeEnum.float })
+                }
+            } else {
+                cols.push({ id: "Codigo_medida", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+                cols.push({ id: urlObj.observationId, alias: urlObj.name, dataType: tableau.dataTypeEnum.float });
+
+                var measureColumns = [];
+
+                measureColumns.push({ id: "Codigo_medida", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+
+                var tableMeasure = {
+                    id: "measure",
+                    alias: "Medida",
+                    columns: measureColumns
+                }
+                tables.push(tableMeasure);
             }
+
+            var tableGeographic = {
+                id: "geographic",
+                alias: "Geográfica",
+                columns: _buildCols(urlObj, columnsGeographic, urlObj.geographicalLanguages)
+            };
+            tables.push(tableGeographic);
+
+            var tableTime = {
+                id: "time",
+                alias: "Temporal",
+                columns: _buildCols(urlObj, columnsTime, urlObj.timeLanguages)
+            };
+            tables.push(tableTime);
+
+            var tableInfo = {
+                id: "indicatorData",
+                alias: tableau.connectionName,
+                columns: cols
+            };
+            tables.push(tableInfo);
         } else {
-            cols.push({ id: "Codigo_medida", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
-            cols.push({ id: urlObj.observationId, alias: urlObj.name, dataType: tableau.dataTypeEnum.float });
+            var geographicCols = _buildCols(urlObj, columnsGeographic, urlObj.geographicalLanguages);
+            var timeCols       = _buildCols(urlObj, columnsTime, urlObj.timeLanguages);
+            var mainCols = geographicCols;
 
-            var measureColumns = [];
-
-            measureColumns.push({ id: "Codigo_medida", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
-
-            var tableMeasure = {
-                id: "measure",
-                alias: "Medida",
-                columns: measureColumns
-            }
-        }
-
-        var geographicCols = [];
-        geographicCols.push({ id: "Codigo_geografico", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
-
-        if (urlObj.granularity) {
-            geographicCols.push({ id: "Granularidad_geografica", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
-        }
-
-        if (urlObj.labels) {
-            if (!urlObj.allLanguages) {
-                geographicCols.push({ id: "Etiqueta_geografica", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
-            } else {
-                for (i = 0; i < urlObj.geographicalLanguages.length; i++) {
-                    geographicCols.push({ id: "Etiqueta_geografica_" + urlObj.geographicalLanguages[i], columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+            timeCols.forEach(function(column) {
+                mainCols.push(column);
+            });
+            if (urlObj.showMeasureColumns) {
+                for (i = 0; i < urlObj.measureColumns.length; i++) {
+                    mainCols.push({ id: urlObj.observationId + "_" + urlObj.measureColumns[i], dataType: tableau.dataTypeEnum.float })
                 }
-            }
-        }
-
-        var tableGeographic = {
-            id: "geographic",
-            alias: "Geográfica",
-            columns: geographicCols
-        };
-
-        var timeCols = [];
-
-        if (urlObj.recodeDates) {
-            timeCols.push({ id: "Fecha", columnRole: "dimension", dataType: tableau.dataTypeEnum.date });
-        }
-        timeCols.push({ id: "Codigo_temporal", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
-
-        if (urlObj.granularity) {
-            timeCols.push({ id: "Granularidad_temporal", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
-        }
-        if (urlObj.labels) {
-            if (!urlObj.allLanguages) {
-                timeCols.push({ id: "Etiqueta_temporal", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
             } else {
-                for (i = 0; i < urlObj.timeLanguages.length; i++) {
-                    timeCols.push({ id: "Etiqueta_temporal_" + urlObj.timeLanguages[i], columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
-                }
+                mainCols.push({ id: "Codigo_medida", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+                mainCols.push({ id: urlObj.observationId, alias: urlObj.name, dataType: tableau.dataTypeEnum.float });
             }
+
+            tables.push({
+                id: "indicatorData",
+                alias: tableau.connectionName,
+                columns: mainCols 
+            });
         }
-
-        var tableTime = {
-            id: "time",
-            alias: "Temporal",
-            columns: timeCols
-        };
-
-        var tableInfo = {
-            id: "indicatorData",
-            alias: tableau.connectionName,
-            columns: cols
-        };
-
-        var tables = [tableInfo, tableGeographic, tableTime];
-
-        if (!urlObj.showMeasureColumns) {
-            tables.push(tableMeasure);
-        }
-
         schemaCallback(tables);
     };
 
@@ -97,28 +85,47 @@
         var urlObj = JSON.parse(tableau.connectionData);
         var promises = [];
         var isMainTable = table.tableInfo.id == "indicatorData";
+        
+        if (!isMainTable || (!urlObj.starModel && (urlObj.granularity || urlObj.labels || urlObj.recodeDates))) {
+            promises.push($.getJSON(urlObj.url.substring(0, urlObj.url.indexOf('/data'))));
+        } 
+
         if (isMainTable) {
             promises.push($.getJSON(urlObj.url));
-         } else {
-             promises.push($.getJSON(urlObj.url.substring(0, urlObj.url.indexOf('/data'))));
-         }
+        }
             
 
         $.when.apply($, promises).then(function () {
 
             
-            if (isMainTable) {
+            if (isMainTable && urlObj.starModel) {
                 var dataResponse = arguments[0];
                 var geographicalDimensions = _.invert(dataResponse.dimension.GEOGRAPHICAL.representation.index);    
                 var measureDimensions = _.invert(dataResponse.dimension.MEASURE.representation.index);
                 var timeDimensions = _.invert(dataResponse.dimension.TIME.representation.index);
+            } else if (isMainTable) {
+                var indexArguments = 0;
+                if (urlObj.granularity || urlObj.labels || urlObj.recodeDates) {
+                    var dimensions = arguments[indexArguments][0].dimension;
+                    var indexedGeographicalRepresentations = _.keyBy(dimensions.GEOGRAPHICAL.representation, 'code');
+                    var indexedTimeRepresentations = _.keyBy(dimensions.TIME.representation, 'code');
+                    indexArguments++;
+                }
+
+                if (indexArguments != 0) {
+                    dataResponse = arguments[indexArguments][0];
+                } else {
+                    dataResponse = arguments[0];
+                }
+                var geographicalDimensions = _.invert(dataResponse.dimension.GEOGRAPHICAL.representation.index);
+                var measureDimensions = _.invert(dataResponse.dimension.MEASURE.representation.index);
+                var timeDimensions = _.invert(dataResponse.dimension.TIME.representation.index);
+    
             } else {
                 var dimensions = arguments[0].dimension;
-                // var indexedGeographicalRepresentations = _.keyBy(dimensions.GEOGRAPHICAL.representation, 'code');
-                // var indexedTimeRepresentations = _.keyBy(dimensions.TIME.representation, 'code');
             }
             var tableData = [];
-            if (isMainTable) {
+            if (isMainTable && urlObj.starModel) {
                 for (var i = 0, lengthGeographical = dataResponse.dimension.GEOGRAPHICAL.representation.size; i < lengthGeographical; i++) {
                     for (var j = 0, lengthTime = dataResponse.dimension.TIME.representation.size; j < lengthTime; j++) {
                         if (urlObj.showMeasureColumns) {
@@ -141,7 +148,7 @@
                         }
                     }
                 }
-            } else if (table.tableInfo.id == "geographic"){
+            } else if (table.tableInfo.id == "geographic") {
                 for (var i = 0, lengthGeographical = dimensions.GEOGRAPHICAL.representation.length; i < lengthGeographical; i++) {
                     var hash = {};
                     hash.Codigo_geografico = dimensions.GEOGRAPHICAL.representation[i].code;
@@ -187,6 +194,88 @@
                         }
                     }
                     tableData.push(hash);
+                }
+            } else if (table.tableInfo.id == "measure") {
+                for (var j = 0, lengthTime = dimensions.MEASURE.representation.length; j < lengthTime; j++) {
+                    var hash = {};
+                    hash.Codigo_medida = dimensions.MEASURE.representation[j].code;
+                    tableData.push(hash);
+                }
+            } else {
+                for (var i = 0, lengthGeographical = dataResponse.dimension.GEOGRAPHICAL.representation.size; i < lengthGeographical; i++) {
+                    for (var j = 0, lengthTime = dataResponse.dimension.TIME.representation.size; j < lengthTime; j++) {
+                        if (urlObj.showMeasureColumns) {
+                            var hash = {};
+                            hash.Codigo_geografico = geographicalDimensions[i];
+    
+                            if (urlObj.recodeDates) {
+                                var granularity = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
+                                var date = timeDimensions[j];
+                                hash.Fecha = recodeDates(date, granularity);
+                            }
+                            hash.Codigo_temporal = timeDimensions[j];
+    
+                            for (var k = 0, lengthMeasure = dataResponse.dimension.MEASURE.representation.size; k < lengthMeasure; k++) {
+                                hash[urlObj.observationId + '_' + text[language].indicator.measures[measureDimensions[k]]] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
+                            }
+    
+                            if (urlObj.granularity) {
+                                hash.Granularidad_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].granularityCode;
+                                hash.Granularidad_temporal = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
+                            }
+                            
+                            if (urlObj.labels) {
+                                if (!urlObj.allLanguages) {
+                                    hash.Etiqueta_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].title.__default__;
+                                    hash.Etiqueta_temporal = indexedTimeRepresentations[timeDimensions[j]].title.__default__;
+                                } else {
+                                    for (l = 0; l < urlObj.geographicalLanguages.length; l++) {
+                                        hash['Etiqueta_geografica_' + urlObj.geographicalLanguages[l]] = indexedGeographicalRepresentations[hash.Codigo_geografico].title[urlObj.geographicalLanguages[l]];
+                                    }
+                                    for (l = 0; l < urlObj.timeLanguages.length; l++) {
+                                        hash['Etiqueta_temporal_' + urlObj.timeLanguages[l]] = indexedTimeRepresentations[timeDimensions[j]].title[urlObj.timeLanguages[l]];
+                                    }
+                                }
+                            }
+                            tableData.push(hash);
+    
+                        } else {
+                            for (var k = 0, lengthMeasure = dataResponse.dimension.MEASURE.representation.size; k < lengthMeasure; k++) {
+                                var hash = {};
+                                hash.Codigo_geografico = geographicalDimensions[i];
+                                
+                                if (urlObj.recodeDates) {
+                                    var granularity = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
+                                    var date = timeDimensions[j];
+                                    hash.Fecha = recodeDates(date, granularity);
+                                }
+                                hash.Codigo_temporal = timeDimensions[j];
+    
+                                hash.Codigo_medida = measureDimensions[k];
+                                hash[urlObj.observationId] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
+    
+                                if (urlObj.granularity) {
+                                    hash.Granularidad_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].granularityCode;
+                                    hash.Granularidad_temporal = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
+                                }
+    
+                                if (urlObj.labels) {
+                                    if (!urlObj.allLanguages) {
+                                        hash.Etiqueta_geografica = indexedGeographicalRepresentations[hash.Codigo_geografico].title.__default__;
+                                        hash.Etiqueta_temporal = indexedTimeRepresentations[timeDimensions[j]].title.__default__;
+                                    } else {
+                                        for (l = 0; l < urlObj.geographicalLanguages.length; l++) {
+                                            hash['Etiqueta_geografica_' + urlObj.geographicalLanguages[l]] = indexedGeographicalRepresentations[hash.Codigo_geografico].title[urlObj.geographicalLanguages[l]];
+                                        }
+                                        for (l = 0; l < urlObj.timeLanguages.length; l++) {
+                                            hash['Etiqueta_temporal_' + urlObj.timeLanguages[l]] = indexedTimeRepresentations[timeDimensions[j]].title[urlObj.timeLanguages[l]];
+                                        }
+                                    }
+                                }
+                                tableData.push(hash);
+                            }
+                        }
+                    }
                 }
             }
 
@@ -290,6 +379,7 @@
                 granularity: $('#showGranularity').is(':checked'),
                 labels: $('#showLabels').is(':checked'),
                 allLanguages: $('#allLanguages').is(':checked'),
+                starModel: $("#starModel").is(":checked"),
                 showMeasureColumns: $('#measureColumns').is(':checked'),
                 recodeDates: $('#recodeDates').is(':checked')
             };
@@ -346,4 +436,27 @@
             }
         });
     });
+
+    function _buildCols(urlObj, columnsId, languages) {
+        var returnCols = [];
+        returnCols.push({ id: columnsId[0], columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+        if (urlObj.granularity) {
+            returnCols.push({ id: columnsId[1], columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+        }
+        if (urlObj.labels) {
+            if (!urlObj.allLanguages) {
+                returnCols.push({ id: columnsId[2], columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+            } else {
+                for (i = 0; i < urlObj.timeLanguages.length; i++) {
+                    returnCols.push({ id: columnsId[2] + "_" + urlObj.timeLanguages[i], columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+                }
+            }
+        }
+        if(columnsId[3]) {
+            if (urlObj.recodeDates) {
+                returnCols.push({ id: columnsId[3], columnRole: "dimension", dataType: tableau.dataTypeEnum.date });
+            }
+        }
+        return returnCols;
+    }
 })();

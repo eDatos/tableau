@@ -96,6 +96,7 @@
         "getData": "Obtener datos",
         "measureColumns": "Visualizar las medidas como columnas",
         "legalWarning": "Aviso legal",
+        "starModel" : "Modelo estrella",
         "recodeDates": "Incluir campo calculado con fecha a partir de periodos de referencia"
     },
     "en": {
@@ -183,6 +184,7 @@
         "getData": "Get data",
         "measureColumns": "View measures as columns",
         "legalWarning": "Legal warning",
+        "starModel": "Star model",
         "recodeDates": "Recode dates"
     }
 }
