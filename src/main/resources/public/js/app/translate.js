@@ -23,12 +23,14 @@ $.getJSON("translate/text.json", function(resp) {
     $("#searchIndicatorInstancesButton").text(text[language].indicator.searchInstances);
     $("#indicatorInstances").text(text[language].indicator.instances);
     $("#responseFormat").text(text[language].responseFormat);
+    $("#dataModel").prepend(text[language].dataModel);
+    $("#labelMeasureColumns").append(text[language].measureColumns);
+    $("#labelStarModel").append(text[language].starModel);
+    $("#labeling").prepend(text[language].labeling);
+    $("#labelRecodeDates").append(text[language].recodeDates);
     $("#labelShowGranularity").append(text[language].indicator.showGranularity);
     $("#labelShowLabels").append(text[language].indicator.showLabels);
     $("#labelAllLanguages").append(text[language].indicator.allLanguages);
-    $("#labelMeasureColumns").append(text[language].measureColumns);
-    $("#labelStarModel").append(text[language].starModel);
-    $("#labelRecodeDates").append(text[language].recodeDates);
     $("#dataButton").text(text[language].getData);
     $("#descIndicator").prepend(text[language].indicator.desc);
     $("#linkIndicatorAPI").attr("href", text[language].indicator.apiLink);
@@ -77,6 +79,8 @@ $.getJSON("translate/text.json", function(resp) {
     $("#searchCodelistsButton").text(text[language].codelist.searchCodelists);
     $("#codelists").text(text[language].codelist.codelists);
     $("#decodeCodelists").append(text[language].codelist.decodeCodelists);
+    $("#decoding").prepend(text[language].codelist.recoding);
+    $("#labelDecode").append(text[language].codelist.decodeQuestion);
     $("#descCodelist").prepend(text[language].codelist.desc);
     $("#linkCodelistAPI").attr("href", text[language].codelist.apiLink);
     $("#linkCodelistAPI").text(text[language].codelist.api);

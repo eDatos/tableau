@@ -144,7 +144,7 @@
                 urlCodelist = $('#selectCodelist').val() + '/codes?fields=+variableElement';
                 urlDecodeCodelist =  $('#selectDecodeCodelist').val() + '/codes?fields=+variableElement';
 
-                if (!$("#labelDecodeCodelist input").is(":checked") || isNullOrBlank($("#selectDecodeCodelist").val())) {
+                if (!$("#decode").is(":checked") || isNullOrBlank($("#selectDecodeCodelist").val())) {
                     urlDecodeCodelist = '';
                 }
 
@@ -157,7 +157,7 @@
             var urlObj = {
                 url: urlCodelist.trim(),
                 urlDecodeCodelist: urlDecodeCodelist.trim(),
-                decodeOptionEnabled: $("#labelDecodeCodelist input").is(":checked"),
+                decodeOptionEnabled: $("#decode").is(":checked"),
                 codelist01Tablename: $("#selectCodelist option:checked").text(),
                 codelist02Tablename: $("#selectDecodeCodelist option:checked").text(),
                 allLanguages: $('#allLanguages').is(':checked')
@@ -168,7 +168,7 @@
                 return url.match(".+\/codes(.json)?.+(\\?fields=+variableElement)?$") != null;
             }
 
-            if (isValidUrl(urlObj.url) && ($("#labelDownloadCodelist input").is(":checked") || isValidUrl(urlObj.urlDecodeCodelist))) {
+            if (isValidUrl(urlObj.url) && (!$("#decode").is(":checked") || isValidUrl(urlObj.urlDecodeCodelist))) {
                 $('#errorMsg').html("");
                 $('#errorNotSelectedDecoded').css("right", "-350px");
 
@@ -225,5 +225,4 @@
     }
 
 })();
-
 

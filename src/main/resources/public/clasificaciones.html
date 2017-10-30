@@ -29,12 +29,7 @@
         <div class="content">
             <div class="section" id="selectData">
                 <form>
-                    <div id="downloadDecodeContainer">
-                        <h4 id="downloadDecodeLabel"></h4>
-                        <label id="labelDownloadCodelist" class="radioLabel"><input type="radio" name="downloadDecode" onchange="onDownloadDecodeSelected(this)" value="download"></label>
-                        <label id="labelDecodeCodelist" class="radioLabel"><input type="radio" name="downloadDecode" onchange="onDownloadDecodeSelected(this)" value="decode"></label>
-                    </div>
-                    <div id="formContainer" style="display: none;">
+                    <div id="formContainer">
                         <h4 id="titleForm"></h4>
                         <label id="labelCodelistUrl" class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="url"></label>
                         <div class="row radioDiv" id="url" style="display: none">
@@ -58,16 +53,20 @@
                             <label id="codelists" class="col-xs-2"></label>
                             <select class="col-xs-10" id="selectCodelist" onchange="updateDecodelists()"></select>
                         </div>
-                        <div id="loaderDecode" class="loader" style="display: none"></div>                        
-                        <div id="decodeWrapper" class="selectDiv row radioDiv" style="display: none">
-                            <label id="decodeCodelists" class="col-xs-2"></label>
-                            <select class="col-xs-10" id="selectDecodeCodelist"></select>
-                            <span id="errorNotSelectedDecoded"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Debe seleccionar una clasificación a recodificar</span>
-                        </div>
                     </div>
                     <div class="responseFormat">
                         <h4 id="responseFormat"></h4>
-                        <label id="labelAllLanguages" class="radioLabel"><input type="checkbox" id="allLanguages"></label>
+                        <div class="subtitle" id="decoding">
+                            <label id="labelDecode" class="radioLabel"><input type="checkbox" id="decode" onchange="onDownloadDecodeSelected(this)"></label>
+                            <div id="loaderDecode" class="loader" style="display: none"></div>                        
+                            <div id="decodeWrapper" class="selectDiv row radioDiv" style="display: none">
+                                <label id="decodeCodelists" class="col-xs-2"></label>
+                                <select class="col-xs-10" id="selectDecodeCodelist"></select>
+                            </div>
+                        </div>
+                        <div class="subtitle" id="labeling">
+                            <label id="labelAllLanguages" class="radioLabel"><input type="checkbox" id="allLanguages"></label>
+                        </div>
                     </div>
                     <div class="row" id="divButton">
                         <button type="button" class="btn btn-success col-xs-2 col-xs-offset-10" id="dataButton"></button>

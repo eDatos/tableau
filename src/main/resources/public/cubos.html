@@ -55,11 +55,15 @@
 
                     <div class="responseFormat">
                         <h4 id="responseFormat"></h4>
-                        <label id="labelMeasureColumns" class="radioLabel"><input type="checkbox" id="measureColumns"></label>
-                        <label id="labelShowLabelsDataset" class="radioLabel"><input type="checkbox" id="showLabels" onclick="enableAllLanguages()"></label>
-                        <label id="labelAllLanguages" class="radioLabel"><input type="checkbox" id="allLanguages" disabled></label>
-                        <label id="labelRecodeDates" class="radioLabel"><input type="checkbox" id="recodeDates"></label>
-                        <label id="labelStarModel" class="radioLabel"><input type="checkbox" id="starModel"></label>
+                        <div class="subtitle" id="dataModel">
+                            <label id="labelMeasureColumns" class="radioLabel"><input type="checkbox" id="measureColumns" checked></label>
+                            <label id="labelStarModel" class="radioLabel"><input type="checkbox" id="starModel" checked></label>
+                        </div>
+                        <div class="subtitle" id="labeling">
+                            <label id="labelRecodeDates" class="radioLabel"><input type="checkbox" id="recodeDates" checked></label>
+                            <label id="labelShowLabelsDataset" class="radioLabel"><input type="checkbox" id="showLabels" onclick="enableAllLanguages()"></label>
+                            <label id="labelAllLanguages" class="radioLabel"><input type="checkbox" id="allLanguages" disabled></label>
+                        </div>
                     </div>
 
                     <div class="row" id="divButton">

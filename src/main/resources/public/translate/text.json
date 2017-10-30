@@ -54,7 +54,9 @@
             },
             "downloadDecodeLabel": "Indique la operación que desea realizar:",
             "downloadCodelistOption": "Descargar una clasificación",
-            "decodeCodelistOption": "Recodificar una clasificación"
+            "decodeCodelistOption": "Recodificar una clasificación",
+            "recoding": "Recodificación",
+            "decodeQuestion": "¿Desea realizar un recodificación?"
         },
         "dataset": {
             "name": "Cubo: ",
@@ -97,7 +99,9 @@
         "measureColumns": "Visualizar las medidas como columnas",
         "legalWarning": "Aviso legal",
         "starModel" : "Modelo estrella",
-        "recodeDates": "Incluir campo calculado con fecha a partir de periodos de referencia"
+        "recodeDates": "Incluir campo calculado con fecha a partir de periodos de referencia",
+        "dataModel": "Modelo de datos",
+        "labeling": "Etiquetado"
     },
     "en": {
         "indicator": {
@@ -143,7 +147,9 @@
             "li": {
                 "url": "Introducir la URL de los datos que se desea cargar. Esta URL debe ser una petición que devuelva los códigos de una clasificación y, por tanto, debe acabar en \"/codes\".",
                 "criteria": "Navegar por distintos criterios para seleccionar el recurso que desea cargar."
-            }
+            },
+            "recoding": "Recoding",
+            "decodeQuestion": "Do you want to recode the codelist?"
         },
         "dataset": {
             "name": "Dataset: ",
@@ -185,6 +191,8 @@
         "measureColumns": "View measures as columns",
         "legalWarning": "Legal warning",
         "starModel": "Star model",
-        "recodeDates": "Recode dates"
+        "recodeDates": "Recode dates",
+        "dataModel": "Data model",
+        "labeling": "Labeling"
     }
 }
