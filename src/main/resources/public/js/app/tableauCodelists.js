@@ -49,7 +49,7 @@
 
         if (urlObj.allLanguages) {
             for (i = 0; i < urlObj.languages.length; i++) {
-                colsCodelist01.push({i : "Nombre_origen_" + urlObj.languages[i], columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+                colsCodelist01.push({id: "Nombre_origen_" + urlObj.languages[i], columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
             }
         } else {
             colsCodelist01.push({id: "Nombre_origen", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
