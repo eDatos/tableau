@@ -1,6 +1,7 @@
 (function () {
     var myConnector = tableau.makeConnector();
     var urlIndicator;
+    var number = 1;
 
     myConnector.getSchema = function (schemaCallback) {
         var urlObj = JSON.parse(tableau.connectionData);
@@ -29,29 +30,32 @@
 
                 var tableMeasure = {
                     id: "measure",
-                    alias: "Medida",
+                    alias: addNumber(number) + "Medida",
                     columns: measureColumns
                 }
+                number++;
                 tables.push(tableMeasure);
             }
 
             var tableGeographic = {
                 id: "geographic",
-                alias: "Geográfica",
+                alias: addNumber(number) + "Geográfica",
                 columns: _buildCols(urlObj, columnsGeographic, urlObj.geographicalLanguages)
             };
+            number++;
             tables.push(tableGeographic);
 
             var tableTime = {
                 id: "time",
-                alias: "Temporal",
+                alias: addNumber(number) + "Temporal",
                 columns: _buildCols(urlObj, columnsTime, urlObj.timeLanguages)
             };
+            number++;
             tables.push(tableTime);
 
             var tableInfo = {
                 id: "indicatorData",
-                alias: tableau.connectionName,
+                alias: addNumber(number) + tableau.connectionName,
                 columns: cols
             };
             tables.push(tableInfo);
@@ -74,7 +78,7 @@
 
             tables.push({
                 id: "indicatorData",
-                alias: tableau.connectionName,
+                alias: addNumber(number) + tableau.connectionName,
                 columns: mainCols 
             });
         }

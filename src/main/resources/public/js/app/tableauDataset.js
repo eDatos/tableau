@@ -1,6 +1,7 @@
 (function () {
     var myConnector = tableau.makeConnector();
     var urlDataset;
+    var number = 1;
 
     myConnector.getSchema = function (schemaCallback) {
         var urlObj = JSON.parse(tableau.connectionData);
@@ -24,9 +25,10 @@
                     cols.push({ id: urlObj.dimensions[i].id, alias: urlObj.dimensions[i].label, columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
                     tables.push({
                         id: urlObj.dimensions[i].id,
-                        alias: urlObj.dimensions[i].label,
+                        alias: addNumber(number) + urlObj.dimensions[i].label,
                         columns: _buildColumns(urlObj, urlObj.dimensions[i], urlObj.languages)
                     });
+                    number++;
                 }
             }
         } else {
@@ -49,7 +51,7 @@
 
         var tableInfo = {
             id: "datasetData",
-            alias: tableau.connectionName,
+            alias: addNumber(number) + tableau.connectionName,
             columns: cols
         };
         tables.push(tableInfo);

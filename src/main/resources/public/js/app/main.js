@@ -18,6 +18,10 @@ $.getJSON("config/properties.json", function(resp) {
     });
 });
 
+function addNumber(number) {
+    return number < 10 ? "0" + number + " " : number + " ";
+}
+
 function onDownloadDecodeSelected(downloadDecodeRadio) {
     if ($("#" + downloadDecodeRadio.id).is(":checked")) {
         searchCodelists();
