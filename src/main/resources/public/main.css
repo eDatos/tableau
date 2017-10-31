@@ -40,7 +40,7 @@
 }
 
 .footerImage {
-    width: 90px;
+    width: 120px;
 }
 
 
@@ -110,7 +110,7 @@
 }
 
 #selectData form #divButton {
-    margin-top: 8%;
+    margin-top: 3%;
     margin-right: 7%;
 }
 
@@ -174,13 +174,12 @@ h3 {
 }
 
 .subtitle {
-    font-weight: bold;
     margin-left: 3%;
     margin-top: 2%;
 }
 
-.subtitle span {
-    font-weight: initial;
+.responseFormat {
+    margin-top: 5%;
 }
 
 /* Spinner */
