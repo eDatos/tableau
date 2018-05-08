@@ -58,6 +58,22 @@
             "recoding": "Recodificación",
             "decodeQuestion": "¿Desea realizar un recodificación?"
         },
+        "legalWarning": {
+            "navbar": "Aviso legal",
+            "title": "Aviso legal",
+            "infoUse": "Los información aportada por este Web Data Connector (WDC) es reutilizable en los términos previstos en la Ley 37/2007, de 16 de noviembre, sobre reutilización de la información del sector público, como información puesta a disposición del público con sujeción a ",
+            "generalTerms": "condiciones establecidas en licencias-tipo, y concretamente a las condiciones generales de reutilización de contenidos del Instituto Canario de Estadística (ISTAC)",
+            "generalTermsLink": "http://www.gobiernodecanarias.org/istac/aviso_legal.html#a4",
+            "and": " y a las ",
+            "particularTerms": "Condiciones particulares de uso de las APIs",
+            "particularTermsLink": "http://www.gobiernodecanarias.org/istac/aviso_legal.html#a5",
+            "notAllowedUse": "La utilización indebida o, en su caso, no autorizada, de la información contenida en este WDC, así como los perjuicios que se puedan ocasionar en los derechos de propiedad intelectual del ISTAC, dará lugar al ejercicio de las acciones que legalmente correspondan y, si procede, a las responsabilidades que de dicho ejercicio se deriven.",
+            "unfulfilment": "El incumplimiento de las condiciones de uso de la información se sancionará en los términos previstos en el artículo 11 de la Ley 37/2007, de 16 de noviembre, sobre reutilización de la información del sector público.",
+            "moreInfo": "Si desea más información puede consultar el ",
+            "istacLW": "Aviso Legal",
+            "istacLWLink": "http://www.gobiernodecanarias.org/istac/aviso_legal.html",
+            "ofIstac": " del Instituto Canario de Estadística (ISTAC)."
+        },
         "dataset": {
             "name": "Cubo: ",
             "navbar": "Cubos",
@@ -97,7 +113,6 @@
         "responseFormat": "Formato de respuesta:",
         "getData": "Obtener datos",
         "measureColumns": "Visualizar las medidas como columnas",
-        "legalWarning": "Aviso legal",
         "starModel" : "Modelo estrella",
         "recodeDates": "Incluir campo calculado con fecha a partir de periodos de referencia",
         "dataModel": "Modelo de datos",
@@ -151,6 +166,22 @@
             "recoding": "Recoding",
             "decodeQuestion": "Do you want to recode the codelist?"
         },
+        "legalWarning": {
+            "navbar": "Legal warning",
+            "title": "Legal warning",
+            "infoUse": "Los información aportada por este Web Data Connector (WDC) es reutilizable en los términos previstos en la Ley 37/2007, de 16 de noviembre, sobre reutilización de la información del sector público, como información puesta a disposición del público con sujeción a ",
+            "generalTerms": "condiciones establecidas en licencias-tipo, y concretamente a las condiciones generales de reutilización de contenidos del Instituto Canario de Estadística (ISTAC)",
+            "generalTermsLink": "http://www.gobiernodecanarias.org/istac/aviso_legal.html#a4",
+            "and": " y a las ",
+            "particularTerms": "Condiciones particulares de uso de las APIs",
+            "particularTermsLink": "http://www.gobiernodecanarias.org/istac/aviso_legal.html#a5",
+            "notAllowedUse": "La utilización indebida o, en su caso, no autorizada, de la información contenida en este WDC, así como los perjuicios que se puedan ocasionar en los derechos de propiedad intelectual del ISTAC, dará lugar al ejercicio de las acciones que legalmente correspondan y, si procede, a las responsabilidades que de dicho ejercicio se deriven.",
+            "unfulfilment": "El incumplimiento de las condiciones de uso de la información se sancionará en los términos previstos en el artículo 11 de la Ley 37/2007, de 16 de noviembre, sobre reutilización de la información del sector público.",
+            "moreInfo": "Si desea más información puede consultar el ",
+            "istacLW": "Aviso Legal",
+            "istacLWLink": "http://www.gobiernodecanarias.org/istac/aviso_legal.html",
+            "ofIstac": " del Instituto Canario de Estadística (ISTAC)."
+        },
         "dataset": {
             "name": "Dataset: ",
             "navbar": "Datasets",
@@ -189,7 +220,6 @@
         "responseFormat": "Response format:",
         "getData": "Get data",
         "measureColumns": "View measures as columns",
-        "legalWarning": "Legal warning",
         "starModel": "Star model",
         "recodeDates": "Recode dates",
         "dataModel": "Data model",

@@ -88,4 +88,19 @@ $.getJSON("translate/text.json", function(resp) {
     $("#codelistUse").text(text[language].codelist.use);
     $("#liUrlCodelist").text(text[language].codelist.li.url);
     $("#liCriteriaCodelist").text(text[language].codelist.li.criteria);
+
+    $("#titleLegal").text(text[language].legalWarning.title);
+    $("#infoUse").prepend(text[language].legalWarning.infoUse);
+    $("#generalTermsLink").attr("href", text[language].legalWarning.generalTermsLink);
+    $("#generalTermsLink").text(text[language].legalWarning.generalTerms);
+    $("#generalAndParticular").replaceWith(text[language].legalWarning.and);
+    $("#particularTermsLink").attr("href", text[language].legalWarning.particularTermsLink);
+    $("#particularTermsLink").text(text[language].legalWarning.particularTerms);
+    $("#infoUse").append(".");
+    $("#notAllowedUse").text(text[language].legalWarning.notAllowedUse);
+    $("#unfulfilment").text(text[language].legalWarning.unfulfilment);
+    $("#moreInfo").prepend(text[language].legalWarning.moreInfo);
+    $("#istacLWLink").attr("href", text[language].legalWarning.istacLWLink);
+    $("#istacLWLink").text(text[language].legalWarning.istacLW);
+    $("#moreInfo").append(text[language].legalWarning.ofIstac);
 });
