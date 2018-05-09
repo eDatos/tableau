@@ -44,6 +44,7 @@
             "searchCodelists": "Buscar clasificaciones",
             "codelists": "Clasificaciones:",
             "decodeCodelists": "Clasificación a recodificar:",
+            "emptyDecodeCodelists": "No hay ninguna clasificación de destino a la que poder recodificar",
             "desc": "Este conector le permite cargar cualquiera de las clasificaciones que utiliza el ISTAC para codificar sus variables / conceptos. Estos datos se publican originalmente a través de la ",
             "apiLink": "http://www.gobiernodecanarias.org/istac/api/structural-resources",
             "api": "API de Recursos Estructurales",
