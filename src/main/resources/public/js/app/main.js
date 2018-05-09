@@ -254,7 +254,12 @@ function updateDecodelists() {
             return item.id != $("#selectCodelist").val();
         }), 'text'),
         dropdownAutoWidth : true,
-        width: '83.3%'
+        width: '83.3%',
+        language: {
+            noResults: function() {
+                return text[language].codelist.emptyDecodeCodelists;
+            }
+        }
     });
     $("#loaderDecode").hide();
 }
