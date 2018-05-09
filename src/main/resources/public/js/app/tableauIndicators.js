@@ -1,7 +1,7 @@
 (function () {
     var myConnector = tableau.makeConnector();
     var urlIndicator;
-    const connectionTableNumber = 1;
+    const CONNECTION_TABLE_NUMBER = 1;
     var number = 2;
 
     myConnector.getSchema = function (schemaCallback) {
@@ -56,7 +56,7 @@
 
             var tableInfo = {
                 id: "indicatorData",
-                alias: addNumber(connectionTableNumber) + tableau.connectionName,
+                alias: addNumber(CONNECTION_TABLE_NUMBER) + tableau.connectionName,
                 columns: cols
             };
             tables.push(tableInfo);
@@ -79,7 +79,7 @@
 
             tables.push({
                 id: "indicatorData",
-                alias: addNumber(connectionTableNumber) + tableau.connectionName,
+                alias: addNumber(CONNECTION_TABLE_NUMBER) + tableau.connectionName,
                 columns: mainCols 
             });
         }
