@@ -84,6 +84,8 @@
 								<excludes>
 									<exclude>public/node_modules/**</exclude>
 									<exclude>public/node/**</exclude>
+									<exclude>package.json</exclude>
+									<exclude>yarn.lock</exclude>
 								</excludes>
 							</resource>
 						</resources>
