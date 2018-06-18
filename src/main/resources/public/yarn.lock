@@ -6,6 +6,10 @@ async@^1.5.2:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
 
+bootstrap@3.3.6:
+  version "3.3.6"
+  resolved "http://repository.arte-consultores.com/repository/npm-all/bootstrap/-/bootstrap-3.3.6.tgz#8de8f749dc8a743f2ac5b510d988371e3daa6589"
+
 colors@1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/colors/-/colors-1.0.3.tgz#0433f44d809680fdeb60ed260f1b0c262e82a40b"
@@ -33,6 +37,10 @@ eventemitter3@1.x.x:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-1.2.0.tgz#1c86991d816ad1e504750e73874224ecf3bec508"
 
+font-awesome@4.7.0:
+  version "4.7.0"
+  resolved "http://repository.arte-consultores.com/repository/npm-all/font-awesome/-/font-awesome-4.7.0.tgz#8fa8cf0411a1a31afd07b06d2902bb9fc815a133"
+
 he@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/he/-/he-1.1.1.tgz#93410fd21b009735151f8868c2f271f3427e23fd"
@@ -56,6 +64,10 @@ http-server@^0.10.0:
     optimist "0.6.x"
     portfinder "^1.0.13"
     union "~0.4.3"
+
+jquery@1.9.1:
+  version "1.9.1"
+  resolved "http://repository.arte-consultores.com/repository/npm-all/jquery/-/jquery-1.9.1.tgz#e4cd4835faaefbade535857613c0fc3ff2adaf34"
 
 mime@^1.2.11:
   version "1.3.6"

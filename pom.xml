@@ -17,9 +17,56 @@
     	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     	<!--MVN -->
         <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
+		<frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
+		<node.version>v6.11.1</node.version>
+		<yarn.version>v0.27.5</yarn.version>
 	</properties>
 
 	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<version>${frontend-maven-plugin.version}</version>
+
+				<configuration>
+					<workingDirectory>src/main/resources/public</workingDirectory>
+				</configuration>
+
+				<executions>
+					<execution>
+						<id>install node and npm</id>
+						<goals>
+							<goal>install-node-and-yarn</goal>
+						</goals>
+						<configuration>
+							<nodeVersion>${node.version}</nodeVersion>
+							<yarnVersion>${yarn.version}</yarnVersion>
+						</configuration>
+					</execution>
+					<execution>
+						<id>yarn install</id>
+						<goals>
+							<goal>yarn</goal>
+						</goals>
+						<configuration>
+							<arguments>install</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>yarn run build</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>yarn</goal>
+						</goals>
+						<configuration>
+							<arguments>run build</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>	
+		</plugins>
+
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -31,6 +78,15 @@
 						<delimiters>
 							<delimiter>${resource.delimiter}</delimiter>
 						</delimiters>
+						<resources>
+							<resource>
+								<directory>src/main/resources/public/</directory>
+								<excludes>
+									<exclude>node_modules/**</exclude>
+									<exclude>node/**</exclude>
+								</excludes>
+							</resource>
+						</resources>
 					</configuration>
 				</plugin>
 				<plugin>

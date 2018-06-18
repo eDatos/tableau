@@ -1,89 +1,102 @@
 <html>
-    <head>
-        <title>WDC ISTAC</title>
-        <meta charset="UTF-8">
-        <meta http-equiv="Cache-Control" content="no-store" />
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
-        <link href="main.css" rel="stylesheet">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" crossorigin="anonymous"></script>
-        <script src="https://connectors.tableau.com/libs/tableauwdc-2.2.latest.js" type="text/javascript"></script>
-        <script src="js/vendor/lodash.js" type="text/javascript"></script>
-        <script src="js/app/tableauCodelists.js" type="text/javascript"></script>
-        <script src="js/app/main.js" type="text/javascript"></script>
-        <script src="js/app/translate.js" type="text/javascript"></script>
-        <script>
-            $(function() {
-                $("#headerTemplate").load("templates/header.html", function() {
-                    $("#clasificaciones").addClass("active");
-                });
-                $("#footerTemplate").load("templates/footer.html");
-            });
-        </script>
-    </head>
-    <body>
-        <div id="headerTemplate"></div>
-        <div class="content">
-            <div class="section" id="selectData">
-                <form>
-                    <div id="formContainer">
-                        <h4 id="titleForm"></h4>
-                        <label id="labelCodelistUrl" class="radioLabel"><input type="radio" name="datatype" onclick="chooseDataOption(this)" value="url"></label>
-                        <div class="row radioDiv" id="url" style="display: none">
-                                <label id="labelUrl" class="col-xs-2"></label>
-                                <input class="col-xs-10" name="url" id="inputUrl" />
-                        </div>
 
-                        <label id="selectVariableLabel" class="radioLabel"><input id="selectVariableInput" type="radio" name="datatype" onchange="chooseDataOption(this)" value="variableFamily" checked></label>
-                        <div id="loaderVariableFamily" class="loader first-loader" style="display: none"></div>
-                        <div class="selectDiv row radioDiv" id="variableFamily">
-                            <label id="families" class="col-xs-2"></label>
-                            <select class="col-xs-10" id="selectVariableFamily" style="width: 83.3%" onchange="searchVariables()"></select>
-                        </div>
-                        <div id="loaderVariable" class="loader" style="display: none"></div>
-                        <div class="selectDiv row radioDiv" style="display: none">
-                            <label id="variables" class="col-xs-2"></label>
-                            <select class="col-xs-10" id="selectVariable" onchange="searchCodelists()"></select>
-                        </div>
-                        <div id="loaderCodelist" class="loader" style="display: none"></div>
-                        <div class="selectDiv row radioDiv" style="display: none">
-                            <label id="codelists" class="col-xs-2"></label>
-                            <select class="col-xs-10" id="selectCodelist" onchange="updateDecodelists()"></select>
-                        </div>
+<head>
+    <title>WDC ISTAC</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-store" />
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+    <link href="css/main.css" rel="stylesheet">
+    <script src="js/vendor/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script src="js/vendor/bootstrap.min.js"></script>
+    <script src="https://connectors.tableau.com/libs/tableauwdc-2.2.latest.js" type="text/javascript"></script>
+    <script src="js/vendor/lodash.js" type="text/javascript"></script>
+    <script src="js/app/tableauCodelists.js" type="text/javascript"></script>
+    <script src="js/app/main.js" type="text/javascript"></script>
+    <script src="js/app/translate.js" type="text/javascript"></script>
+    <script>
+        $(function () {
+            $("#headerTemplate").load("templates/header.html", function () {
+                $("#clasificaciones").addClass("active");
+            });
+            $("#footerTemplate").load("templates/footer.html");
+        });
+    </script>
+</head>
+
+<body>
+    <div id="headerTemplate"></div>
+    <div class="content">
+        <div class="section" id="selectData">
+            <form>
+                <div id="formContainer">
+                    <h4 id="titleForm"></h4>
+                    <label id="labelCodelistUrl" class="radioLabel">
+                        <input type="radio" name="datatype" onclick="chooseDataOption(this)" value="url">
+                    </label>
+                    <div class="row radioDiv" id="url" style="display: none">
+                        <label id="labelUrl" class="col-xs-2"></label>
+                        <input class="col-xs-10" name="url" id="inputUrl" />
                     </div>
-                    <div class="responseFormat">
-                        <h4 id="responseFormat"></h4>
-                        <div class="subtitle" id="decoding">
-                            <label id="labelDecode" class="radioLabel"><input type="checkbox" id="decode" onchange="onDownloadDecodeSelected(this)"></label>
-                            <div id="loaderDecode" class="loader" style="display: none"></div>                        
-                            <div id="decodeWrapper" class="selectDiv row radioDiv" style="display: none">
-                                <label id="decodeCodelists" class="col-xs-2"></label>
-                                <select class="col-xs-10" id="selectDecodeCodelist"></select>
-                            </div>
-                        </div>
-                        <div class="subtitle" id="labeling">
-                            <label id="labelAllLanguages" class="radioLabel"><input type="checkbox" id="allLanguages"></label>
-                        </div>
+
+                    <label id="selectVariableLabel" class="radioLabel">
+                        <input id="selectVariableInput" type="radio" name="datatype" onchange="chooseDataOption(this)" value="variableFamily" checked>
+                    </label>
+                    <div id="loaderVariableFamily" class="loader first-loader" style="display: none"></div>
+                    <div class="selectDiv row radioDiv" id="variableFamily">
+                        <label id="families" class="col-xs-2"></label>
+                        <select class="col-xs-10" id="selectVariableFamily" style="width: 83.3%" onchange="searchVariables()"></select>
                     </div>
-                    <div class="row" id="divButton">
-                        <button type="button" class="btn btn-success col-xs-2 col-xs-offset-10" id="dataButton"></button>
+                    <div id="loaderVariable" class="loader" style="display: none"></div>
+                    <div class="selectDiv row radioDiv" style="display: none">
+                        <label id="variables" class="col-xs-2"></label>
+                        <select class="col-xs-10" id="selectVariable" onchange="searchCodelists()"></select>
                     </div>
-                    <div id="errorMsg"></div>
-                </form>
-            </div>
-            <div class="section">
-                <div class="text">
-                    <p id="descCodelist"><a id="linkCodelistAPI"></a></p>
-                    <p id="codelistUse"></p>
-                    <ol>
-                        <li id="liUrlCodelist"></li>
-                        <li id="liCriteriaCodelist"></li>
+                    <div id="loaderCodelist" class="loader" style="display: none"></div>
+                    <div class="selectDiv row radioDiv" style="display: none">
+                        <label id="codelists" class="col-xs-2"></label>
+                        <select class="col-xs-10" id="selectCodelist" onchange="updateDecodelists()"></select>
+                    </div>
                 </div>
+                <div class="responseFormat">
+                    <h4 id="responseFormat"></h4>
+                    <div class="subtitle" id="decoding">
+                        <label id="labelDecode" class="radioLabel">
+                            <input type="checkbox" id="decode" onchange="onDownloadDecodeSelected(this)">
+                        </label>
+                        <div id="loaderDecode" class="loader" style="display: none"></div>
+                        <div id="decodeWrapper" class="selectDiv row radioDiv" style="display: none">
+                            <label id="decodeCodelists" class="col-xs-2"></label>
+                            <select class="col-xs-10" id="selectDecodeCodelist"></select>
+                        </div>
+                    </div>
+                    <div class="subtitle" id="labeling">
+                        <label id="labelAllLanguages" class="radioLabel">
+                            <input type="checkbox" id="allLanguages">
+                        </label>
+                    </div>
+                </div>
+                <div class="row" id="divButton">
+                    <button type="button" class="btn btn-success col-xs-2 col-xs-offset-10" id="dataButton"></button>
+                </div>
+                <div id="errorMsg"></div>
+            </form>
+        </div>
+        <div class="section">
+            <div class="text">
+                <p id="descCodelist">
+                    <a id="linkCodelistAPI"></a>
+                </p>
+                <p id="codelistUse"></p>
+                <ol>
+                    <li id="liUrlCodelist"></li>
+                    <li id="liCriteriaCodelist"></li>
             </div>
         </div>
-        <div id="footerTemplate"></div>        
-    </body>
+    </div>
+    <div id="footerTemplate"></div>
+</body>
+
 </html>

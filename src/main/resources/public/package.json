@@ -1,9 +1,17 @@
 {
     "scripts": {
         "http-server": "node node_modules/http-server/bin/http-server -p 8888 -c-1",
-        "start": "http-server"
+        "start": "http-server",
+        "copy:fontawesome": "cp node_modules/font-awesome/css/font-awesome.min.css css && cp node_modules/font-awesome/fonts/* fonts",
+        "copy:jquery": "cp node_modules/jquery/jquery.min.js js/vendor",
+        "copy:bootstrap": "cp node_modules/bootstrap/dist/js/bootstrap.min.js js/vendor && cp node_modules/bootstrap/dist/css/bootstrap.min.css css",
+        "copy:vendor": "npm run copy:bootstrap && npm run copy:jquery && npm run copy:fontawesome",
+        "build": "npm run copy:vendor"
     },
     "dependencies": {
-        "http-server": "^0.10.0"
+        "bootstrap": "3.3.6",
+        "font-awesome": "4.7.0",
+        "http-server": "^0.10.0",
+        "jquery": "1.9.1"
     }
 }

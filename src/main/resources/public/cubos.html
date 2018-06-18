@@ -1,89 +1,102 @@
 <html>
-    <head>
-        <title>WDC ISTAC</title>
-        <meta charset="UTF-8">
-        <meta http-equiv="Cache-Control" content="no-store" />
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
-        <link href="main.css" rel="stylesheet">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" crossorigin="anonymous"></script>
-        <script src="https://connectors.tableau.com/libs/tableauwdc-2.2.latest.js" type="text/javascript"></script>
-        <script src="js/vendor/lodash.js" type="text/javascript"></script>
-        <script src="js/app/recodeDates.js" type="text/javascript"></script>
-        <script src="js/app/tableauDataset.js" type="text/javascript"></script>
-        <script src="js/app/main.js" type="text/javascript"></script>
-        <script src="js/app/translate.js" type="text/javascript"></script>
-        <script>
-            $(function() {
-                $("#headerTemplate").load("templates/header.html", function() {
-                    $("#cubos").addClass("active");
-                });
-                $("#footerTemplate").load("templates/footer.html");
+
+<head>
+    <title>WDC ISTAC</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-store" />
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+    <link href="css/main.css" rel="stylesheet">
+    <script src="js/vendor/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script src="js/vendor/bootstrap.min.js"></script>
+    <script src="https://connectors.tableau.com/libs/tableauwdc-2.2.latest.js" type="text/javascript"></script>
+    <script src="js/vendor/lodash.js" type="text/javascript"></script>
+    <script src="js/app/recodeDates.js" type="text/javascript"></script>
+    <script src="js/app/tableauDataset.js" type="text/javascript"></script>
+    <script src="js/app/main.js" type="text/javascript"></script>
+    <script src="js/app/translate.js" type="text/javascript"></script>
+    <script>
+        $(function () {
+            $("#headerTemplate").load("templates/header.html", function () {
+                $("#cubos").addClass("active");
             });
-        </script>
-    </head>
-    <body>
-        <div id="headerTemplate"></div>
-        <div class="content">
-            <div class="section" id="selectData">
-                <form>
-                    <h4 id="titleForm"></h4>
-                    <label id="labelDatasetUrl" class="radioLabel">
-                        <input type="radio" name="datatype" onclick="chooseDataOption(this)" value="url">
-                    </label>
-                    <div class="row radioDiv" id="url" style="display: none">
-                        <label id="labelUrl" class="col-xs-2"></label>
-                        <input class="col-xs-10" name="url" id="inputUrl" />
-                    </div>
+            $("#footerTemplate").load("templates/footer.html");
+        });
+    </script>
+</head>
 
-                    <label id="labelSelectOperation" class="radioLabel">
-                        <input type="radio" name="datatype" onclick="chooseDataOption(this)" value="operation" checked>
-                    </label>
-                    <div id="loaderOperation" class="loader first-loader" style="display: none"></div>
-                    <div class="selectDiv row radioDiv" id="operation">
-                        <label id="operations" class="col-xs-2"></label>
-                        <select class="col-xs-10" id="selectOperation" style="width: 83.3%" onchange="searchDatasets()"></select>
-                    </div>
-                    <div id="loaderDataset" class="loader" style="display: none"></div>
-                    <div class="selectDiv row radioDiv" style="display: none">
-                        <label id="datasets" class="col-xs-2"></label>
-                        <select class="col-xs-10" id="selectDataset"></select>
-                    </div>
+<body>
+    <div id="headerTemplate"></div>
+    <div class="content">
+        <div class="section" id="selectData">
+            <form>
+                <h4 id="titleForm"></h4>
+                <label id="labelDatasetUrl" class="radioLabel">
+                    <input type="radio" name="datatype" onclick="chooseDataOption(this)" value="url">
+                </label>
+                <div class="row radioDiv" id="url" style="display: none">
+                    <label id="labelUrl" class="col-xs-2"></label>
+                    <input class="col-xs-10" name="url" id="inputUrl" />
+                </div>
 
-                    <div class="responseFormat">
-                        <h4 id="responseFormat"></h4>
-                        <div class="subtitle" id="dataModel">
-                            <label id="labelMeasureColumns" class="radioLabel"><input type="checkbox" id="measureColumns" checked></label>
-                            <label id="labelStarModel" class="radioLabel"><input type="checkbox" id="starModel" checked></label>
-                        </div>
-                        <div class="subtitle" id="labeling">
-                            <label id="labelRecodeDates" class="radioLabel"><input type="checkbox" id="recodeDates" checked></label>
-                            <label id="labelShowLabelsDataset" class="radioLabel"><input type="checkbox" id="showLabels" onclick="enableAllLanguages()"></label>
-                            <label id="labelAllLanguages" class="radioLabel"><input type="checkbox" id="allLanguages" disabled></label>
-                        </div>
-                    </div>
+                <label id="labelSelectOperation" class="radioLabel">
+                    <input type="radio" name="datatype" onclick="chooseDataOption(this)" value="operation" checked>
+                </label>
+                <div id="loaderOperation" class="loader first-loader" style="display: none"></div>
+                <div class="selectDiv row radioDiv" id="operation">
+                    <label id="operations" class="col-xs-2"></label>
+                    <select class="col-xs-10" id="selectOperation" style="width: 83.3%" onchange="searchDatasets()"></select>
+                </div>
+                <div id="loaderDataset" class="loader" style="display: none"></div>
+                <div class="selectDiv row radioDiv" style="display: none">
+                    <label id="datasets" class="col-xs-2"></label>
+                    <select class="col-xs-10" id="selectDataset"></select>
+                </div>
 
-                    <div class="row" id="divButton">
-                        <button type="button" class="btn btn-success col-xs-2 col-xs-offset-10" id="dataButton"></button>
+                <div class="responseFormat">
+                    <h4 id="responseFormat"></h4>
+                    <div class="subtitle" id="dataModel">
+                        <label id="labelMeasureColumns" class="radioLabel">
+                            <input type="checkbox" id="measureColumns" checked>
+                        </label>
+                        <label id="labelStarModel" class="radioLabel">
+                            <input type="checkbox" id="starModel" checked>
+                        </label>
                     </div>
-                    <div id="errorMsg"></div>
-                    
-                </form>
-            </div>
-            <div class="section">
-                <p id="descDataset">
-                    <a id="linkDatasetAPI"></a>
-                </p>
-                <p id="datasetUse"></p>
-                <ol>
-                    <li id="liUrlDataset"></li>
-                    <li id="liOperationDataset"></li>
-                </ol>
-            </div>
+                    <div class="subtitle" id="labeling">
+                        <label id="labelRecodeDates" class="radioLabel">
+                            <input type="checkbox" id="recodeDates" checked>
+                        </label>
+                        <label id="labelShowLabelsDataset" class="radioLabel">
+                            <input type="checkbox" id="showLabels" onclick="enableAllLanguages()">
+                        </label>
+                        <label id="labelAllLanguages" class="radioLabel">
+                            <input type="checkbox" id="allLanguages" disabled>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="row" id="divButton">
+                    <button type="button" class="btn btn-success col-xs-2 col-xs-offset-10" id="dataButton"></button>
+                </div>
+                <div id="errorMsg"></div>
+
+            </form>
         </div>
-        <div id="footerTemplate"></div>            
-        </body>
-    </html>
+        <div class="section">
+            <p id="descDataset">
+                <a id="linkDatasetAPI"></a>
+            </p>
+            <p id="datasetUse"></p>
+            <ol>
+                <li id="liUrlDataset"></li>
+                <li id="liOperationDataset"></li>
+            </ol>
+        </div>
+    </div>
+    <div id="footerTemplate"></div>
+</body>
+
+</html>
