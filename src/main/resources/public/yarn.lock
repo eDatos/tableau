@@ -2,6 +2,10 @@
 # yarn lockfile v1
 
 
+almond@~0.3.1:
+  version "0.3.3"
+  resolved "http://repository.arte-consultores.com/repository/npm-all/almond/-/almond-0.3.3.tgz#a0e7c95ac7624d6417b4494b1e68bff693168a20"
+
 async@^1.5.2:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
@@ -65,9 +69,13 @@ http-server@^0.10.0:
     portfinder "^1.0.13"
     union "~0.4.3"
 
-jquery@1.9.1:
-  version "1.9.1"
-  resolved "http://repository.arte-consultores.com/repository/npm-all/jquery/-/jquery-1.9.1.tgz#e4cd4835faaefbade535857613c0fc3ff2adaf34"
+jquery-mousewheel@~3.1.13:
+  version "3.1.13"
+  resolved "http://repository.arte-consultores.com/repository/npm-all/jquery-mousewheel/-/jquery-mousewheel-3.1.13.tgz#06f0335f16e353a695e7206bf50503cb523a6ee5"
+
+jquery@^1.9.2:
+  version "1.12.4"
+  resolved "http://repository.arte-consultores.com/repository/npm-all/jquery/-/jquery-1.12.4.tgz#01e1dfba290fe73deba77ceeacb0f9ba2fec9e0c"
 
 mime@^1.2.11:
   version "1.3.6"
@@ -121,6 +129,13 @@ qs@~2.3.3:
 requires-port@1.x.x:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
+
+select2@4.0.3:
+  version "4.0.3"
+  resolved "http://repository.arte-consultores.com/repository/npm-all/select2/-/select2-4.0.3.tgz#207733fe91eacb9cb1a13f12463401f472449e0f"
+  dependencies:
+    almond "~0.3.1"
+    jquery-mousewheel "~3.1.13"
 
 union@~0.4.3:
   version "0.4.6"

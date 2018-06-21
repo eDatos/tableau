@@ -15,3 +15,5 @@ src/main/resources/public/fonts/fontawesome-webfont.eot
 src/main/resources/public/js/vendor/jquery.min.js
 src/main/resources/public/js/vendor/bootstrap.min.js
 src/main/resources/public/node/
+src/main/resources/public/css/select2.min.css
+src/main/resources/public/js/vendor/select2.min.js

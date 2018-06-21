@@ -3,15 +3,17 @@
         "http-server": "node node_modules/http-server/bin/http-server -p 8888 -c-1",
         "start": "http-server",
         "copy:fontawesome": "cp node_modules/font-awesome/css/font-awesome.min.css css && cp node_modules/font-awesome/fonts/* fonts",
-        "copy:jquery": "cp node_modules/jquery/jquery.min.js js/vendor",
+        "copy:jquery": "cp node_modules/jquery/dist/jquery.min.js js/vendor",
+        "copy:select2": "cp node_modules/select2/dist/js/select2.min.js js/vendor && cp node_modules/select2/dist/css/select2.min.css css",
         "copy:bootstrap": "cp node_modules/bootstrap/dist/js/bootstrap.min.js js/vendor && cp node_modules/bootstrap/dist/css/bootstrap.min.css css",
-        "copy:vendor": "npm run copy:bootstrap && npm run copy:jquery && npm run copy:fontawesome",
+        "copy:vendor": "npm run copy:bootstrap && npm run copy:jquery && npm run copy:fontawesome && npm run copy:select2",
         "build": "npm run copy:vendor"
     },
     "dependencies": {
         "bootstrap": "3.3.6",
         "font-awesome": "4.7.0",
         "http-server": "^0.10.0",
-        "jquery": "1.9.1"
+        "jquery": "^1.9.2",
+        "select2": "4.0.3"
     }
 }
