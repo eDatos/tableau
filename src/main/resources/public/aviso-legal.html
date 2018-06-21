@@ -16,6 +16,7 @@
         $(function () {
             $("#headerTemplate").load("templates/header.html", function () {
                 $("#aviso").addClass("active");
+                loadHeaderTranslations();
             });
             $("#footerTemplate").load("templates/footer.html");
         });

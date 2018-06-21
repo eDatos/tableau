@@ -103,4 +103,13 @@ $.getJSON("translate/text.json", function(resp) {
     $("#istacLWLink").attr("href", text[language].legalWarning.istacLWLink);
     $("#istacLWLink").text(text[language].legalWarning.istacLW);
     $("#moreInfo").append(text[language].legalWarning.ofIstac);
+
+    loadHeaderTranslations();
 });
+
+function loadHeaderTranslations() {
+    $("#indicadores").html(text[language].indicator.navbar);
+    $("#cubos").html(text[language].dataset.navbar);
+    $("#clasificaciones").html(text[language].codelist.navbar);
+    $("#aviso").html(text[language].legalWarning.navbar);
+}
