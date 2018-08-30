@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="163mm"
+   height="51mm"
+   viewBox="0 0 163 51"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="DatosAbiertos_blanco.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4"
+     inkscape:cx="264.71356"
+     inkscape:cy="167.07431"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Capa 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-246)">
+    <path
+       d="m 64.729232,246.85575 c 1.687679,0 2.859705,0.3282 3.516079,0.98458 0.656299,0.6563 0.984474,1.82832 0.984474,3.51608 v 11.25142 c 0,1.68768 -0.328175,2.8597 -0.984474,3.51608 -0.656374,0.6563 -1.8284,0.98447 -3.516079,0.98447 H 56.85317 v -20.25263 z m 1.125119,15.75208 v -11.25142 c 0,-0.52513 -0.07027,-0.88139 -0.210994,-1.06891 -0.140646,-0.18756 -0.445305,-0.2813 -0.914125,-0.2813 h -4.500629 v 13.95183 h 4.500629 c 0.46882,0 0.773479,-0.0938 0.914125,-0.28137 0.140721,-0.18748 0.210994,-0.54378 0.210994,-1.06883"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.35277778"
+       id="path825"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="U:\imagenCorp\DatosAbiertos_blanco.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       d="m 79.91867,246.85575 5.60692,20.25263 h -3.328526 l -1.120432,-4.05049 h -5.700734 l -1.129883,4.05049 h -3.328526 l 5.644501,-20.25263 z m -3.661414,13.05169 h 3.947395 l -1.875308,-6.79301 -0.18279,0.014 z"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.35277778"
+       id="path827"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="U:\imagenCorp\DatosAbiertos_blanco.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       d="m 96.795863,246.85575 v 3.15045 h -4.500628 v 17.10218 H 88.919802 V 250.0062 h -4.500579 v -3.15045 z"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.35277778"
+       id="path829"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="U:\imagenCorp\DatosAbiertos_blanco.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       d="m 106.3596,246.85575 c 1.68768,0 2.85971,0.3282 3.51608,0.98458 0.6563,0.6563 0.98448,1.82832 0.98448,3.51608 v 11.25142 c 0,1.68768 -0.32818,2.8597 -0.98448,3.51608 -0.65637,0.6563 -1.8284,0.98447 -3.51608,0.98447 h -3.37543 c -1.68775,0 -2.85978,-0.32817 -3.516079,-0.98447 -0.656374,-0.65638 -0.984548,-1.8284 -0.984548,-3.51608 v -11.25142 c 0,-1.68776 0.328174,-2.85978 0.984548,-3.51608 0.656299,-0.65638 1.828329,-0.98458 3.516079,-0.98458 z m 1.12512,15.75208 v -11.25142 c 0,-0.52513 -0.0703,-0.88139 -0.21099,-1.06891 -0.14062,-0.18756 -0.44535,-0.2813 -0.91413,-0.2813 h -3.37543 c -0.46882,0 -0.77355,0.0937 -0.9142,0.2813 -0.14065,0.18752 -0.21099,0.54378 -0.21099,1.06891 v 11.25142 c 0,0.52505 0.0703,0.88135 0.21099,1.06883 0.14065,0.18756 0.44538,0.28137 0.9142,0.28137 h 3.37543 c 0.46878,0 0.77351,-0.0938 0.91413,-0.28137 0.14065,-0.18748 0.21099,-0.54378 0.21099,-1.06883"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.35277778"
+       id="path831"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="U:\imagenCorp\DatosAbiertos_blanco.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       d="m 125.90898,253.32535 h -3.37546 v -1.96894 c 0,-0.52513 -0.0703,-0.88139 -0.211,-1.06891 -0.14062,-0.18756 -0.44535,-0.2813 -0.91412,-0.2813 h -3.37544 c -0.46882,0 -0.77355,0.0937 -0.9142,0.2813 -0.14064,0.18752 -0.21099,0.54378 -0.21099,1.06891 v 2.8128 c 0,0.50635 0.0657,0.83921 0.19693,0.99861 0.13127,0.15935 0.44069,0.23907 0.92826,0.23907 h 3.37544 c 1.70645,0 2.88317,0.31411 3.53014,0.94228 0.64692,0.62822 0.97044,1.77678 0.97044,3.44578 v 2.81288 c 0,1.68768 -0.3282,2.8597 -0.9845,3.51608 -0.65638,0.6563 -1.8284,0.98447 -3.51608,0.98447 h -3.37544 c -1.68775,0 -2.85978,-0.32817 -3.51608,-0.98447 -0.65637,-0.65638 -0.98454,-1.8284 -0.98454,-3.51608 v -1.96902 h 3.37543 v 1.96902 c 0,0.52505 0.0704,0.88135 0.21099,1.06883 0.14065,0.18756 0.44538,0.28137 0.9142,0.28137 h 3.37544 c 0.46877,0 0.7735,-0.0938 0.91412,-0.28137 0.14065,-0.18748 0.211,-0.54378 0.211,-1.06883 v -2.81288 c 0,-0.50635 -0.0657,-0.83914 -0.19691,-0.99856 -0.13127,-0.1594 -0.44069,-0.23912 -0.92821,-0.23912 h -3.37544 c -1.7065,0 -2.88322,-0.31404 -3.53014,-0.94228 -0.647,-0.62822 -0.97048,-1.77681 -0.97048,-3.44578 v -2.8128 c 0,-1.68776 0.32817,-2.85978 0.98454,-3.51608 0.6563,-0.65638 1.82833,-0.98458 3.51608,-0.98458 h 3.37544 c 1.68768,0 2.8597,0.3282 3.51608,0.98458 0.6563,0.6563 0.9845,1.82832 0.9845,3.51608 z"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.35277778"
+       id="path833"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="U:\imagenCorp\DatosAbiertos_blanco.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       d="M 63.604037,276.24737 69.468858,296.5 H 67.73896 l -1.39701,-4.83813 H 59.155079 L 57.739216,296.5 h -1.729898 l 5.921104,-20.25263 z m -3.989513,13.83931 h 6.267981 l -3.023868,-10.47794 -0.18279,0.0141 z"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.35277778"
+       id="path835"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="U:\imagenCorp\DatosAbiertos_blanco.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       d="m 83.856664,282.71697 c 0,1.40642 -0.257827,2.35812 -0.773554,2.8551 -0.515653,0.4969 -1.195468,0.74542 -2.03932,0.74542 v 0.14062 c 0.862605,0 1.547033,0.24376 2.053384,0.73136 0.506352,0.4875 0.75949,1.43454 0.75949,2.84093 v 1.96905 c 0,1.68768 -0.328175,2.8597 -0.984474,3.51608 -0.656374,0.6563 -1.8284,0.98447 -3.516079,0.98447 h -6.750868 v -20.25263 h 6.750868 c 1.687679,0 2.859705,0.3282 3.516079,0.98455 0.656299,0.6563 0.984474,1.82833 0.984474,3.51608 z m -1.687755,7.31343 c 0,-1.12512 -0.187478,-1.88461 -0.562559,-2.27837 -0.375007,-0.39386 -1.12512,-0.59071 -2.250239,-0.59071 h -5.063188 v 7.76349 h 5.063188 c 1.106366,0 1.851766,-0.20161 2.236174,-0.60477 0.384458,-0.40314 0.576624,-1.17672 0.576624,-2.32059 z m -2.812798,-4.44434 c 1.125119,0 1.875232,-0.19686 2.250239,-0.59062 0.375081,-0.39386 0.562559,-1.15335 0.562559,-2.27847 V 280.748 c 0,-1.14394 -0.192166,-1.91742 -0.576624,-2.32066 -0.384408,-0.40316 -1.129808,-0.60478 -2.236174,-0.60478 h -5.063188 v 7.7635 z"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.35277778"
+       id="path837"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="U:\imagenCorp\DatosAbiertos_blanco.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       d="M 89.622982,276.24737 V 296.5 h -1.687679 v -20.25263 z"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.35277778"
+       id="path839"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="U:\imagenCorp\DatosAbiertos_blanco.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       d="m 94.123611,296.5 v -20.25263 h 10.126329 v 1.57519 h -8.438625 v 7.7635 h 8.157275 v 1.57526 h -8.157275 v 7.76349 h 8.438625 V 296.5 Z"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.35277778"
+       id="path841"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="U:\imagenCorp\DatosAbiertos_blanco.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       d="m 119.58002,296.5 h -1.91276 l -3.63795,-7.08844 h -4.01305 V 296.5 h -1.68768 v -20.25263 h 6.75086 c 1.68768,0 2.85971,0.3282 3.51608,0.98455 0.6563,0.6563 0.9845,1.82833 0.9845,3.51608 v 4.21929 c 0,1.55643 -0.27191,2.66285 -0.81577,3.31915 -0.54381,0.65637 -1.50015,1.022 -2.86911,1.09706 z m -9.56376,-18.67744 v 10.01381 h 5.06318 c 1.12512,0 1.87524,-0.1969 2.25024,-0.59069 0.37511,-0.39378 0.56259,-1.15327 0.56259,-2.27839 V 280.748 c 0,-1.14394 -0.19217,-1.91742 -0.57665,-2.32066 -0.38439,-0.40316 -1.12981,-0.60478 -2.23618,-0.60478 z"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.35277778"
+       id="path843"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="U:\imagenCorp\DatosAbiertos_blanco.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       d="m 133.50362,276.24737 v 1.57519 h -4.78185 V 296.5 h -1.68768 v -18.67744 h -4.78192 v -1.57519 z"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.35277778"
+       id="path845"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="U:\imagenCorp\DatosAbiertos_blanco.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       d="m 143.06736,276.24737 c 1.68775,0 2.85978,0.3282 3.51608,0.98455 0.65637,0.6563 0.98455,1.82833 0.98455,3.51608 v 11.25145 c 0,1.68768 -0.32818,2.8597 -0.98455,3.51608 -0.6563,0.6563 -1.82833,0.98447 -3.51608,0.98447 h -2.25024 c -1.68775,0 -2.85978,-0.32817 -3.51608,-0.98447 -0.65637,-0.65638 -0.98447,-1.8284 -0.98447,-3.51608 V 280.748 c 0,-1.68775 0.3281,-2.85978 0.98447,-3.51608 0.6563,-0.65635 1.82833,-0.98455 3.51608,-0.98455 z m 2.81287,15.75208 V 280.748 c 0,-1.14394 -0.19216,-1.91742 -0.57662,-2.32066 -0.38441,-0.40316 -1.12981,-0.60478 -2.23625,-0.60478 h -2.25024 c -1.10644,0 -1.85184,0.20162 -2.23625,0.60478 -0.38441,0.40324 -0.57662,1.17672 -0.57662,2.32066 v 11.25145 c 0,1.14387 0.19221,1.91745 0.57662,2.32059 0.38441,0.40316 1.12981,0.60477 2.23625,0.60477 h 2.25024 c 1.10644,0 1.85184,-0.20161 2.23625,-0.60477 0.38446,-0.40314 0.57662,-1.17672 0.57662,-2.32059"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.35277778"
+       id="path847"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="U:\imagenCorp\DatosAbiertos_blanco.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       d="m 162.61678,282.43568 h -1.68775 V 280.748 c 0,-1.14394 -0.19217,-1.91742 -0.57663,-2.32066 -0.38441,-0.40316 -1.12981,-0.60478 -2.23625,-0.60478 h -2.25024 c -1.10644,0 -1.85184,0.20162 -2.23625,0.60478 -0.38438,0.40324 -0.57662,1.17672 -0.57662,2.32066 v 1.96897 c 0,1.12512 0.18753,1.88461 0.56256,2.27847 0.37508,0.39376 1.12512,0.59062 2.25031,0.59062 h 2.25024 c 1.68776,0 2.85978,0.31882 3.51608,0.95642 0.65638,0.63759 0.98455,1.80024 0.98455,3.48792 v 1.96905 c 0,1.68768 -0.32817,2.8597 -0.98455,3.51608 -0.6563,0.6563 -1.82832,0.98447 -3.51608,0.98447 h -2.25024 c -1.68775,0 -2.85978,-0.32817 -3.51608,-0.98447 -0.65637,-0.65638 -0.98447,-1.8284 -0.98447,-3.51608 v -1.68776 h 1.68768 v 1.68776 c 0,1.14387 0.19224,1.91745 0.57662,2.32059 0.38441,0.40316 1.12981,0.60477 2.23625,0.60477 h 2.25024 c 1.10644,0 1.85184,-0.20161 2.23625,-0.60477 0.38446,-0.40314 0.57663,-1.17672 0.57663,-2.32059 v -1.96905 c 0,-1.12512 -0.18748,-1.88461 -0.56256,-2.27837 -0.37501,-0.39386 -1.12512,-0.59071 -2.25032,-0.59071 h -2.25024 c -1.68775,0 -2.85978,-0.3188 -3.51608,-0.95642 -0.65637,-0.63752 -0.98447,-1.80017 -0.98447,-3.48793 V 280.748 c 0,-1.68775 0.3281,-2.85978 0.98447,-3.51608 0.6563,-0.65635 1.82833,-0.98455 3.51608,-0.98455 h 2.25024 c 1.68776,0 2.85978,0.3282 3.51608,0.98455 0.65638,0.6563 0.98455,1.82833 0.98455,3.51608 z"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.35277778"
+       id="path849"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="U:\imagenCorp\DatosAbiertos_blanco.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       d="M 1.8484714,246.5 H 41.1112 c 0.80582,0 1.465177,0.65928 1.465177,1.4651 v 0 c 0,0.80582 -0.659357,1.46511 -1.465177,1.46511 H 1.8484714 c -0.8058952,0 -1.4652526,-0.65929 -1.4652526,-1.46511 v 0 c 0,-0.80582 0.6593574,-1.4651 1.4652526,-1.4651"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.35277778"
+       id="path851"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="U:\imagenCorp\DatosAbiertos_blanco.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       d="m 1.848321,252.36049 h 2.1805927 c 0.80582,0 1.4651022,0.6592 1.4651022,1.4651 v 0 c 0,0.80577 -0.6592822,1.4651 -1.4651022,1.4651 H 1.848321 c -0.80582,0 -1.4651022,-0.65933 -1.4651022,-1.4651 v 0 c 0,-0.8059 0.6592822,-1.4651 1.4651022,-1.4651"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.35277778"
+       id="path853"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="U:\imagenCorp\DatosAbiertos_blanco.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       d="m 1.848672,258.22097 h 29.384225 c 0.80582,0 1.465103,0.65923 1.465103,1.4651 v 0 c 0,0.80577 -0.659283,1.4651 -1.465103,1.4651 H 1.848672 c -0.80582,0 -1.46510221,-0.65933 -1.46510221,-1.4651 v 0 c 0,-0.80587 0.65928221,-1.4651 1.46510221,-1.4651"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.35277778"
+       id="path855"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="U:\imagenCorp\DatosAbiertos_blanco.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       d="m 1.849023,264.08145 h 12.607816 c 0.805895,0 1.465102,0.65924 1.465102,1.46511 v 0 c 0,0.80577 -0.659207,1.4651 -1.465102,1.4651 H 1.849023 c -0.80582,0 -1.46517743,-0.65933 -1.46517743,-1.4651 v 0 c 0,-0.80587 0.65935743,-1.46511 1.46517743,-1.46511"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.35277778"
+       id="path857"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="U:\imagenCorp\DatosAbiertos_blanco.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       d="m 1.849374,269.94194 h 18.419914 c 0.805669,0 1.465027,0.65923 1.465027,1.4651 v 0 c 0,0.80577 -0.659358,1.46513 -1.465027,1.46513 H 1.849374 c -0.80582,0 -1.46515237,-0.65936 -1.46515237,-1.46513 v 0 c 0,-0.80587 0.65933237,-1.4651 1.46515237,-1.4651"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.35277778"
+       id="path859"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="U:\imagenCorp\DatosAbiertos_blanco.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       d="M 1.8496748,275.80242 H 24.659981 c 0.805745,0 1.465103,0.65923 1.465103,1.46513 v 0 c 0,0.80574 -0.659358,1.4651 -1.465103,1.4651 H 1.8496748 c -0.80582,0 -1.46510218,-0.65936 -1.46510218,-1.4651 v 0 c 0,-0.8059 0.65928218,-1.46513 1.46510218,-1.46513"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.35277778"
+       id="path861"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="U:\imagenCorp\DatosAbiertos_blanco.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       d="m 1.8500258,281.66293 h 8.5190732 c 0.80582,0 1.465102,0.65921 1.465102,1.4651 v 0 c 0,0.80575 -0.659282,1.4651 -1.465102,1.4651 H 1.8500258 c -0.8058952,0 -1.46517741,-0.65935 -1.46517741,-1.4651 v 0 c 0,-0.80589 0.65928221,-1.4651 1.46517741,-1.4651"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.35277778"
+       id="path863"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="U:\imagenCorp\DatosAbiertos_blanco.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       d="M 1.8503768,287.52341 H 35.58606 c 0.805971,0 1.465178,0.65921 1.465178,1.46511 v 0 c 0,0.80574 -0.659207,1.4651 -1.465178,1.4651 H 1.8503768 c -0.8058952,0 -1.46517742,-0.65936 -1.46517742,-1.4651 v 0 c 0,-0.8059 0.65928222,-1.46511 1.46517742,-1.46511"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.35277778"
+       id="path865"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="U:\imagenCorp\DatosAbiertos_blanco.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       d="M 1.8506526,293.3839 H 41.11125 c 0.80577,0 1.465127,0.65921 1.465127,1.4651 v 0 c 0,0.80575 -0.659357,1.4651 -1.465127,1.4651 H 1.8506526 c -0.80582,0 -1.46510223,-0.65935 -1.46510223,-1.4651 v 0 c 0,-0.80589 0.65928223,-1.4651 1.46510223,-1.4651"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.35277778"
+       id="path867"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="U:\imagenCorp\DatosAbiertos_blanco.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+  </g>
+</svg>

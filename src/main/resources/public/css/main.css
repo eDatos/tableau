@@ -25,15 +25,145 @@
     width: 245px;
 }
 
-.bottom {
-	border-top: 2px solid rgb(214, 214, 214);
+#footerTemplate {
+    bottom: 0;
+    height: 170px;
     position: relative;
-    top: 30px;    
+    width: 100%;
+    box-sizing: border-box;
+    font-family: "Roboto", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.05;   
 }
 
-.bottom #gobiernoDeCanarias {
+#footerTemplate .footer-content {
+    width: 100%;
+    padding: 20px 36px;
+    background-color: #59656E;
+    min-height: 170px;
+    display: grid;
+    grid-template-columns: repeat(24, 1fr);
+    row-gap: 20px;
+}
+
+#footerTemplate table {
+    line-height: 1.05;
+    color: white;
+    font-weight: 500;
+}
+
+#footerTemplate table th {
+    font-size: 12px;
+    padding: 0.3rem 1.6rem 0.3rem 0;
+}
+
+#footerTemplate table td {
+    line-height: 1.5;
+    font-size: 10px;
+    font-weight: 350;
+    padding: 0.15rem 1.6rem 0.15rem 0;
+}
+
+#footerTemplate th {
+    text-align: left;
+}
+
+#footerTemplate a {
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    touch-action: manipulation;
+}
+
+#footerTemplate .footer-content div:not(:last-child) {
+    min-height: 150px;
+}
+
+#footerTemplate .footer-content .contact {
+    border-right: white solid 4px;
+    grid-column: auto / span 6;
+}
+
+#footerTemplate .footer-content .contact .footer-brand img {
+    margin-bottom: 15px;
+}
+
+#footerTemplate .footer-content .logos {
+    padding-left: 20px;
+    align-items: flex-start;
+    border-right: white solid 4px;
+    grid-column: auto / span 6;
+}
+
+#footerTemplate .footer-content .logos div a:not(:last-child) {
+    margin-right: 30px;
+}
+
+
+#footerTemplate .footer-content .logos2 {
+    align-items: flex-end;
+    grid-column: auto / span 4;
+}
+
+#footerTemplate .footer-content .links .links-wrapper {
+    margin-left: 20px;
+}
+
+#footerTemplate .footer-content .links .social {
+    justify-content: space-around;
+    padding-top: 1.5rem;
+    margin-right: 20px;
+}
+
+#footerTemplate .footer-content .links .social a {
+    margin-right: 10px;
+}
+
+#footerTemplate .footer-content .links {
+    border-right: white solid 4px;
+    flex-direction: row;
+    grid-column: auto / span 8;
+}
+
+#footerTemplate .footer-content .flex-container-vertical {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+#footerTemplate .footer-content .flex-container-horizontal {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+#footerTemplate .footer-content .flex-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+#footerTemplate #gobiernoDeCanarias {
     color: #999;
     font-size: 12px;
+}
+
+.logo-img-30 {
+    height: 30px;
+}
+
+.logo-img-45 {
+    height: 45px;
+}
+
+.logo-img-50 {
+    height: 50px;
+}
+
+.logo-img-60 {
+    height: 60px;
 }
 
 .footerImage {
