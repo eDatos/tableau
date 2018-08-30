@@ -75,10 +75,6 @@
     touch-action: manipulation;
 }
 
-#footerTemplate .footer-content div:not(:last-child) {
-    min-height: 150px;
-}
-
 #footerTemplate .footer-content .contact {
     border-right: white solid 4px;
     grid-column: auto / span 6;
