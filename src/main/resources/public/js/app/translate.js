@@ -1,18 +1,18 @@
 var language = navigator.language.substr(0, 2);
 
 var errorMsg;
-$.getJSON("translate/error.json", function(resp) {
+$.getJSON("translate/error.json", function (resp) {
     errorMsg = resp;
 });
 
 var text;
-$.getJSON("translate/text.json", function(resp) {
+$.getJSON("translate/text.json", function (resp) {
     text = resp;
     $("#titleForm").text(text[language].form.title);
     $("#labelIndicatorUrl").append(text[language].indicator.url);
     $("#labelUrl").text(text[language].url);
     $("#labelSelectIndicator").append(text[language].indicator.selectIndicator);
-    $.each($(".labelEndpoint"), function(_, endpoint) {
+    $.each($(".labelEndpoint"), function (_, endpoint) {
         $(endpoint).text(text[language].endpoint);
     });
     $("#searchIndicatorsButton").text(text[language].indicator.search);
@@ -69,7 +69,7 @@ $.getJSON("translate/text.json", function(resp) {
 
     $("#downloadDecodeLabel").append(text[language].codelist.downloadDecodeLabel);
     $("#labelDownloadCodelist").append(text[language].codelist.downloadCodelistOption);
-    $("#labelDecodeCodelist").append(text[language].codelist.decodeCodelistOption);    
+    $("#labelDecodeCodelist").append(text[language].codelist.decodeCodelistOption);
     $("#labelCodelistUrl").append(text[language].codelist.url);
     $("#selectVariableLabel").append(text[language].codelist.selectVariable);
     $("#searchVariableFamiliesButton").text(text[language].codelist.searchVariableFamilies);
@@ -108,6 +108,7 @@ $.getJSON("translate/text.json", function(resp) {
 });
 
 function loadHeaderTranslations() {
+    $("#home").html(text[language].home.navbar);
     $("#indicadores").html(text[language].indicator.navbar);
     $("#cubos").html(text[language].dataset.navbar);
     $("#clasificaciones").html(text[language].codelist.navbar);
