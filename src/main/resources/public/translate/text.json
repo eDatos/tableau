@@ -95,6 +95,7 @@
             "labels": "Añadir las etiquetas de las dimensiones al conjunto de datos"
         },
         "home": {
+            "navbar": "Inicio",
             "title": "ISTAC Web Data Connector",
             "descTableau": "Tableau es una herramienta que permite crear visualizaciones de manera muy rápida sobre cualquier conjunto de datos. Con esta herramienta podrá crear sus propios cuadros de mandos y aprovechar así la potencia que le brinda Tableau para realizar análisis sobre los datos.",
             "descWDC": "Los Web Data Connectors de Tableau permiten conectar la herramienta con datos externos para poder obtenerlos de manera automática y muy sencilla.",
@@ -114,7 +115,7 @@
         "responseFormat": "Formato de respuesta:",
         "getData": "Obtener datos",
         "measureColumns": "Visualizar las medidas como columnas",
-        "starModel" : "Modelo estrella",
+        "starModel": "Modelo estrella",
         "recodeDates": "Incluir campo calculado con fecha a partir de periodos de referencia",
         "dataModel": "Modelo de datos",
         "labeling": "Etiquetado"
@@ -202,6 +203,7 @@
             "datasets": "Datasets: "
         },
         "home": {
+            "navbar": "Inicio",
             "title": "ISTAC Web Data Connector",
             "descTableau": "Tableau es una herramienta que permite crear visualizaciones de manera muy rápida sobre cualquier conjunto de datos. Con esta herramienta podrá crear sus propios cuadros de mandos y aprovechar así la potencia que le brinda Tableau para realizar análisis sobre los datos.",
             "descWDC": "Los Web Data Connectors de Tableau permiten conectar la herramienta con datos externos para poder obtenerlos de manera automática y muy sencilla.",

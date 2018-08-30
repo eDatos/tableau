@@ -13,15 +13,12 @@
     src: local('Droid Sans Bold'), local('DroidSans-Bold'), url('../fonts/DroidSans-Bold.ttf') format('truetype');
 }
 
-#header i {
-    font-size: 24px !important;
+#header {
+    font-family: "Roboto", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
 }
 
-.top {
-	border-bottom: 2px solid rgb(214, 214, 214);
-	padding: 0px 4px 8px 0px !important;
-	margin-left: auto;
-	margin-right: auto;
+#header i {
+    font-size: 24px !important;
 }
 
 .topImage {
@@ -43,7 +40,6 @@
     width: 120px;
 }
 
-
 .section {
 	font-family: "Droid Sans", sans-serif;
 	font-size: 15px;
@@ -54,50 +50,89 @@
 	clear: both;
 }
 
-.section .left {
-	float: left;
+.top .section {
+    display: flex;
+    max-width: 100%;
+    padding: 0;
+    min-height: 70px;
 }
 
-.section .right {
-	float: right;
+.top .section div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-.section#header {
-	padding-top: 15px;
+.top .section .left {
+    flex: 1;
+    align-items: flex-start;
+    margin-left: 25px;
+}
+
+.top .section .right {
+    flex: 3;
+    align-items: flex-end;
+}
+
+.top .section .right .section {
+    margin: 0;
 }
 
 #header ul {
     list-style-type: none;
 	margin: 0;
-	padding: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 #header li {
-    display: inline;
-	padding: 0 5px 0 0;
+    margin: 0px 25px 0px 0px !important;
 }
 
 #header a {
-    color: #000;
+    color: #9c9c9c;
 	font-weight: 600;
-    padding: 0px 4px 10px 0px !important;
-	margin: 15px 6px 0px 0px !important;
+    text-transform: uppercase;
+    text-align: center;
 }
 
 #header a:hover {
-    border-bottom: 2px solid #000;
     font-weight: 600;
     text-decoration: none;
-	color: #9c9c9c;
+	color: #fff;
 }
 
 #header a.active {
     font-weight: 600;
-	color: #008BD0;
+    color: #fff;
+    position: relative;
+}
+
+#header a.active::after {
+    content: '\F0D8';
+    font: normal normal normal 55px/1 FontAwesome;
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 100%;
+}
+
+#header a.active.bordered-a  {
+    border: 1px solid white;
+}
+
+.bordered-a {
+    border: 1px solid #9c9c9c;
+    padding: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
 }
 
 #headerTemplate {
-    min-height: 113px;
+    background-color: #000;
 }
 
 #selectData form {
