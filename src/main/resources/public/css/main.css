@@ -13,6 +13,15 @@
     src: local('Droid Sans Bold'), local('DroidSans-Bold'), url('../fonts/DroidSans-Bold.ttf') format('truetype');
 }
 
+body {
+    position: relative;
+    min-height: 100%;
+}
+
+.content {
+    position: relative;
+}
+
 #header {
     font-family: "Roboto", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
 }
@@ -27,22 +36,17 @@
 
 #footerTemplate {
     bottom: 0;
-    height: 170px;
     position: relative;
     width: 100%;
     box-sizing: border-box;
     font-family: "Roboto", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     line-height: 1.05;   
+    background-color: #59656E;
 }
 
 #footerTemplate .footer-content {
-    width: 100%;
-    padding: 20px 36px;
-    background-color: #59656E;
-    min-height: 170px;
-    display: grid;
-    grid-template-columns: repeat(24, 1fr);
-    row-gap: 20px;
+    padding: 0 20px;
+
 }
 
 #footerTemplate table {
@@ -75,70 +79,114 @@
     touch-action: manipulation;
 }
 
-#footerTemplate .footer-content .contact {
-    border-right: white solid 4px;
-    grid-column: auto / span 6;
-}
+/* #footerTemplate .footer-content .contact {
+    height: 210px;
+    padding-right: 0px;
+} */
 
 #footerTemplate .footer-content .contact .footer-brand img {
     margin-bottom: 15px;
 }
 
-#footerTemplate .footer-content .logos {
-    padding-left: 20px;
-    align-items: flex-start;
-    border-right: white solid 4px;
-    grid-column: auto / span 6;
+/* #footerTemplate .footer-content .logos {
+    height: 210px;
+    padding: 15px 0px 0px 25px;
+} */
+
+#footerTemplate .footer-content .logos a {
+    float: left;
+}
+
+#footerTemplate .footer-content .logos .footer-brand {
+    margin-right: 10px;
+    margin-bottom: 30px;
+}
+
+#footerTemplate .footer-content .logos div{
+    padding: 0px;
+    clear: both;
+    float: left;
 }
 
 #footerTemplate .footer-content .logos div a:not(:last-child) {
     margin-right: 30px;
+    float: left;
 }
 
+#footerTemplate .footer-content .logos div a:last-child {
+    float: right;
+}
+
+/* #footerTemplate .footer-content .links {
+    height: 210px;
+}
 
 #footerTemplate .footer-content .logos2 {
-    align-items: flex-end;
-    grid-column: auto / span 4;
+    height: 210px;
+    padding-left: 0px;
+} */
+
+#footerTemplate .footer-content .logos2 a {
+    float: right;
+}
+
+#footerTemplate .footer-content .logos2 div {
+    clear: both;
+    float: right;
+    padding-right: 0px;
+}
+
+#footerTemplate .footer-content .links .links-wrapper a {
+    float: left;
+    clear: both;
+    margin-bottom: 30px;
 }
 
 #footerTemplate .footer-content .links .links-wrapper {
-    margin-left: 20px;
+    width: 40%;
+    float: left;
+    padding-right: 0px;
 }
 
 #footerTemplate .footer-content .links .social {
-    justify-content: space-around;
-    padding-top: 1.5rem;
-    margin-right: 20px;
+    width: 60%;
+    float: right;
+    text-align: right;
 }
 
 #footerTemplate .footer-content .links .social a {
-    margin-right: 10px;
+    padding-left: 10px;
 }
 
-#footerTemplate .footer-content .links {
-    border-right: white solid 4px;
-    flex-direction: row;
-    grid-column: auto / span 8;
+#footerTemplate .footer-content .links .social a img {
+    margin-bottom: 10px;
 }
 
-#footerTemplate .footer-content .flex-container-vertical {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: space-around;
+#footerTemplate .footer-content > div {
+    float: left;
+    margin: 20px 0px;
+    padding: 0px 20px;
+    height: 210px;
 }
 
-#footerTemplate .footer-content .flex-container-horizontal {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
+@media (min-width: 768px) { 
+    #footerTemplate .footer-content .contact {
+        border-right: white solid 4px;
+    }
+
+    #footerTemplate .footer-content .links {
+        border-right: white solid 4px;
+    }
 }
 
-#footerTemplate .footer-content .flex-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+@media (min-width: 1200px) { 
+    #footerTemplate .footer-content .links {
+        border-right: white solid 4px;
+    }
+
+    #footerTemplate .footer-content .logos {
+        border-right: white solid 4px; 
+    }
 }
 
 #footerTemplate #gobiernoDeCanarias {
@@ -148,6 +196,10 @@
 
 .logo-img-30 {
     height: 30px;
+}
+
+.logo-img-40 {
+    height: 40px;
 }
 
 .logo-img-45 {
