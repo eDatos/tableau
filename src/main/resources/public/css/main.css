@@ -13,6 +13,18 @@
     src: local('Droid Sans Bold'), local('DroidSans-Bold'), url('../fonts/DroidSans-Bold.ttf') format('truetype');
 }
 
+#headerTemplate { /* default style */
+    background-color: #000;
+}
+
+#headerTemplate.EXTERNAL {
+    background-color: #3498db;
+}
+
+#headerTemplate.INTERNAL {
+    background-color: #000;
+}
+
 body {
     position: relative;
     min-height: 100%;
@@ -305,10 +317,6 @@ body {
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
-}
-
-#headerTemplate {
-    background-color: #000;
 }
 
 #selectData form {
