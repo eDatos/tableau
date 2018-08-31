@@ -16,8 +16,15 @@ $.getJSON("config/properties.json", function (resp) {
             }
         }
     });
-    $("#headerTemplate").ready(function (ele) {
-        $("#headerTemplate").addClass(properties.installationEnvironmentType);
+    $("#headerTemplate").ready(function () {
+        switch (properties.installationEnvironmentType) {
+            case "INTERNAL":
+                $("#headerTemplate").addClass("entorno-interno");
+                break;
+            case "EXTERNAL":
+                $("#headerTemplate").addClass("entorno-externo");
+                break;
+        }
     });
 });
 

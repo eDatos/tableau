@@ -17,11 +17,11 @@
     background-color: #000;
 }
 
-#headerTemplate.EXTERNAL {
+#headerTemplate.entorno-externo {
     background-color: #008BD0;
 }
 
-#headerTemplate.INTERNAL {
+#headerTemplate.entorno-interno {
     background-color: #000;
 }
 
