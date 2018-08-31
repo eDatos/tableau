@@ -9,5 +9,6 @@
         "status": {
             "production": "PRODUCTION"
         }
-    }
+    },
+    "installationEnvironmentType": "INTERNAL"
 }

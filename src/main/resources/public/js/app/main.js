@@ -1,10 +1,10 @@
 var properties;
-$.getJSON("config/properties.json", function(resp) {
+$.getJSON("config/properties.json", function (resp) {
     properties = resp;
-    $("form").ready(function() {
+    $("form").ready(function () {
         if ($("input[name='datatype']:checked")[0]) {
-            switch($("input[name='datatype']:checked")[0].value) {
-                case "indicator": 
+            switch ($("input[name='datatype']:checked")[0].value) {
+                case "indicator":
                     $("#labelSelectIndicator").ready(searchIndicators());
                     break;
                 case "variableFamily":
@@ -14,6 +14,16 @@ $.getJSON("config/properties.json", function(resp) {
                     $("#labelSelectOperation").ready(searchOperations());
                     break;
             }
+        }
+    });
+    $("#headerTemplate").ready(function () {
+        switch (properties.installationEnvironmentType) {
+            case "INTERNAL":
+                $("#headerTemplate").addClass("entorno-interno");
+                break;
+            case "EXTERNAL":
+                $("#headerTemplate").addClass("entorno-externo");
+                break;
         }
     });
 });
@@ -47,7 +57,7 @@ function chooseDataOption(radio) {
                     $("#decode").attr("disabled", false);
                 }
             }
-            switch(radioDivs[i].id) {
+            switch (radioDivs[i].id) {
                 case "indicator":
                     searchIndicators();
                     break;
@@ -81,20 +91,20 @@ function searchIndicators() {
     if (endpoint[endpoint.length - 1] == "/") {
         endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
     }
-    $.getJSON(endpoint + "/indicators?limit=1000&orderBy=ID ASC", function(resp) {
+    $.getJSON(endpoint + "/indicators?limit=1000&orderBy=ID ASC", function (resp) {
         $('#errorMsg').html("");
         if (resp.items) {
             for (var i = 0; i < resp.items.length; i++) {
-                indicators[i] = {id: resp.items[i].id, text: resp.items[i].title.__default__};
+                indicators[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
             }
         }
         $('#selectIndicator').select2({
             data: _.sortBy(indicators, 'text'),
-            dropdownAutoWidth : true,            
+            dropdownAutoWidth: true,
             width: '83.3%'
         });
         $("#loaderIndicator").hide();
-    }).error(function() {
+    }).error(function () {
         $("#loaderIndicator").hide();
         $('#errorMsg').html(errorMsg[language].error.endpoint);
     });
@@ -110,21 +120,21 @@ function searchIndicatorsSystems() {
     if (endpoint[endpoint.length - 1] == "/") {
         endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
     }
-    $.getJSON(endpoint + "/indicatorsSystems?limit=1000&orderBy=ID ASC", function(resp) {
+    $.getJSON(endpoint + "/indicatorsSystems?limit=1000&orderBy=ID ASC", function (resp) {
         $('#errorMsg').html("");
         if (resp.items) {
             for (var i = 0; i < resp.items.length; i++) {
-                indicatorsSystems[i] = {id: resp.items[i].id, text: resp.items[i].title.__default__};
+                indicatorsSystems[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
             }
         }
         $('#selectIndicatorSystem').select2({
             data: _.sortBy(indicatorsSystems, 'text'),
-            dropdownAutoWidth : true,            
+            dropdownAutoWidth: true,
             width: '83.3%'
         });
         $("#loaderIndicatorSystem").hide();
         searchIndicatorsInstances();
-    }).error(function() {
+    }).error(function () {
         $("#loaderIndicatorSystem").hide();
         $('#errorMsg').html(errorMsg[language].error.endpoint);
     });
@@ -137,19 +147,19 @@ function searchIndicatorsInstances() {
     var indicatorsInstances = [];
     $('#selectIndicatorInstance').html('').select2();
     url = endpoint + "/indicatorsSystems/" + document.getElementById("selectIndicatorSystem").value + "/indicatorsInstances?limit=1000&orderBy=ID ASC";
-    $.getJSON(url, function(resp){
+    $.getJSON(url, function (resp) {
         if (resp.items) {
             for (var i = 0; i < resp.items.length; i++) {
-                indicatorsInstances[i] = {id: resp.items[i].id, text: resp.items[i].title.__default__};
+                indicatorsInstances[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
             }
         }
         $('#selectIndicatorInstance').select2({
             data: _.sortBy(indicatorsInstances, 'text'),
-            dropdownAutoWidth : true,            
+            dropdownAutoWidth: true,
             width: '83.3%'
         });
         $("#loaderIndicatorInstance").hide();
-    }).error(function() {
+    }).error(function () {
         $("#loaderVariableFamily").hide();
         $('#errorMsg').html(errorMsg[language].error.request);
     });
@@ -167,20 +177,20 @@ function searchVariableFamilies() {
         endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
     }
     url = endpoint + "/variablefamilies.json?limit=1000&orderBy=ID ASC";
-    $.getJSON(url, function(resp){
+    $.getJSON(url, function (resp) {
         if (resp.variableFamily) {
             for (var i = 0; i < resp.variableFamily.length; i++) {
-                variableFamilies[i] = {id: resp.variableFamily[i].id, text: _.keyBy(resp.variableFamily[i].name.text, 'lang')[language].value};
+                variableFamilies[i] = { id: resp.variableFamily[i].id, text: _.keyBy(resp.variableFamily[i].name.text, 'lang')[language].value };
             }
         }
         $('#selectVariableFamily').select2({
             data: _.sortBy(variableFamilies, 'text'),
-            dropdownAutoWidth : true,            
+            dropdownAutoWidth: true,
             width: '83.3%'
         });
         $("#loaderVariableFamily").hide();
         searchVariables();
-    }).error(function() {
+    }).error(function () {
         $("#loaderVariableFamily").hide();
         $('#errorMsg').html(errorMsg[language].error.endpoint);
     });
@@ -194,20 +204,20 @@ function searchVariables() {
     $("#selectCodelist").parent().hide();
     $("#selectVariable").html('').select2();
     url = endpoint + "/variablefamilies/" + document.getElementById("selectVariableFamily").value + "/variables.json?limit=1000&orderBy=ID ASC";
-    $.getJSON(url, function(resp) {
+    $.getJSON(url, function (resp) {
         if (resp.variable) {
             for (var i = 0; i < resp.variable.length; i++) {
-                variables[i] = {id: resp.variable[i].urn, text: _.keyBy(resp.variable[i].name.text, 'lang')[language].value};
+                variables[i] = { id: resp.variable[i].urn, text: _.keyBy(resp.variable[i].name.text, 'lang')[language].value };
             }
         }
         $("#selectVariable").select2({
             data: _.sortBy(variables, 'text'),
-            dropdownAutoWidth : true,
+            dropdownAutoWidth: true,
             width: '83.3%'
         });
         $("#loaderVariable").hide();
         searchCodelists();
-    }).error(function() {
+    }).error(function () {
         $("#loaderCodelist").hide();
         $("#errorMsg").html(errorMsg[language].error.request);
     });
@@ -221,27 +231,27 @@ function searchCodelists() {
     document.getElementById("selectCodelist").parentElement.style.display = "block";
     codelists = [];
     $("#selectCodelist").html('').select2();
-    url = endpoint + '/codelists.json?limit=1000&orderBy=ID ASC&query=VARIABLE_URN EQ "' + $("#selectVariable").val() +'" AND LATEST EQ "true"';
-    $.getJSON(url, function(resp) {
+    url = endpoint + '/codelists.json?limit=1000&orderBy=ID ASC&query=VARIABLE_URN EQ "' + $("#selectVariable").val() + '" AND LATEST EQ "true"';
+    $.getJSON(url, function (resp) {
         if (resp.codelist) {
             for (var i = 0; i < resp.codelist.length; i++) {
-                codelists[i] = {id: resp.codelist[i].selfLink.href, text: _.keyBy(resp.codelist[i].name.text, 'lang')[language].value};
+                codelists[i] = { id: resp.codelist[i].selfLink.href, text: _.keyBy(resp.codelist[i].name.text, 'lang')[language].value };
             }
         }
         $("#selectCodelist").select2({
             data: _.sortBy(codelists, 'text'),
-            dropdownAutoWidth : true,
+            dropdownAutoWidth: true,
             width: '83.3%'
         });
         if ($("#decode").is(":checked")) {
             updateDecodelists();
         }
         $("#loaderCodelist").hide();
-    }).error(function() {
+    }).error(function () {
         $("#loaderCodelist").hide();
         $("#errorMsg").html(errorMsg[language].error.request);
     });
-    
+
 }
 
 function updateDecodelists() {
@@ -250,13 +260,13 @@ function updateDecodelists() {
     document.getElementById("selectDecodeCodelist").parentElement.style.display = "block";
     $("#selectDecodeCodelist").html('').select2();
     $("#selectDecodeCodelist").select2({
-        data: _.sortBy(_.filter(codelists, function(item) {
+        data: _.sortBy(_.filter(codelists, function (item) {
             return item.id != $("#selectCodelist").val();
         }), 'text'),
-        dropdownAutoWidth : true,
+        dropdownAutoWidth: true,
         width: '83.3%',
         language: {
-            noResults: function() {
+            noResults: function () {
                 return text[language].codelist.emptyDecodeCodelists;
             }
         }
@@ -274,20 +284,20 @@ function searchOperations() {
     if (endpoint[endpoint.length - 1] == "/") {
         endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
     }
-    $.getJSON(endpoint + "/operations.json?query=STATUS EQ \"" + properties.operations.status.production + "\"&limit=1000&orderBy=ID ASC", function(resp) {
+    $.getJSON(endpoint + "/operations.json?query=STATUS EQ \"" + properties.operations.status.production + "\"&limit=1000&orderBy=ID ASC", function (resp) {
         if (resp.operation) {
             for (var i = 0; i < resp.operation.length; i++) {
-                operations[i] = {id: resp.operation[i].urn, text: _.keyBy(resp.operation[i].name.text, 'lang')[language].value};
+                operations[i] = { id: resp.operation[i].urn, text: _.keyBy(resp.operation[i].name.text, 'lang')[language].value };
             }
         }
-        $("#selectOperation").select2({ 
+        $("#selectOperation").select2({
             data: _.sortBy(operations, 'text'),
             dropdownAutoWidth: true,
             width: '83.3%'
         });
         $("#loaderOperation").hide();
         searchDatasets();
-    }).error(function() {
+    }).error(function () {
         $("#loaderOperation").hide();
         $("#errorMsg").html(errorMsg[language].error.endpoint);
     });
@@ -303,12 +313,13 @@ function searchDatasets() {
         endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
     }
     url = endpoint + "/datasets.json?limit=1000&orderBy=ID ASC&query=STATISTICAL_OPERATION_URN EQ '" + $("#selectOperation").val() + "'";
-    $.getJSON(url, function(resp) {
+    $.getJSON(url, function (resp) {
         if (resp.dataset) {
             for (var i = 0; i < resp.dataset.length; i++) {
                 datasets[i] = {
-                    id: resp.dataset[i].selfLink.href.substring (0, resp.dataset[i].selfLink.href.lastIndexOf('/')), 
-                    text: _.keyBy(resp.dataset[i].name.text, 'lang')[language].value};
+                    id: resp.dataset[i].selfLink.href.substring(0, resp.dataset[i].selfLink.href.lastIndexOf('/')),
+                    text: _.keyBy(resp.dataset[i].name.text, 'lang')[language].value
+                };
             }
         }
         $("#selectDataset").select2({
@@ -318,9 +329,9 @@ function searchDatasets() {
         });
         $("#loaderDataset").hide();
         document.getElementById("selectDataset").parentElement.style.display = "block";
-    }).error(function() {
+    }).error(function () {
         $("#loaderDataset").hide();
-        $("#errorMsg").html(errorMsg[language].error.request);  
+        $("#errorMsg").html(errorMsg[language].error.request);
     });
 }
 
