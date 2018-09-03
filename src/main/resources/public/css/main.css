@@ -32,6 +32,7 @@ body {
 
 .content {
     position: relative;
+    padding-bottom: 
 }
 
 #header {
@@ -47,8 +48,8 @@ body {
 }
 
 #footerTemplate {
+    position: absolute;
     bottom: 0;
-    position: relative;
     width: 100%;
     box-sizing: border-box;
     font-family: "Roboto", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -91,19 +92,9 @@ body {
     touch-action: manipulation;
 }
 
-/* #footerTemplate .footer-content .contact {
-    height: 210px;
-    padding-right: 0px;
-} */
-
 #footerTemplate .footer-content .contact .footer-brand img {
     margin-bottom: 15px;
 }
-
-/* #footerTemplate .footer-content .logos {
-    height: 210px;
-    padding: 15px 0px 0px 25px;
-} */
 
 #footerTemplate .footer-content .logos a {
     float: left;
@@ -128,15 +119,6 @@ body {
 #footerTemplate .footer-content .logos div a:last-child {
     float: right;
 }
-
-/* #footerTemplate .footer-content .links {
-    height: 210px;
-}
-
-#footerTemplate .footer-content .logos2 {
-    height: 210px;
-    padding-left: 0px;
-} */
 
 #footerTemplate .footer-content .logos2 a {
     float: right;
@@ -182,6 +164,7 @@ body {
 }
 
 @media (min-width: 768px) { 
+
     #footerTemplate .footer-content .contact {
         border-right: white solid 4px;
     }
@@ -191,7 +174,23 @@ body {
     }
 }
 
+@media (max-width: 767px) {
+    .content {
+        padding-bottom: 1000px;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1199px) {
+    .content {
+        padding-bottom: 500px;
+    }
+}
+
 @media (min-width: 1200px) { 
+    .content {
+        padding-bottom: 250px;
+    }
+
     #footerTemplate .footer-content .links {
         border-right: white solid 4px;
     }
