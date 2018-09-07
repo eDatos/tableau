@@ -1,6 +1,7 @@
 var properties;
 $.getJSON("config/properties.json", function (resp) {
     properties = resp;
+    addGoogleAnalyticsScriptTag();
     $("form").ready(function () {
         if ($("input[name='datatype']:checked")[0]) {
             switch ($("input[name='datatype']:checked")[0].value) {
@@ -27,6 +28,26 @@ $.getJSON("config/properties.json", function (resp) {
         }
     });
 });
+
+function addGoogleAnalyticsScriptTag() {
+    $.getJSON(properties.endpoint.metadata + 'properties/metamac.analytics.google.tracking_id.json', function(resp) {
+        var googleAnalyticsTrackId = resp.value;
+
+        var googleAnalyticsScript = document.createElement('script');
+        googleAnalyticsScript.setAttribute('src', 'https://www.googletagmanager.com/gtag/js?id=' + googleAnalyticsTrackId);
+        googleAnalyticsScript.async = true;
+        document.head.prepend(googleAnalyticsScript);
+
+        executeGoogleAnalyticsInlineCode(googleAnalyticsTrackId);
+    });
+}
+
+function executeGoogleAnalyticsInlineCode(trackingId) {
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', trackingId); 
+}
 
 function addNumber(number) {
     return number < 10 ? "0" + number + " " : number + " ";
