@@ -25,6 +25,10 @@
     background-color: #000;
 }
 
+#headerTemplate.entorno-externo #header a:not(.active) {
+    color: #8CD2EA;
+}
+
 body {
     position: relative;
     min-height: 100%;
