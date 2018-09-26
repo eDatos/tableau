@@ -420,9 +420,14 @@ h3 {
 }
 
 
-.btn-success {
-    background-color: #008BD0;
-    border-color: #008BD0;
+ .btn-success {
+    background-color: #008BD0; /* Corporativo */
+    border-color: #0072A2;
+}
+
+.btn-success:hover {
+    background-color: #005980;
+    border-color: #003956;
 }
 
 @-webkit-keyframes spin {
