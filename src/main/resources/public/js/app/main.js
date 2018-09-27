@@ -30,7 +30,7 @@ $.getJSON("config/properties.json", function (resp) {
 });
 
 function addGoogleAnalyticsScriptTag() {
-    $.getJSON(properties.endpoint.metadata + 'properties/metamac.analytics.google.tracking_id.json', function(resp) {
+    $.getJSON(properties.endpoint.metadata + 'properties/metamac.analytics.google.tracking_id.json', function (resp) {
         var googleAnalyticsTrackId = resp.value;
 
         var googleAnalyticsScript = document.createElement('script');
@@ -44,9 +44,9 @@ function addGoogleAnalyticsScriptTag() {
 
 function executeGoogleAnalyticsInlineCode(trackingId) {
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
-    gtag('config', trackingId); 
+    gtag('config', trackingId);
 }
 
 function addNumber(number) {
