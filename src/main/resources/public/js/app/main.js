@@ -6,7 +6,7 @@ $.getJSON("config/properties.json", function (resp) {
         if ($("input[name='datatype']:checked")[0]) {
             switch ($("input[name='datatype']:checked")[0].value) {
                 case "indicator":
-                    $("#labelSelectIndicator").ready(searchIndicators());
+                    $("#labelSelectIndicator").ready(searchSubjects());
                     break;
                 case "variableFamily":
                     $("#selectVariableLabel").ready(searchVariableFamilies());
@@ -80,7 +80,7 @@ function chooseDataOption(radio) {
             }
             switch (radioDivs[i].id) {
                 case "indicator":
-                    searchIndicators();
+                    searchSubjects();
                     break;
                 case "indicatorInstance":
                     searchIndicatorsSystems();
@@ -103,16 +103,51 @@ function chooseDataOption(radio) {
 
 var endpoint;
 
-function searchIndicators() {
-    $("#errorMsg").html("");
-    $("#loaderIndicator").show();
-    var indicators = [];
-    $('#selectIndicator').html('').select2();
+function searchSubjects() {
+    $("#loaderSubject").show();
+    document.getElementById("selectIndicator").parentElement.style.display = "none";
+    var subjects = [];
+    $('#selectSubject').html('').select2();
+
     endpoint = properties.endpoint.indicators;
     if (endpoint[endpoint.length - 1] == "/") {
         endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
     }
-    $.getJSON(endpoint + "/indicators?limit=1000&orderBy=ID ASC", function (resp) {
+
+    $.getJSON(endpoint + "/subjects", function (resp) {
+        $('#errorMsg').html("");
+        if (resp.items) {
+            for (var i = 0; i < resp.items.length; i++) {
+                subjects[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
+            }
+        }
+        $('#selectSubject').select2({
+            data: _.sortBy(subjects, 'text'),
+            dropdownAutoWidth: true,
+            width: '83.3%'
+        });
+        $("#loaderSubject").hide();
+        searchIndicators();
+    }).error(function () {
+        $("#loaderSubject").hide();
+        $('#errorMsg').html(errorMsg[language].error.endpoint);
+    });
+}
+
+function searchIndicators() {
+    $("#errorMsg").html("");
+    $("#loaderIndicator").show();
+    document.getElementById("selectIndicator").parentElement.style.display = "block";
+    var indicators = [];
+    $('#selectIndicator').html('').select2();
+
+    endpoint = properties.endpoint.indicators;
+    if (endpoint[endpoint.length - 1] == "/") {
+        endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
+    }
+
+    var subjectCode = document.getElementById("selectSubject").value
+    $.getJSON(endpoint + "/indicators?limit=1000&orderBy=ID ASC&q=subjectCode EQ '" + subjectCode + "'", function (resp) {
         $('#errorMsg').html("");
         if (resp.items) {
             for (var i = 0; i < resp.items.length; i++) {

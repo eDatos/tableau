@@ -45,10 +45,15 @@
                 <label id="labelSelectIndicator" class="radioLabel">
                     <input type="radio" name="datatype" onclick="chooseDataOption(this)" value="indicator" checked>
                 </label>
-                <div id="loaderIndicator" class="loader first-loader" style="display: none"></div>
+                <div id="loaderSubject" class="loader first-loader" style="display: none"></div>
                 <div class="selectDiv row radioDiv" id="indicator">
+                    <label id="subjects" class="col-xs-2"></label>
+                    <select class="col-xs-10" id="selectSubject" style="width: 83.3%" onchange="searchIndicators()"></select>
+                </div>
+                <div id="loaderIndicator" class="loader" style="display: none"></div>
+                <div class="selectDiv row radioDiv" style="display: none">
                     <label id="indicators" class="col-xs-2"></label>
-                    <select class="col-xs-10" id="selectIndicator" style="width: 83.3%"></select>
+                    <select class="col-xs-10" id="selectIndicator"></select>
                 </div>
 
                 <label id="labelIndicatorInstance" class="radioLabel">

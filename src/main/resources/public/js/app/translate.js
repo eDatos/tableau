@@ -16,6 +16,7 @@ $.getJSON("translate/text.json", function (resp) {
         $(endpoint).text(text[language].endpoint);
     });
     $("#searchIndicatorsButton").text(text[language].indicator.search);
+    $("#subjects").text(text[language].indicator.subjects);
     $("#indicators").text(text[language].indicator.indicators);
     $("#labelIndicatorInstance").append(text[language].indicator.selectInstance);
     $("#searchIndicatorSystemsButton").text(text[language].indicator.searchSystems);
