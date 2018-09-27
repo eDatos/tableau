@@ -29,6 +29,10 @@
     color: #8CD2EA;
 }
 
+#headerTemplate.entorno-externo #header a:not(.active).bordered-a {
+    border-color: #8CD2EA;
+}
+
 body {
     position: relative;
     min-height: 100%;
