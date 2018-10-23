@@ -434,7 +434,8 @@ h3 {
 }
 
 .btn-success:hover,
-.btn-success.active, .btn-success:active {
+.btn-success.active, .btn-success:active,
+.btn-success.active:hover, .btn-success:active:hover {
     background-color: #005980;
     border-color: #003956;
 }
