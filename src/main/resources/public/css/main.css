@@ -433,9 +433,9 @@ h3 {
     border-color: #0072A2;
 }
 
-.btn-success:hover,
-.btn-success.active, .btn-success:active,
-.btn-success.active:hover, .btn-success:active:hover {
+.btn-success.active.focus, .btn-success.active:focus, 
+.btn-success.active:hover, .btn-success:active.focus,
+.btn-success:active:focus, .btn-success:active:hover {
     background-color: #005980;
     border-color: #003956;
 }
