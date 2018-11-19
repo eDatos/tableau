@@ -5,9 +5,7 @@ $.getJSON("translate/error.json", function (resp) {
     errorMsg = resp;
 });
 
-var text;
-$.getJSON("translate/text.json", function (resp) {
-    text = resp;
+function loadTexts() {
     $("#titleForm").text("Seleccione los datos que desea obtener:");
     $("#labelIndicatorUrl").append("URL del indicador / instancia de indicador");
     $("#labelUrl").text("URL: ");
@@ -89,13 +87,4 @@ $.getJSON("translate/text.json", function (resp) {
     $("#codelistUse").text("A la hora de seleccionar la clasificación que se desea obtener disponemos de varias opciones:");
     $("#liUrlCodelist").text("Introducir la URL de los datos que se desea cargar. Esta URL debe ser una petición que devuelva los códigos de una clasificación y, por tanto, debe acabar en \"/codes\".");
     $("#liCriteriaCodelist").text("Navegar por distintos criterios para seleccionar el recurso que desea cargar.");
-
-    loadHeaderTranslations();
-});
-
-function loadHeaderTranslations() {
-        $("#home").html("Inicio");
-        $("#indicadores").html("Indicadores");
-        $("#cubos").html("Cubos");
-        $("#clasificaciones").html("Clasificaciones");
-}
+};

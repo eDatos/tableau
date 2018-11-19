@@ -16,7 +16,6 @@
         $(function () {
             $("#headerTemplate").load("templates/header.html", function () {
                 $("#home").addClass("active");
-                loadHeaderTranslations();
             });
             $("#footerTemplate").load("templates/footer.html");
         });
@@ -49,5 +48,8 @@
     </div>
     <div id="footerTemplate"></div>
 </body>
+<script>
+    loadTexts();
+</script>
 
 </html>

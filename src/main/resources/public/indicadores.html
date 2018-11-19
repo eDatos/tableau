@@ -21,7 +21,6 @@
         $(function () {
             $("#headerTemplate").load("templates/header.html", function () {
                 $("#indicadores").addClass("active");
-                loadHeaderTranslations();
             });
             $("#footerTemplate").load("templates/footer.html");
         });
@@ -119,5 +118,8 @@
     </div>
     <div id="footerTemplate"></div>
 </body>
+<script>
+    loadTexts();
+</script>
 
 </html>

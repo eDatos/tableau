@@ -20,7 +20,6 @@
         $(function () {
             $("#headerTemplate").load("templates/header.html", function () {
                 $("#clasificaciones").addClass("active");
-                loadHeaderTranslations();
             });
             $("#footerTemplate").load("templates/footer.html");
         });
@@ -43,7 +42,8 @@
                     </div>
 
                     <label id="selectVariableLabel" class="radioLabel">
-                        <input id="selectVariableInput" type="radio" name="datatype" onchange="chooseDataOption(this)" value="variableFamily" checked>
+                        <input id="selectVariableInput" type="radio" name="datatype" onchange="chooseDataOption(this)"
+                            value="variableFamily" checked>
                     </label>
                     <div id="loaderVariableFamily" class="loader first-loader" style="display: none"></div>
                     <div class="selectDiv row radioDiv" id="variableFamily">
@@ -99,5 +99,8 @@
     </div>
     <div id="footerTemplate"></div>
 </body>
+<script>
+    loadTexts();
+</script>
 
 </html>
