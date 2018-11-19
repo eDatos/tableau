@@ -42,11 +42,11 @@
                     }
                 } else {
                     var columns = _buildColumns(urlObj, urlObj.dimensions[k], urlObj.languages);
-                    columns.forEach(function(element) {
+                    columns.forEach(function (element) {
                         cols.push(element);
                     });
                 }
-            }                
+            }
         }
 
         var tableInfo = {
@@ -118,7 +118,7 @@
                                     hash["Etiqueta_" + dimension.id] = dimensionLabel['es'].value;
                                 }
                             }
-                        }                
+                        }
                     }
 
                     if (urlObj.measureColumns && table.tableInfo.id == "datasetData") {
@@ -134,7 +134,7 @@
                 }
             } else {
                 var dimension = _.keyBy(dataResponse.metadata.dimensions.dimension, "id")[table.tableInfo.id];
-                for(i = 0; i < dimension.dimensionValues.total; i++) {
+                for (i = 0; i < dimension.dimensionValues.total; i++) {
                     var hash = {};
                     hash[table.tableInfo.id] = dimension.dimensionValues.value[i].id;
                     if (urlObj.recodeDates && urlObj.timeDimension == table.tableInfo.id) {
@@ -156,8 +156,8 @@
                         }
                     }
                     tableData.push(hash);
-                }                
-            } 
+                }
+            }
 
             table.appendRows(_.values(tableData));
             doneCallback();
@@ -250,10 +250,10 @@
                     tableau.connectionData = JSON.stringify(urlObj);
                     tableau.submit();
                 }).error(function () {
-                    $("#errorMsg").html(errorMsg[language].error.submit);
+                    $("#errorMsg").html(errorMsg.error.submit);
                 });
             } else {
-                $('#errorMsg').html(errorMsg[language].error.dataset.url);
+                $('#errorMsg').html(errorMsg.error.dataset.url);
             }
         });
     });

@@ -130,7 +130,7 @@ function searchSubjects() {
         searchIndicators();
     }).error(function () {
         $("#loaderSubject").hide();
-        $('#errorMsg').html(errorMsg[language].error.endpoint);
+        $('#errorMsg').html(errorMsg.error.endpoint);
     });
 }
 
@@ -162,7 +162,7 @@ function searchIndicators() {
         $("#loaderIndicator").hide();
     }).error(function () {
         $("#loaderIndicator").hide();
-        $('#errorMsg').html(errorMsg[language].error.endpoint);
+        $('#errorMsg').html(errorMsg.error.endpoint);
     });
 }
 
@@ -192,7 +192,7 @@ function searchIndicatorsSystems() {
         searchIndicatorsInstances();
     }).error(function () {
         $("#loaderIndicatorSystem").hide();
-        $('#errorMsg').html(errorMsg[language].error.endpoint);
+        $('#errorMsg').html(errorMsg.error.endpoint);
     });
 }
 
@@ -217,7 +217,7 @@ function searchIndicatorsInstances() {
         $("#loaderIndicatorInstance").hide();
     }).error(function () {
         $("#loaderVariableFamily").hide();
-        $('#errorMsg').html(errorMsg[language].error.request);
+        $('#errorMsg').html(errorMsg.error.request);
     });
 }
 
@@ -248,7 +248,7 @@ function searchVariableFamilies() {
         searchVariables();
     }).error(function () {
         $("#loaderVariableFamily").hide();
-        $('#errorMsg').html(errorMsg[language].error.endpoint);
+        $('#errorMsg').html(errorMsg.error.endpoint);
     });
 }
 
@@ -275,7 +275,7 @@ function searchVariables() {
         searchCodelists();
     }).error(function () {
         $("#loaderCodelist").hide();
-        $("#errorMsg").html(errorMsg[language].error.request);
+        $("#errorMsg").html(errorMsg.error.request);
     });
 }
 
@@ -305,7 +305,7 @@ function searchCodelists() {
         $("#loaderCodelist").hide();
     }).error(function () {
         $("#loaderCodelist").hide();
-        $("#errorMsg").html(errorMsg[language].error.request);
+        $("#errorMsg").html(errorMsg.error.request);
     });
 
 }
@@ -355,7 +355,7 @@ function searchOperations() {
         searchDatasets();
     }).error(function () {
         $("#loaderOperation").hide();
-        $("#errorMsg").html(errorMsg[language].error.endpoint);
+        $("#errorMsg").html(errorMsg.error.endpoint);
     });
 }
 
@@ -387,7 +387,7 @@ function searchDatasets() {
         document.getElementById("selectDataset").parentElement.style.display = "block";
     }).error(function () {
         $("#loaderDataset").hide();
-        $("#errorMsg").html(errorMsg[language].error.request);
+        $("#errorMsg").html(errorMsg.error.request);
     });
 }
 

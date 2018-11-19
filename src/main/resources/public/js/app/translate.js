@@ -1,9 +1,20 @@
-var language = navigator.language.substr(0, 2);
-
-var errorMsg;
-$.getJSON("translate/error.json", function (resp) {
-    errorMsg = resp;
-});
+var language = "es";
+var errorMsg = {
+    "error": {
+        "endpoint": "El endpoint indicado no existe",
+        "request": "Ha ocurrido un error al realizar la petición",
+        "indicator": {
+            "url": "La URL del indicador no es válida"
+        },
+        "codelist": {
+            "url": "La URL de la clasificación no es válida"
+        },
+        "dataset": {
+            "url": "La URL del cubo no es válida"
+        },
+        "submit": "Ha ocurrido un error, es posible que la URL indicada sea incorrecta"
+    }
+};
 
 function loadTexts() {
     $("#titleForm").text("Seleccione los datos que desea obtener:");

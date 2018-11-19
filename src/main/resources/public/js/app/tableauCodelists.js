@@ -10,21 +10,21 @@
 
         if (urlObj.decodeOptionEnabled) {
             var colsCodelist02 = [
-                {id: "Codigo_recodificado", columnRole: "dimension", dataType: tableau.dataTypeEnum.string },
-                {id: "Padre_recodificado", columnRole: "dimension", dataType: tableau.dataTypeEnum.string }
+                { id: "Codigo_recodificado", columnRole: "dimension", dataType: tableau.dataTypeEnum.string },
+                { id: "Padre_recodificado", columnRole: "dimension", dataType: tableau.dataTypeEnum.string }
             ];
 
             if (urlObj.allLanguages) {
                 for (i = 0; i < urlObj.languages.length; i++) {
-                    colsCodelist02.push({id: "Nombre_recodificado_" + urlObj.languages[i], columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+                    colsCodelist02.push({ id: "Nombre_recodificado_" + urlObj.languages[i], columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
                 }
             } else {
-                colsCodelist02.push({id: "Nombre_recodificado", columnRole: "dimension", dataType: tableau.dataTypeEnum.string});
+                colsCodelist02.push({ id: "Nombre_recodificado", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
             }
 
             var colsIntersection = [
-                {id: "Codigo_origen", columnRole: "dimension", dataType: tableau.dataTypeEnum.string },
-                {id: "Codigo_recodificado", columnRole: "dimension", dataType: tableau.dataTypeEnum.string }
+                { id: "Codigo_origen", columnRole: "dimension", dataType: tableau.dataTypeEnum.string },
+                { id: "Codigo_recodificado", columnRole: "dimension", dataType: tableau.dataTypeEnum.string }
             ];
 
             var tableCodelist02 = {
@@ -43,16 +43,16 @@
         }
 
         var colsCodelist01 = [
-            {id: "Codigo_origen", columnRole: "dimension", dataType: tableau.dataTypeEnum.string },
-            {id: "Padre_origen", columnRole: "dimension", dataType: tableau.dataTypeEnum.string }
+            { id: "Codigo_origen", columnRole: "dimension", dataType: tableau.dataTypeEnum.string },
+            { id: "Padre_origen", columnRole: "dimension", dataType: tableau.dataTypeEnum.string }
         ];
 
         if (urlObj.allLanguages) {
             for (i = 0; i < urlObj.languages.length; i++) {
-                colsCodelist01.push({id: "Nombre_origen_" + urlObj.languages[i], columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+                colsCodelist01.push({ id: "Nombre_origen_" + urlObj.languages[i], columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
             }
         } else {
-            colsCodelist01.push({id: "Nombre_origen", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+            colsCodelist01.push({ id: "Nombre_origen", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
         }
 
         var tableCodelist01 = {
@@ -119,7 +119,7 @@
                     var recodedCode = _.find(dataResponseCodelist2.code, function (item) {
                         return item.variableElement.id == variableElementId;
                     });
-                    secondaryHash.Codigo_recodificado = (recodedCode) ? recodedCode.id: '';
+                    secondaryHash.Codigo_recodificado = (recodedCode) ? recodedCode.id : '';
                     tableData.push(secondaryHash);
                 }
             }
@@ -136,23 +136,23 @@
     $(document).ready(function () {
         $("#dataButton").click(function () {
             switch ($('input[name="datatype"]:checked').val()) {
-            case 'url':
-                urlCodelist = $('#inputUrl').val();
+                case 'url':
+                    urlCodelist = $('#inputUrl').val();
                     tableau.connectionName = "Clasificación: ";
-                break;
-            case 'variableFamily':
-                urlCodelist = $('#selectCodelist').val() + '/codes?fields=+variableElement';
-                urlDecodeCodelist =  $('#selectDecodeCodelist').val() + '/codes?fields=+variableElement';
+                    break;
+                case 'variableFamily':
+                    urlCodelist = $('#selectCodelist').val() + '/codes?fields=+variableElement';
+                    urlDecodeCodelist = $('#selectDecodeCodelist').val() + '/codes?fields=+variableElement';
 
-                if (!$("#decode").is(":checked") || isNullOrBlank($("#selectDecodeCodelist").val())) {
-                    urlDecodeCodelist = '';
-                }
+                    if (!$("#decode").is(":checked") || isNullOrBlank($("#selectDecodeCodelist").val())) {
+                        urlDecodeCodelist = '';
+                    }
 
-                if (isNullOrBlank($('#selectCodelist').val())) {
-                    urlCodelist = '';
-                }
+                    if (isNullOrBlank($('#selectCodelist').val())) {
+                        urlCodelist = '';
+                    }
                     tableau.connectionName = "Clasificación: ";
-                break;
+                    break;
             }
             var urlObj = {
                 url: urlCodelist.trim(),
@@ -187,13 +187,13 @@
                     tableau.connectionData = JSON.stringify(urlObj);
                     tableau.submit();
                 }).error(function () {
-                    $("#errorMsg").html(errorMsg[language].error.submit);
+                    $("#errorMsg").html(errorMsg.error.submit);
                 });
             } else {
                 if (isNullOrBlank($("#selectDecodeCodelist").val()) && urlObj.decodeOptionEnabled) {
                     $('#errorNotSelectedDecoded').css("right", "0px");
                 } else {
-                    $('#errorMsg').html(errorMsg[language].error.codelist.url);
+                    $('#errorMsg').html(errorMsg.error.codelist.url);
                 }
             }
         });
