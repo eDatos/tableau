@@ -173,11 +173,11 @@
             switch ($('input[name="datatype"]:checked').val()) {
                 case 'url':
                     urlDataset = $('#inputUrl').val();
-                    tableau.connectionName = text[language].dataset.name;
+                    tableau.connectionName = "Cubo: ";
                     break;
                 case 'operation':
                     urlDataset = $("#selectDataset").val() + "/~latest";
-                    tableau.connectionName = text[language].dataset.name;
+                    tableau.connectionName = "Cubo: ";
                     break;
             }
             var urlObj = {

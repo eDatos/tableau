@@ -4,6 +4,14 @@
     const CONNECTION_TABLE_NUMBER = 1;
     var number = 2;
 
+    var measuresIds = {
+        "ABSOLUTE": "",
+        "ANNUAL_PERCENTAGE_RATE": "_Tasa_variacion_anual",
+        "INTERPERIOD_PERCENTAGE_RATE": "_Tasa_variacion_interperiodica",
+        "ANNUAL_PUNTUAL_RATE": "_Variacion_anual",
+        "INTERPERIOD_PUNTUAL_RATE": "_Variacion_interperiodica"
+    }
+
     myConnector.getSchema = function (schemaCallback) {
         var urlObj = JSON.parse(tableau.connectionData);
         var tables = [];
@@ -138,7 +146,7 @@
                             hash.Codigo_geografico = geographicalDimensions[i];
                             hash.Codigo_temporal = timeDimensions[j];
                             for (var k = 0, lengthMeasure = dataResponse.dimension.MEASURE.representation.size; k < lengthMeasure; k++) {
-                                hash[_capitalize(urlObj.observationId) + text[language].indicator.measures[measureDimensions[k]]] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
+                                hash[_capitalize(urlObj.observationId) + measuresIds[measureDimensions[k]]] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
                             }
                             tableData.push(hash);
                         } else {
@@ -221,7 +229,7 @@
                             hash.Codigo_temporal = timeDimensions[j];
     
                             for (var k = 0, lengthMeasure = dataResponse.dimension.MEASURE.representation.size; k < lengthMeasure; k++) {
-                                hash[_capitalize(urlObj.observationId) + text[language].indicator.measures[measureDimensions[k]]] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
+                                hash[_capitalize(urlObj.observationId) + measuresIds[measureDimensions[k]]] = dataResponse.observation[i * lengthTime * lengthMeasure + j * lengthMeasure + k];
                             }
     
                             if (urlObj.granularity) {
@@ -353,7 +361,7 @@
             switch ($('input[name="datatype"]:checked').val()) {
                 case 'url':
                     urlIndicator = $('#inputUrl').val();
-                    tableau.connectionName = text[language].indicator.name;
+                    tableau.connectionName = "Indicador: ";
                     break;
                 case 'indicator':
                     var endpoint = properties.endpoint.indicators;
@@ -364,7 +372,7 @@
                     if ($('#selectIndicator').val() == null || $('#selectIndicator').val() == undefined || $('#selectIndicator').val().length == 0) {
                         urlIndicator = '';
                     }
-                    tableau.connectionName = text[language].indicator.name;
+                    tableau.connectionName = "Indicador: ";
                     break;
                 case 'indicatorInstance':
                     var endpoint = properties.endpoint.indicators;
@@ -376,7 +384,7 @@
                     if ($('#selectIndicatorInstance').val() == null || $('#selectIndicatorInstance').val() == undefined || $('#selectIndicatorInstance').val().length == 0) {
                         urlIndicator = '';
                     }
-                    tableau.connectionName = text[language].indicator.instance;
+                    tableau.connectionName = "Instancia de indicador: ";
                     break;
             }
             var urlObj = {
@@ -426,7 +434,7 @@
                     if (urlObj.showMeasureColumns) {
                         measureColumns = [];
                         for (i = 0; i < resp.dimension.MEASURE.representation.length; i++) {
-                            measureColumns[i] = text[language].indicator.measures[resp.dimension.MEASURE.representation[i].code];
+                            measureColumns[i] = measuresIds[resp.dimension.MEASURE.representation[i].code];
                         }
                         urlObj.measureColumns = measureColumns;
                     }

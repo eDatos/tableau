@@ -138,7 +138,7 @@
             switch ($('input[name="datatype"]:checked').val()) {
             case 'url':
                 urlCodelist = $('#inputUrl').val();
-                tableau.connectionName = text[language].codelist.name;
+                    tableau.connectionName = "Clasificación: ";
                 break;
             case 'variableFamily':
                 urlCodelist = $('#selectCodelist').val() + '/codes?fields=+variableElement';
@@ -151,7 +151,7 @@
                 if (isNullOrBlank($('#selectCodelist').val())) {
                     urlCodelist = '';
                 }
-                tableau.connectionName = text[language].codelist.name;
+                    tableau.connectionName = "Clasificación: ";
                 break;
             }
             var urlObj = {

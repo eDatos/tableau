@@ -323,7 +323,7 @@ function updateDecodelists() {
         width: '83.3%',
         language: {
             noResults: function () {
-                return text[language].codelist.emptyDecodeCodelists;
+                return "No hay ninguna clasificación de destino a la que poder recodificar";
             }
         }
     });
