@@ -239,7 +239,10 @@
                     }
 
                     if (urlObj.recodeDates) {
-                        urlObj.timeDimension = _.keyBy(resp.metadata.dimensions.dimension, 'type')['TIME_DIMENSION'].id;
+                        var dimensionsByType = _.keyBy(resp.metadata.dimensions.dimension, 'type');
+                        if (dimensionsByType['TIME_DIMENSION']) {
+                            urlObj.timeDimension = dimensionsByType['TIME_DIMENSION'].id;
+                        }
                     }
 
                     if (urlObj.allLanguages) {
