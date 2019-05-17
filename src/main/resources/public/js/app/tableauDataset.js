@@ -242,6 +242,8 @@
                         var dimensionsByType = _.keyBy(resp.metadata.dimensions.dimension, 'type');
                         if (dimensionsByType['TIME_DIMENSION']) {
                             urlObj.timeDimension = dimensionsByType['TIME_DIMENSION'].id;
+                        } else {
+                            urlObj.recodeDates = false;
                         }
                     }
 
