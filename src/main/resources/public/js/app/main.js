@@ -4,19 +4,24 @@ var metadatasLoaded = {};
 
 var endpoint;
 
-function getMetadataValue(metadataKey, callback) {
+function getMetadataValue(metadataKey) {
+    var deferred = $.Deferred();
     if (metadatasLoaded.hasOwnProperty(metadataKey)) {
-        return callback(metadatasLoaded[metadataKey]);
+        return deferred.resolve(metadatasLoaded[metadataKey]);
     }
     var metadataEndpoint = properties.endpoint.metadata;
-    $.getJSON(metadataEndpoint + 'properties/' + metadataKey + '.json', function(response) {
-        metadatasLoaded[metadataKey] = response.value;
-        callback(response.value);
-    });
+    $.getJSON(metadataEndpoint + 'properties/' + metadataKey + '.json')
+        .done(function(response) {
+            metadatasLoaded[metadataKey] = response.value;
+            deferred.resolve(response.value);
+        });
+    return deferred.promise();
 }
 
-function getEndpointMetadataValue(endpointInfo, callback) {
+function getEndpointMetadataValue(endpointInfo) {
     var metadataKey = endpointInfo.metadataKey;
+    var deferred = $.Deferred();
+
     if (typeof endpointInfo.metadataKey === 'object') {
         metadataKey = endpointInfo.metadataKey[properties.installationEnvironmentType];
     }
@@ -25,11 +30,13 @@ function getEndpointMetadataValue(endpointInfo, callback) {
         console.error('Endpoint metadata key is null');
     }
 
-    getMetadataValue(metadataKey, function(endpointPath) {
-        endpointValue = endpointPath + '/' + endpointInfo.version
-        endpoint = endpointValue;
-        callback(endpointValue);
-    });
+    getMetadataValue(metadataKey)
+        .done(function(endpointValue) {
+            endpoint = endpointValue + '/' + endpointInfo.version;
+            deferred.resolve(endpoint);
+        });
+    
+    return deferred.promise();
 }
 
 $.getJSON("config/properties.json", function (resp) {
@@ -141,27 +148,27 @@ function searchSubjects() {
     var subjects = [];
     $('#selectSubject').html('').select2();
 
-    getEndpointMetadataValue(properties.endpoint.indicators, function(endpoint) {
-
-        $.getJSON(endpoint + "/subjects", function (resp) {
-            $('#errorMsg').html("");
-            if (resp.items) {
-                for (var i = 0; i < resp.items.length; i++) {
-                    subjects[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
+    getEndpointMetadataValue(properties.endpoint.indicators)
+        .done(function(endpoint) {
+            $.getJSON(endpoint + "/subjects", function (resp) {
+                $('#errorMsg').html("");
+                if (resp.items) {
+                    for (var i = 0; i < resp.items.length; i++) {
+                        subjects[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
+                    }
                 }
-            }
-            $('#selectSubject').select2({
-                data: _.sortBy(subjects, 'text'),
-                dropdownAutoWidth: true,
-                width: '83.3%'
+                $('#selectSubject').select2({
+                    data: _.sortBy(subjects, 'text'),
+                    dropdownAutoWidth: true,
+                    width: '83.3%'
+                });
+                $("#loaderSubject").hide();
+                searchIndicators();
+            }).error(function () {
+                $("#loaderSubject").hide();
+                $('#errorMsg').html(errorMsg.error.endpoint);
             });
-            $("#loaderSubject").hide();
-            searchIndicators();
-        }).error(function () {
-            $("#loaderSubject").hide();
-            $('#errorMsg').html(errorMsg.error.endpoint);
         });
-    });
 }
 
 function searchIndicators() {
@@ -171,26 +178,27 @@ function searchIndicators() {
     var indicators = [];
     $('#selectIndicator').html('').select2();
 
-    getEndpointMetadataValue(properties.endpoint.indicators, function(endpoint) {
-        var subjectCode = document.getElementById("selectSubject").value
-        $.getJSON(endpoint + "/indicators?limit=1000&orderBy=ID ASC&q=subjectCode EQ '" + subjectCode + "'", function (resp) {
-            $('#errorMsg').html("");
-            if (resp.items) {
-                for (var i = 0; i < resp.items.length; i++) {
-                    indicators[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
+    getEndpointMetadataValue(properties.endpoint.indicators)
+        .done(function(endpoint) {
+            var subjectCode = document.getElementById("selectSubject").value
+            $.getJSON(endpoint + "/indicators?limit=1000&orderBy=ID ASC&q=subjectCode EQ '" + subjectCode + "'", function (resp) {
+                $('#errorMsg').html("");
+                if (resp.items) {
+                    for (var i = 0; i < resp.items.length; i++) {
+                        indicators[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
+                    }
                 }
-            }
-            $('#selectIndicator').select2({
-                data: _.sortBy(indicators, 'text'),
-                dropdownAutoWidth: true,
-                width: '83.3%'
+                $('#selectIndicator').select2({
+                    data: _.sortBy(indicators, 'text'),
+                    dropdownAutoWidth: true,
+                    width: '83.3%'
+                });
+                $("#loaderIndicator").hide();
+            }).error(function () {
+                $("#loaderIndicator").hide();
+                $('#errorMsg').html(errorMsg.error.endpoint);
             });
-            $("#loaderIndicator").hide();
-        }).error(function () {
-            $("#loaderIndicator").hide();
-            $('#errorMsg').html(errorMsg.error.endpoint);
         });
-    });
 }
 
 function searchIndicatorsSystems() {
@@ -199,26 +207,27 @@ function searchIndicatorsSystems() {
     document.getElementById("selectIndicatorInstance").parentElement.style.display = "none";
     var indicatorsSystems = [];
     $('#selectIndicatorSystem').html('').select2();
-    getEndpointMetadataValue(properties.endpoint.indicators, function(endpoint) {
-        $.getJSON(endpoint + "/indicatorsSystems?limit=1000&orderBy=ID ASC", function (resp) {
-            $('#errorMsg').html("");
-            if (resp.items) {
-                for (var i = 0; i < resp.items.length; i++) {
-                    indicatorsSystems[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
+    getEndpointMetadataValue(properties.endpoint.indicators)
+        .done(function(endpoint) {
+            $.getJSON(endpoint + "/indicatorsSystems?limit=1000&orderBy=ID ASC", function (resp) {
+                $('#errorMsg').html("");
+                if (resp.items) {
+                    for (var i = 0; i < resp.items.length; i++) {
+                        indicatorsSystems[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
+                    }
                 }
-            }
-            $('#selectIndicatorSystem').select2({
-                data: _.sortBy(indicatorsSystems, 'text'),
-                dropdownAutoWidth: true,
-                width: '83.3%'
+                $('#selectIndicatorSystem').select2({
+                    data: _.sortBy(indicatorsSystems, 'text'),
+                    dropdownAutoWidth: true,
+                    width: '83.3%'
+                });
+                $("#loaderIndicatorSystem").hide();
+                searchIndicatorsInstances();
+            }).error(function () {
+                $("#loaderIndicatorSystem").hide();
+                $('#errorMsg').html(errorMsg.error.endpoint);
             });
-            $("#loaderIndicatorSystem").hide();
-            searchIndicatorsInstances();
-        }).error(function () {
-            $("#loaderIndicatorSystem").hide();
-            $('#errorMsg').html(errorMsg.error.endpoint);
         });
-    });
 }
 
 function searchIndicatorsInstances() {
@@ -227,25 +236,26 @@ function searchIndicatorsInstances() {
     document.getElementById("selectIndicatorInstance").parentElement.style.display = "block";
     var indicatorsInstances = [];
     $('#selectIndicatorInstance').html('').select2();
-    getEndpointMetadataValue(properties.endpoint.indicators, function(endpoint) {
-        url = endpoint + "/indicatorsSystems/" + document.getElementById("selectIndicatorSystem").value + "/indicatorsInstances?limit=1000&orderBy=ID ASC";
-        $.getJSON(url, function (resp) {
-            if (resp.items) {
-                for (var i = 0; i < resp.items.length; i++) {
-                    indicatorsInstances[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
+    getEndpointMetadataValue(properties.endpoint.indicators).
+        done(function(endpoint) {
+            url = endpoint + "/indicatorsSystems/" + document.getElementById("selectIndicatorSystem").value + "/indicatorsInstances?limit=1000&orderBy=ID ASC";
+            $.getJSON(url, function (resp) {
+                if (resp.items) {
+                    for (var i = 0; i < resp.items.length; i++) {
+                        indicatorsInstances[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
+                    }
                 }
-            }
-            $('#selectIndicatorInstance').select2({
-                data: _.sortBy(indicatorsInstances, 'text'),
-                dropdownAutoWidth: true,
-                width: '83.3%'
+                $('#selectIndicatorInstance').select2({
+                    data: _.sortBy(indicatorsInstances, 'text'),
+                    dropdownAutoWidth: true,
+                    width: '83.3%'
+                });
+                $("#loaderIndicatorInstance").hide();
+            }).error(function () {
+                $("#loaderVariableFamily").hide();
+                $('#errorMsg').html(errorMsg.error.request);
             });
-            $("#loaderIndicatorInstance").hide();
-        }).error(function () {
-            $("#loaderVariableFamily").hide();
-            $('#errorMsg').html(errorMsg.error.request);
         });
-    });
 }
 
 function searchVariableFamilies() {
@@ -255,26 +265,27 @@ function searchVariableFamilies() {
     $("#selectVariable").parent().hide();
     $("#selectCodelist").parent().hide();
     $('#selectVariableFamily').html('').select2();
-    getEndpointMetadataValue(properties.endpoint['structural-resources'], function(endpoint) {
-        url = endpoint + "/variablefamilies.json?limit=1000&orderBy=ID ASC";
-        $.getJSON(url, function (resp) {
-            if (resp.variableFamily) {
-                for (var i = 0; i < resp.variableFamily.length; i++) {
-                    variableFamilies[i] = { id: resp.variableFamily[i].id, text: _.keyBy(resp.variableFamily[i].name.text, 'lang')[language].value };
+    getEndpointMetadataValue(properties.endpoint['structural-resources'])
+        .done(function(endpoint) {
+            url = endpoint + "/variablefamilies.json?limit=1000&orderBy=ID ASC";
+            $.getJSON(url, function (resp) {
+                if (resp.variableFamily) {
+                    for (var i = 0; i < resp.variableFamily.length; i++) {
+                        variableFamilies[i] = { id: resp.variableFamily[i].id, text: _.keyBy(resp.variableFamily[i].name.text, 'lang')[language].value };
+                    }
                 }
-            }
-            $('#selectVariableFamily').select2({
-                data: _.sortBy(variableFamilies, 'text'),
-                dropdownAutoWidth: true,
-                width: '83.3%'
+                $('#selectVariableFamily').select2({
+                    data: _.sortBy(variableFamilies, 'text'),
+                    dropdownAutoWidth: true,
+                    width: '83.3%'
+                });
+                $("#loaderVariableFamily").hide();
+                searchVariables();
+            }).error(function () {
+                $("#loaderVariableFamily").hide();
+                $('#errorMsg').html(errorMsg.error.endpoint);
             });
-            $("#loaderVariableFamily").hide();
-            searchVariables();
-        }).error(function () {
-            $("#loaderVariableFamily").hide();
-            $('#errorMsg').html(errorMsg.error.endpoint);
         });
-    });
 }
 
 function searchVariables() {
@@ -363,26 +374,27 @@ function searchOperations() {
     var operations = [];
     $("#selectOperation").html('').select2();
     
-    getEndpointMetadataValue(properties.endpoint.operations, function(endpoint) {
-        $.getJSON(endpoint + "/operations.json?query=STATUS EQ \"" + properties.operations.status.production + "\"&limit=1000&orderBy=ID ASC", function (resp) {
-            if (resp.operation) {
-                for (var i = 0; i < resp.operation.length; i++) {
-                    operations[i] = { id: resp.operation[i].urn, text: _.keyBy(resp.operation[i].name.text, 'lang')[language].value };
+    getEndpointMetadataValue(properties.endpoint.operations)
+        .done(function(endpoint) {
+            $.getJSON(endpoint + "/operations.json?query=STATUS EQ \"" + properties.operations.status.production + "\"&limit=1000&orderBy=ID ASC", function (resp) {
+                if (resp.operation) {
+                    for (var i = 0; i < resp.operation.length; i++) {
+                        operations[i] = { id: resp.operation[i].urn, text: _.keyBy(resp.operation[i].name.text, 'lang')[language].value };
+                    }
                 }
-            }
-            $("#selectOperation").select2({
-                data: _.sortBy(operations, 'text'),
-                dropdownAutoWidth: true,
-                width: '83.3%'
+                $("#selectOperation").select2({
+                    data: _.sortBy(operations, 'text'),
+                    dropdownAutoWidth: true,
+                    width: '83.3%'
+                });
+                $("#loaderOperation").hide();
+                searchDatasets();
+            }).error(function () {
+                $("#loaderOperation").hide();
+                $("#errorMsg").html(errorMsg.error.endpoint);
             });
-            $("#loaderOperation").hide();
-            searchDatasets();
-        }).error(function () {
-            $("#loaderOperation").hide();
-            $("#errorMsg").html(errorMsg.error.endpoint);
-        });
 
-    });
+        });
 }
 
 function searchDatasets() {
@@ -390,29 +402,30 @@ function searchDatasets() {
     $("#loaderDataset").show();
     var datasets = [];
     $("#selectDataset").html('').select2();
-    getEndpointMetadataValue(properties.endpoint['statistical-resources'], function(endpoint) {
-        url = endpoint + "/datasets.json?limit=1000&orderBy=ID ASC&query=STATISTICAL_OPERATION_URN EQ '" + $("#selectOperation").val() + "'";
-        $.getJSON(url, function (resp) {
-            if (resp.dataset) {
-                for (var i = 0; i < resp.dataset.length; i++) {
-                    datasets[i] = {
-                        id: resp.dataset[i].selfLink.href.substring(0, resp.dataset[i].selfLink.href.lastIndexOf('/')),
-                        text: _.keyBy(resp.dataset[i].name.text, 'lang')[language].value
-                    };
+    getEndpointMetadataValue(properties.endpoint['statistical-resources'])
+        .done(function(endpoint) {
+            url = endpoint + "/datasets.json?limit=1000&orderBy=ID ASC&query=STATISTICAL_OPERATION_URN EQ '" + $("#selectOperation").val() + "'";
+            $.getJSON(url, function (resp) {
+                if (resp.dataset) {
+                    for (var i = 0; i < resp.dataset.length; i++) {
+                        datasets[i] = {
+                            id: resp.dataset[i].selfLink.href.substring(0, resp.dataset[i].selfLink.href.lastIndexOf('/')),
+                            text: _.keyBy(resp.dataset[i].name.text, 'lang')[language].value
+                        };
+                    }
                 }
-            }
-            $("#selectDataset").select2({
-                data: _.sortBy(_.uniqBy(datasets, 'id'), 'text'),
-                dropdownAutoWidth: true,
-                width: '83.3%'
+                $("#selectDataset").select2({
+                    data: _.sortBy(_.uniqBy(datasets, 'id'), 'text'),
+                    dropdownAutoWidth: true,
+                    width: '83.3%'
+                });
+                $("#loaderDataset").hide();
+                document.getElementById("selectDataset").parentElement.style.display = "block";
+            }).error(function () {
+                $("#loaderDataset").hide();
+                $("#errorMsg").html(errorMsg.error.request);
             });
-            $("#loaderDataset").hide();
-            document.getElementById("selectDataset").parentElement.style.display = "block";
-        }).error(function () {
-            $("#loaderDataset").hide();
-            $("#errorMsg").html(errorMsg.error.request);
         });
-    });
 }
 
 function enableAllLanguages() {

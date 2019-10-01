@@ -366,25 +366,27 @@
                         callback();
                         break;
                     case 'indicator':
-                        getEndpointMetadataValue(properties.endpoint.indicators, function(endpoint) {
-                            urlIndicator = endpoint + '/indicators/' + $('#selectIndicator').val() + '/data';
-                            if ($('#selectIndicator').val() == null || $('#selectIndicator').val() == undefined || $('#selectIndicator').val().length == 0) {
-                                urlIndicator = '';
-                            }
-                            tableau.connectionName = "Indicador: ";
-                            callback();
-                        });
+                        getEndpointMetadataValue(properties.endpoint.indicators)
+                            .done(function(endpoint) {
+                                urlIndicator = endpoint + '/indicators/' + $('#selectIndicator').val() + '/data';
+                                if ($('#selectIndicator').val() == null || $('#selectIndicator').val() == undefined || $('#selectIndicator').val().length == 0) {
+                                    urlIndicator = '';
+                                }
+                                tableau.connectionName = "Indicador: ";
+                                callback();
+                            });
                         break;
                     case 'indicatorInstance':
-                        getEndpointMetadataValue(properties.endpoint.indicators, function(endpoint) {
-                            urlIndicator = endpoint + '/indicatorsSystems/' + $('#selectIndicatorSystem').val() + '/indicatorsInstances/' +
-                                $('#selectIndicatorInstance').val() + '/data';
-                            if ($('#selectIndicatorInstance').val() == null || $('#selectIndicatorInstance').val() == undefined || $('#selectIndicatorInstance').val().length == 0) {
-                                urlIndicator = '';
-                            }
-                            tableau.connectionName = "Instancia de indicador: ";
-                            callback();
-                        });
+                        getEndpointMetadataValue(properties.endpoint.indicators)
+                            .done(function(endpoint) {
+                                urlIndicator = endpoint + '/indicatorsSystems/' + $('#selectIndicatorSystem').val() + '/indicatorsInstances/' +
+                                    $('#selectIndicatorInstance').val() + '/data';
+                                if ($('#selectIndicatorInstance').val() == null || $('#selectIndicatorInstance').val() == undefined || $('#selectIndicatorInstance').val().length == 0) {
+                                    urlIndicator = '';
+                                }
+                                tableau.connectionName = "Instancia de indicador: ";
+                                callback();
+                            });
                         break;
                 }
             })(function() {
