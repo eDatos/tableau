@@ -258,6 +258,7 @@ function searchVariables() {
     var variables = [];
     $("#selectCodelist").parent().hide();
     $("#selectVariable").html('').select2();
+    // This endpoint is assigned its value on metadata-service. It´s not the best way but it´s working for now until it is refactorized
     url = endpoint + "/variablefamilies/" + document.getElementById("selectVariableFamily").value + "/variables.json?limit=1000&orderBy=ID ASC";
     $.getJSON(url, function (resp) {
         if (resp.variable) {
