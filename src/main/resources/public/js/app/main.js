@@ -1,4 +1,7 @@
 var properties;
+
+var endpoint;
+
 $.getJSON("config/properties.json", function (resp) {
     properties = resp;
     addGoogleAnalyticsScriptTag();
@@ -101,7 +104,6 @@ function chooseDataOption(radio) {
     $('#errorMsg').html("");
 }
 
-var endpoint;
 
 function searchSubjects() {
     $("#loaderSubject").show();
@@ -109,29 +111,27 @@ function searchSubjects() {
     var subjects = [];
     $('#selectSubject').html('').select2();
 
-    endpoint = properties.endpoint.indicators;
-    if (endpoint[endpoint.length - 1] == "/") {
-        endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
-    }
-
-    $.getJSON(endpoint + "/subjects", function (resp) {
-        $('#errorMsg').html("");
-        if (resp.items) {
-            for (var i = 0; i < resp.items.length; i++) {
-                subjects[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
-            }
-        }
-        $('#selectSubject').select2({
-            data: _.sortBy(subjects, 'text'),
-            dropdownAutoWidth: true,
-            width: '83.3%'
+    getEndpointMetadataValue(properties.endpoint.indicators)
+        .done(function(endpoint) {
+            $.getJSON(endpoint + "/subjects", function (resp) {
+                $('#errorMsg').html("");
+                if (resp.items) {
+                    for (var i = 0; i < resp.items.length; i++) {
+                        subjects[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
+                    }
+                }
+                $('#selectSubject').select2({
+                    data: _.sortBy(subjects, 'text'),
+                    dropdownAutoWidth: true,
+                    width: '83.3%'
+                });
+                $("#loaderSubject").hide();
+                searchIndicators();
+            }).error(function () {
+                $("#loaderSubject").hide();
+                $('#errorMsg').html(errorMsg.error.endpoint);
+            });
         });
-        $("#loaderSubject").hide();
-        searchIndicators();
-    }).error(function () {
-        $("#loaderSubject").hide();
-        $('#errorMsg').html(errorMsg.error.endpoint);
-    });
 }
 
 function searchIndicators() {
@@ -141,29 +141,27 @@ function searchIndicators() {
     var indicators = [];
     $('#selectIndicator').html('').select2();
 
-    endpoint = properties.endpoint.indicators;
-    if (endpoint[endpoint.length - 1] == "/") {
-        endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
-    }
-
-    var subjectCode = document.getElementById("selectSubject").value
-    $.getJSON(endpoint + "/indicators?limit=1000&orderBy=ID ASC&q=subjectCode EQ '" + subjectCode + "'", function (resp) {
-        $('#errorMsg').html("");
-        if (resp.items) {
-            for (var i = 0; i < resp.items.length; i++) {
-                indicators[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
-            }
-        }
-        $('#selectIndicator').select2({
-            data: _.sortBy(indicators, 'text'),
-            dropdownAutoWidth: true,
-            width: '83.3%'
+    getEndpointMetadataValue(properties.endpoint.indicators)
+        .done(function(endpoint) {
+            var subjectCode = document.getElementById("selectSubject").value
+            $.getJSON(endpoint + "/indicators?limit=1000&orderBy=ID ASC&q=subjectCode EQ '" + subjectCode + "'", function (resp) {
+                $('#errorMsg').html("");
+                if (resp.items) {
+                    for (var i = 0; i < resp.items.length; i++) {
+                        indicators[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
+                    }
+                }
+                $('#selectIndicator').select2({
+                    data: _.sortBy(indicators, 'text'),
+                    dropdownAutoWidth: true,
+                    width: '83.3%'
+                });
+                $("#loaderIndicator").hide();
+            }).error(function () {
+                $("#loaderIndicator").hide();
+                $('#errorMsg').html(errorMsg.error.endpoint);
+            });
         });
-        $("#loaderIndicator").hide();
-    }).error(function () {
-        $("#loaderIndicator").hide();
-        $('#errorMsg').html(errorMsg.error.endpoint);
-    });
 }
 
 function searchIndicatorsSystems() {
@@ -172,28 +170,27 @@ function searchIndicatorsSystems() {
     document.getElementById("selectIndicatorInstance").parentElement.style.display = "none";
     var indicatorsSystems = [];
     $('#selectIndicatorSystem').html('').select2();
-    endpoint = properties.endpoint.indicators;
-    if (endpoint[endpoint.length - 1] == "/") {
-        endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
-    }
-    $.getJSON(endpoint + "/indicatorsSystems?limit=1000&orderBy=ID ASC", function (resp) {
-        $('#errorMsg').html("");
-        if (resp.items) {
-            for (var i = 0; i < resp.items.length; i++) {
-                indicatorsSystems[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
-            }
-        }
-        $('#selectIndicatorSystem').select2({
-            data: _.sortBy(indicatorsSystems, 'text'),
-            dropdownAutoWidth: true,
-            width: '83.3%'
+    getEndpointMetadataValue(properties.endpoint.indicators)
+        .done(function(endpoint) {
+            $.getJSON(endpoint + "/indicatorsSystems?limit=1000&orderBy=ID ASC", function (resp) {
+                $('#errorMsg').html("");
+                if (resp.items) {
+                    for (var i = 0; i < resp.items.length; i++) {
+                        indicatorsSystems[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
+                    }
+                }
+                $('#selectIndicatorSystem').select2({
+                    data: _.sortBy(indicatorsSystems, 'text'),
+                    dropdownAutoWidth: true,
+                    width: '83.3%'
+                });
+                $("#loaderIndicatorSystem").hide();
+                searchIndicatorsInstances();
+            }).error(function () {
+                $("#loaderIndicatorSystem").hide();
+                $('#errorMsg').html(errorMsg.error.endpoint);
+            });
         });
-        $("#loaderIndicatorSystem").hide();
-        searchIndicatorsInstances();
-    }).error(function () {
-        $("#loaderIndicatorSystem").hide();
-        $('#errorMsg').html(errorMsg.error.endpoint);
-    });
 }
 
 function searchIndicatorsInstances() {
@@ -202,23 +199,26 @@ function searchIndicatorsInstances() {
     document.getElementById("selectIndicatorInstance").parentElement.style.display = "block";
     var indicatorsInstances = [];
     $('#selectIndicatorInstance').html('').select2();
-    url = endpoint + "/indicatorsSystems/" + document.getElementById("selectIndicatorSystem").value + "/indicatorsInstances?limit=1000&orderBy=ID ASC";
-    $.getJSON(url, function (resp) {
-        if (resp.items) {
-            for (var i = 0; i < resp.items.length; i++) {
-                indicatorsInstances[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
-            }
-        }
-        $('#selectIndicatorInstance').select2({
-            data: _.sortBy(indicatorsInstances, 'text'),
-            dropdownAutoWidth: true,
-            width: '83.3%'
+    getEndpointMetadataValue(properties.endpoint.indicators).
+        done(function(endpoint) {
+            url = endpoint + "/indicatorsSystems/" + document.getElementById("selectIndicatorSystem").value + "/indicatorsInstances?limit=1000&orderBy=ID ASC";
+            $.getJSON(url, function (resp) {
+                if (resp.items) {
+                    for (var i = 0; i < resp.items.length; i++) {
+                        indicatorsInstances[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
+                    }
+                }
+                $('#selectIndicatorInstance').select2({
+                    data: _.sortBy(indicatorsInstances, 'text'),
+                    dropdownAutoWidth: true,
+                    width: '83.3%'
+                });
+                $("#loaderIndicatorInstance").hide();
+            }).error(function () {
+                $("#loaderVariableFamily").hide();
+                $('#errorMsg').html(errorMsg.error.request);
+            });
         });
-        $("#loaderIndicatorInstance").hide();
-    }).error(function () {
-        $("#loaderVariableFamily").hide();
-        $('#errorMsg').html(errorMsg.error.request);
-    });
 }
 
 function searchVariableFamilies() {
@@ -228,28 +228,27 @@ function searchVariableFamilies() {
     $("#selectVariable").parent().hide();
     $("#selectCodelist").parent().hide();
     $('#selectVariableFamily').html('').select2();
-    endpoint = properties.endpoint['structural-resources'];
-    if (endpoint[endpoint.length - 1] == "/") {
-        endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
-    }
-    url = endpoint + "/variablefamilies.json?limit=1000&orderBy=ID ASC";
-    $.getJSON(url, function (resp) {
-        if (resp.variableFamily) {
-            for (var i = 0; i < resp.variableFamily.length; i++) {
-                variableFamilies[i] = { id: resp.variableFamily[i].id, text: _.keyBy(resp.variableFamily[i].name.text, 'lang')[language].value };
-            }
-        }
-        $('#selectVariableFamily').select2({
-            data: _.sortBy(variableFamilies, 'text'),
-            dropdownAutoWidth: true,
-            width: '83.3%'
+    getEndpointMetadataValue(properties.endpoint['structural-resources'])
+        .done(function(endpoint) {
+            url = endpoint + "/variablefamilies.json?limit=1000&orderBy=ID ASC";
+            $.getJSON(url, function (resp) {
+                if (resp.variableFamily) {
+                    for (var i = 0; i < resp.variableFamily.length; i++) {
+                        variableFamilies[i] = { id: resp.variableFamily[i].id, text: _.keyBy(resp.variableFamily[i].name.text, 'lang')[language].value };
+                    }
+                }
+                $('#selectVariableFamily').select2({
+                    data: _.sortBy(variableFamilies, 'text'),
+                    dropdownAutoWidth: true,
+                    width: '83.3%'
+                });
+                $("#loaderVariableFamily").hide();
+                searchVariables();
+            }).error(function () {
+                $("#loaderVariableFamily").hide();
+                $('#errorMsg').html(errorMsg.error.endpoint);
+            });
         });
-        $("#loaderVariableFamily").hide();
-        searchVariables();
-    }).error(function () {
-        $("#loaderVariableFamily").hide();
-        $('#errorMsg').html(errorMsg.error.endpoint);
-    });
 }
 
 function searchVariables() {
@@ -259,6 +258,7 @@ function searchVariables() {
     var variables = [];
     $("#selectCodelist").parent().hide();
     $("#selectVariable").html('').select2();
+    // This endpoint is assigned its value on metadata-service. It´s not the best way but it´s working for now until it is refactorized
     url = endpoint + "/variablefamilies/" + document.getElementById("selectVariableFamily").value + "/variables.json?limit=1000&orderBy=ID ASC";
     $.getJSON(url, function (resp) {
         if (resp.variable) {
@@ -287,6 +287,7 @@ function searchCodelists() {
     document.getElementById("selectCodelist").parentElement.style.display = "block";
     codelists = [];
     $("#selectCodelist").html('').select2();
+    
     url = endpoint + '/codelists.json?limit=1000&orderBy=ID ASC&query=VARIABLE_URN EQ "' + $("#selectVariable").val() + '" AND LATEST EQ "true"';
     $.getJSON(url, function (resp) {
         if (resp.codelist) {
@@ -336,27 +337,28 @@ function searchOperations() {
     document.getElementById("selectOperation").parentElement.style.display = "block";
     var operations = [];
     $("#selectOperation").html('').select2();
-    endpoint = properties.endpoint.operations;
-    if (endpoint[endpoint.length - 1] == "/") {
-        endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
-    }
-    $.getJSON(endpoint + "/operations.json?query=STATUS EQ \"" + properties.operations.status.production + "\"&limit=1000&orderBy=ID ASC", function (resp) {
-        if (resp.operation) {
-            for (var i = 0; i < resp.operation.length; i++) {
-                operations[i] = { id: resp.operation[i].urn, text: _.keyBy(resp.operation[i].name.text, 'lang')[language].value };
-            }
-        }
-        $("#selectOperation").select2({
-            data: _.sortBy(operations, 'text'),
-            dropdownAutoWidth: true,
-            width: '83.3%'
+    
+    getEndpointMetadataValue(properties.endpoint.operations)
+        .done(function(endpoint) {
+            $.getJSON(endpoint + "/operations.json?query=STATUS EQ \"" + properties.operations.status.production + "\"&limit=1000&orderBy=ID ASC", function (resp) {
+                if (resp.operation) {
+                    for (var i = 0; i < resp.operation.length; i++) {
+                        operations[i] = { id: resp.operation[i].urn, text: _.keyBy(resp.operation[i].name.text, 'lang')[language].value };
+                    }
+                }
+                $("#selectOperation").select2({
+                    data: _.sortBy(operations, 'text'),
+                    dropdownAutoWidth: true,
+                    width: '83.3%'
+                });
+                $("#loaderOperation").hide();
+                searchDatasets();
+            }).error(function () {
+                $("#loaderOperation").hide();
+                $("#errorMsg").html(errorMsg.error.endpoint);
+            });
+
         });
-        $("#loaderOperation").hide();
-        searchDatasets();
-    }).error(function () {
-        $("#loaderOperation").hide();
-        $("#errorMsg").html(errorMsg.error.endpoint);
-    });
 }
 
 function searchDatasets() {
@@ -364,31 +366,30 @@ function searchDatasets() {
     $("#loaderDataset").show();
     var datasets = [];
     $("#selectDataset").html('').select2();
-    endpoint = properties.endpoint['statistical-resources'];
-    if (endpoint[endpoint.length - 1] == "/") {
-        endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
-    }
-    url = endpoint + "/datasets.json?limit=1000&orderBy=ID ASC&query=STATISTICAL_OPERATION_URN EQ '" + $("#selectOperation").val() + "'";
-    $.getJSON(url, function (resp) {
-        if (resp.dataset) {
-            for (var i = 0; i < resp.dataset.length; i++) {
-                datasets[i] = {
-                    id: resp.dataset[i].selfLink.href.substring(0, resp.dataset[i].selfLink.href.lastIndexOf('/')),
-                    text: _.keyBy(resp.dataset[i].name.text, 'lang')[language].value
-                };
-            }
-        }
-        $("#selectDataset").select2({
-            data: _.sortBy(_.uniqBy(datasets, 'id'), 'text'),
-            dropdownAutoWidth: true,
-            width: '83.3%'
+    getEndpointMetadataValue(properties.endpoint['statistical-resources'])
+        .done(function(endpoint) {
+            url = endpoint + "/datasets.json?limit=1000&orderBy=ID ASC&query=STATISTICAL_OPERATION_URN EQ '" + $("#selectOperation").val() + "'";
+            $.getJSON(url, function (resp) {
+                if (resp.dataset) {
+                    for (var i = 0; i < resp.dataset.length; i++) {
+                        datasets[i] = {
+                            id: resp.dataset[i].selfLink.href.substring(0, resp.dataset[i].selfLink.href.lastIndexOf('/')),
+                            text: _.keyBy(resp.dataset[i].name.text, 'lang')[language].value
+                        };
+                    }
+                }
+                $("#selectDataset").select2({
+                    data: _.sortBy(_.uniqBy(datasets, 'id'), 'text'),
+                    dropdownAutoWidth: true,
+                    width: '83.3%'
+                });
+                $("#loaderDataset").hide();
+                document.getElementById("selectDataset").parentElement.style.display = "block";
+            }).error(function () {
+                $("#loaderDataset").hide();
+                $("#errorMsg").html(errorMsg.error.request);
+            });
         });
-        $("#loaderDataset").hide();
-        document.getElementById("selectDataset").parentElement.style.display = "block";
-    }).error(function () {
-        $("#loaderDataset").hide();
-        $("#errorMsg").html(errorMsg.error.request);
-    });
 }
 
 function enableAllLanguages() {

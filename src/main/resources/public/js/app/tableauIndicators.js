@@ -358,95 +358,100 @@
 
     $(document).ready(function () {
         $("#dataButton").click(function () {
-            switch ($('input[name="datatype"]:checked').val()) {
-                case 'url':
-                    urlIndicator = $('#inputUrl').val();
-                    tableau.connectionName = "Indicador: ";
-                    break;
-                case 'indicator':
-                    var endpoint = properties.endpoint.indicators;
-                    if (endpoint[endpoint.length - 1] == "/") {
-                        endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
-                    }
-                    urlIndicator = endpoint + '/indicators/' + $('#selectIndicator').val() + '/data';
-                    if ($('#selectIndicator').val() == null || $('#selectIndicator').val() == undefined || $('#selectIndicator').val().length == 0) {
-                        urlIndicator = '';
-                    }
-                    tableau.connectionName = "Indicador: ";
-                    break;
-                case 'indicatorInstance':
-                    var endpoint = properties.endpoint.indicators;
-                    if (endpoint[endpoint.length - 1] == "/") {
-                        endpoint = endpoint.substring(0, endpoint.lastIndexOf("/"));
-                    }
-                    urlIndicator = endpoint + '/indicatorsSystems/' + $('#selectIndicatorSystem').val() + '/indicatorsInstances/' +
-                        $('#selectIndicatorInstance').val() + '/data';
-                    if ($('#selectIndicatorInstance').val() == null || $('#selectIndicatorInstance').val() == undefined || $('#selectIndicatorInstance').val().length == 0) {
-                        urlIndicator = '';
-                    }
-                    tableau.connectionName = "Instancia de indicador: ";
-                    break;
-            }
-            var urlObj = {
-                url: urlIndicator.trim(),
-                granularity: $('#showGranularity').is(':checked'),
-                labels: $('#showLabels').is(':checked'),
-                allLanguages: $('#allLanguages').is(':checked'),
-                starModel: $("#starModel").is(":checked"),
-                showMeasureColumns: $('#measureColumns').is(':checked'),
-                recodeDates: $('#recodeDates').is(':checked')
-            };
-
-            function isValidUrl(url) {
-                url = url.toString();
-                return url.match(".+/data$") != null;
-            }
-
-            if (isValidUrl(urlObj.url)) {
-                $('#errorMsg').html("");
-                $.getJSON(urlObj.url.substring(0, urlObj.url.indexOf('/data')), function (resp) {
-                    urlObj.name = resp.title.__default__;
-                    if ($('input[name="datatype"]:checked').val() != "indicatorInstance") {
-                        urlObj.observationId = resp.code;
-                    } else {
-                        urlObj.observationId = resp.subjectCode;
-                    }
-                    tableau.connectionName = tableau.connectionName + resp.title.__default__;
-
-                    if (urlObj.allLanguages) {
-                        geographicalLanguages = [];
-                        for (i = 0; i < Object.keys(resp.dimension.GEOGRAPHICAL.representation[0].title).length; i++) {
-                            if (Object.keys(resp.dimension.GEOGRAPHICAL.representation[0].title)[i] != "__default__") {
-                                geographicalLanguages.push(Object.keys(resp.dimension.GEOGRAPHICAL.representation[0].title)[i]);
+            (function(callback) {
+                switch ($('input[name="datatype"]:checked').val()) {
+                    case 'url':
+                        urlIndicator = $('#inputUrl').val();
+                        tableau.connectionName = "Indicador: ";
+                        callback();
+                        break;
+                    case 'indicator':
+                        getEndpointMetadataValue(properties.endpoint.indicators)
+                            .done(function(endpoint) {
+                                urlIndicator = endpoint + '/indicators/' + $('#selectIndicator').val() + '/data';
+                                if ($('#selectIndicator').val() == null || $('#selectIndicator').val() == undefined || $('#selectIndicator').val().length == 0) {
+                                    urlIndicator = '';
+                                }
+                                tableau.connectionName = "Indicador: ";
+                                callback();
+                            });
+                        break;
+                    case 'indicatorInstance':
+                        getEndpointMetadataValue(properties.endpoint.indicators)
+                            .done(function(endpoint) {
+                                urlIndicator = endpoint + '/indicatorsSystems/' + $('#selectIndicatorSystem').val() + '/indicatorsInstances/' +
+                                    $('#selectIndicatorInstance').val() + '/data';
+                                if ($('#selectIndicatorInstance').val() == null || $('#selectIndicatorInstance').val() == undefined || $('#selectIndicatorInstance').val().length == 0) {
+                                    urlIndicator = '';
+                                }
+                                tableau.connectionName = "Instancia de indicador: ";
+                                callback();
+                            });
+                        break;
+                }
+            })(function() {
+                var urlObj = {
+                    url: urlIndicator.trim(),
+                    granularity: $('#showGranularity').is(':checked'),
+                    labels: $('#showLabels').is(':checked'),
+                    allLanguages: $('#allLanguages').is(':checked'),
+                    starModel: $("#starModel").is(":checked"),
+                    showMeasureColumns: $('#measureColumns').is(':checked'),
+                    recodeDates: $('#recodeDates').is(':checked')
+                };
+    
+                function isValidUrl(url) {
+                    url = url.toString();
+                    return url.match(".+/data$") != null;
+                }
+    
+                if (isValidUrl(urlObj.url)) {
+                    $('#errorMsg').html("");
+                    $.getJSON(urlObj.url.substring(0, urlObj.url.indexOf('/data')), function (resp) {
+                        urlObj.name = resp.title.__default__;
+                        if ($('input[name="datatype"]:checked').val() != "indicatorInstance") {
+                            urlObj.observationId = resp.code;
+                        } else {
+                            urlObj.observationId = resp.subjectCode;
+                        }
+                        tableau.connectionName = tableau.connectionName + resp.title.__default__;
+    
+                        if (urlObj.allLanguages) {
+                            geographicalLanguages = [];
+                            for (i = 0; i < Object.keys(resp.dimension.GEOGRAPHICAL.representation[0].title).length; i++) {
+                                if (Object.keys(resp.dimension.GEOGRAPHICAL.representation[0].title)[i] != "__default__") {
+                                    geographicalLanguages.push(Object.keys(resp.dimension.GEOGRAPHICAL.representation[0].title)[i]);
+                                }
                             }
-                        }
-                        urlObj.geographicalLanguages = geographicalLanguages;
-
-                        timeLanguages = [];
-                        for (i = 0; i < Object.keys(resp.dimension.TIME.representation[0].title).length; i++) {
-                            if (Object.keys(resp.dimension.TIME.representation[0].title)[i] != "__default__") {
-                                timeLanguages.push(Object.keys(resp.dimension.TIME.representation[0].title)[i]);
+                            urlObj.geographicalLanguages = geographicalLanguages;
+    
+                            timeLanguages = [];
+                            for (i = 0; i < Object.keys(resp.dimension.TIME.representation[0].title).length; i++) {
+                                if (Object.keys(resp.dimension.TIME.representation[0].title)[i] != "__default__") {
+                                    timeLanguages.push(Object.keys(resp.dimension.TIME.representation[0].title)[i]);
+                                }
                             }
+                            urlObj.timeLanguages = timeLanguages;
                         }
-                        urlObj.timeLanguages = timeLanguages;
-                    }
-
-                    if (urlObj.showMeasureColumns) {
-                        measureColumns = [];
-                        for (i = 0; i < resp.dimension.MEASURE.representation.length; i++) {
-                            measureColumns[i] = measuresIds[resp.dimension.MEASURE.representation[i].code];
+    
+                        if (urlObj.showMeasureColumns) {
+                            measureColumns = [];
+                            for (i = 0; i < resp.dimension.MEASURE.representation.length; i++) {
+                                measureColumns[i] = measuresIds[resp.dimension.MEASURE.representation[i].code];
+                            }
+                            urlObj.measureColumns = measureColumns;
                         }
-                        urlObj.measureColumns = measureColumns;
-                    }
-
-                    tableau.connectionData = JSON.stringify(urlObj);
-                    tableau.submit();
-                }).error(function () {
-                    $("#errorMsg").html(errorMsg.error.submit);
-                });
-            } else {
-                $('#errorMsg').html(errorMsg.error.indicator.url);
-            }
+    
+                        tableau.connectionData = JSON.stringify(urlObj);
+                        tableau.submit();
+                    }).error(function () {
+                        $("#errorMsg").html(errorMsg.error.submit);
+                    });
+                } else {
+                    $('#errorMsg').html(errorMsg.error.indicator.url);
+                }
+            });
+            
         });
     });
 

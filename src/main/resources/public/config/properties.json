@@ -1,9 +1,30 @@
 {
     "endpoint": {
-        "operations": "http://estadisticas.arte-consultores.com/operations/v1.0/",
-        "indicators": "https://www3.gobiernodecanarias.org/istac/api/indicators/v1.0/",
-        "structural-resources": "http://estadisticas.arte-consultores.com/structural-resources/v1.0/",
-        "statistical-resources": "http://estadisticas.arte-consultores.com/statistical-resources/v1.0/",
+        "operations": {
+            "metadataKey": {
+                "EXTERNAL": "metamac.statistical_operations.rest.external",
+                "INTERNAL": "metamac.statistical_operations.rest.internal"
+            },
+            "version": "v1.0"
+        },
+        "indicators": {
+            "metadataKey": "indicators.rest.external",
+            "version": "v1.0"
+        },
+        "structural-resources": {
+            "metadataKey": {
+                "EXTERNAL": "metamac.srm.rest.external",
+                "INTERNAL": "metamac.srm.rest.internal"
+            },
+            "version": "v1.0"
+        },
+        "statistical-resources": {
+            "metadataKey": {
+                "EXTERNAL": "metamac.statistical_resources.rest.external",
+                "INTERNAL": "metamac.statistical_resources.rest.internal"
+            },
+            "version": "v1.0"
+        },
         "metadata": "http://estadisticas.arte-consultores.com/cmetadata/v1.0/"
     },
     "operations": {
