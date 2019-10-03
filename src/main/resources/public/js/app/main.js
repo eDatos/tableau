@@ -1,7 +1,5 @@
 var properties;
 
-var metadatasLoaded = {};
-
 var endpoint;
 
 $.getJSON("config/properties.json", function (resp) {

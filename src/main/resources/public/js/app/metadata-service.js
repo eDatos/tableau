@@ -1,4 +1,5 @@
 'use strict';
+var metadatasLoaded = {};
 
 function getMetadataValue(metadataKey) {
     var deferred = $.Deferred();
