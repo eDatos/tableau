@@ -39,7 +39,7 @@ function addGoogleAnalyticsScriptTag() {
         var googleAnalyticsScript = document.createElement('script');
         googleAnalyticsScript.setAttribute('src', 'https://www.googletagmanager.com/gtag/js?id=' + googleAnalyticsTrackId);
         googleAnalyticsScript.async = true;
-        document.head.insertBefore(googleAnalyticsScript);
+        document.head.insertBefore(googleAnalyticsScript, null);
 
         executeGoogleAnalyticsInlineCode(googleAnalyticsTrackId);
     });
