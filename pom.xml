@@ -18,8 +18,8 @@
     	<!--MVN -->
         <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
 		<frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
-		<node.version>v6.11.1</node.version>
-		<yarn.version>v0.27.5</yarn.version>
+		<node.version>v12.16.1</node.version>
+		<npm.version>6.13.4</npm.version>
 	</properties>
 
 	<build>
@@ -30,34 +30,34 @@
 				<version>${frontend-maven-plugin.version}</version>
 
 				<configuration>
-					<workingDirectory>src/main/resources/public</workingDirectory>
+					<workingDirectory>src/main/resources</workingDirectory>
 				</configuration>
 
 				<executions>
 					<execution>
 						<id>install node and npm</id>
 						<goals>
-							<goal>install-node-and-yarn</goal>
+							<goal>install-node-and-npm</goal>
 						</goals>
 						<configuration>
 							<nodeVersion>${node.version}</nodeVersion>
-							<yarnVersion>${yarn.version}</yarnVersion>
+							<npmVersion>${npm.version}</npmVersion>
 						</configuration>
 					</execution>
 					<execution>
-						<id>yarn install</id>
+						<id>npm install</id>
 						<goals>
-							<goal>yarn</goal>
+							<goal>npm</goal>
 						</goals>
 						<configuration>
 							<arguments>install</arguments>
 						</configuration>
 					</execution>
 					<execution>
-						<id>yarn run build</id>
+						<id>npm run build</id>
 						<phase>generate-resources</phase>
 						<goals>
-							<goal>yarn</goal>
+							<goal>npm</goal>
 						</goals>
 						<configuration>
 							<arguments>run build</arguments>
@@ -81,12 +81,9 @@
 						<resources>
 							<resource>
 								<directory>src/main/resources/</directory>
-								<excludes>
-									<exclude>public/node_modules/**</exclude>
-									<exclude>public/node/**</exclude>
-									<exclude>package.json</exclude>
-									<exclude>yarn.lock</exclude>
-								</excludes>
+								<include>
+									public/**/*
+								</include>
 							</resource>
 						</resources>
 					</configuration>
