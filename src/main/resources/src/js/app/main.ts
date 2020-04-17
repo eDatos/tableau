@@ -4,7 +4,7 @@ var endpoint;
 
 $.getJSON("config/properties.json", function (resp) {
     properties = resp;
-    addGoogleAnalyticsScriptTag();
+    addGoogleAnalyticsScriptTag(); var a;
     $("form").ready(function () {
         if ($("input[name='datatype']:checked")[0]) {
             switch ($("input[name='datatype']:checked")[0].value) {
@@ -112,7 +112,7 @@ function searchSubjects() {
     $('#selectSubject').html('').select2();
 
     getEndpointMetadataValue(properties.endpoint.indicators)
-        .done(function(endpoint) {
+        .done(function (endpoint) {
             $.getJSON(endpoint + "/subjects", function (resp) {
                 $('#errorMsg').html("");
                 if (resp.items) {
@@ -142,7 +142,7 @@ function searchIndicators() {
     $('#selectIndicator').html('').select2();
 
     getEndpointMetadataValue(properties.endpoint.indicators)
-        .done(function(endpoint) {
+        .done(function (endpoint) {
             var subjectCode = document.getElementById("selectSubject").value
             $.getJSON(endpoint + "/indicators?limit=1000&orderBy=ID ASC&q=subjectCode EQ '" + subjectCode + "'", function (resp) {
                 $('#errorMsg').html("");
@@ -171,7 +171,7 @@ function searchIndicatorsSystems() {
     var indicatorsSystems = [];
     $('#selectIndicatorSystem').html('').select2();
     getEndpointMetadataValue(properties.endpoint.indicators)
-        .done(function(endpoint) {
+        .done(function (endpoint) {
             $.getJSON(endpoint + "/indicatorsSystems?limit=1000&orderBy=ID ASC", function (resp) {
                 $('#errorMsg').html("");
                 if (resp.items) {
@@ -200,7 +200,7 @@ function searchIndicatorsInstances() {
     var indicatorsInstances = [];
     $('#selectIndicatorInstance').html('').select2();
     getEndpointMetadataValue(properties.endpoint.indicators).
-        done(function(endpoint) {
+        done(function (endpoint) {
             url = endpoint + "/indicatorsSystems/" + document.getElementById("selectIndicatorSystem").value + "/indicatorsInstances?limit=1000&orderBy=ID ASC";
             $.getJSON(url, function (resp) {
                 if (resp.items) {
@@ -229,7 +229,7 @@ function searchVariableFamilies() {
     $("#selectCodelist").parent().hide();
     $('#selectVariableFamily').html('').select2();
     getEndpointMetadataValue(properties.endpoint['structural-resources'])
-        .done(function(endpoint) {
+        .done(function (endpoint) {
             url = endpoint + "/variablefamilies.json?limit=1000&orderBy=ID ASC";
             $.getJSON(url, function (resp) {
                 if (resp.variableFamily) {
@@ -287,7 +287,7 @@ function searchCodelists() {
     document.getElementById("selectCodelist").parentElement.style.display = "block";
     codelists = [];
     $("#selectCodelist").html('').select2();
-    
+
     url = endpoint + '/codelists.json?limit=1000&orderBy=ID ASC&query=VARIABLE_URN EQ "' + $("#selectVariable").val() + '" AND LATEST EQ "true"';
     $.getJSON(url, function (resp) {
         if (resp.codelist) {
@@ -337,9 +337,9 @@ function searchOperations() {
     document.getElementById("selectOperation").parentElement.style.display = "block";
     var operations = [];
     $("#selectOperation").html('').select2();
-    
+
     getEndpointMetadataValue(properties.endpoint.operations)
-        .done(function(endpoint) {
+        .done(function (endpoint) {
             $.getJSON(endpoint + "/operations.json?query=STATUS EQ \"" + properties.operations.status.production + "\"&limit=1000&orderBy=ID ASC", function (resp) {
                 if (resp.operation) {
                     for (var i = 0; i < resp.operation.length; i++) {
@@ -367,7 +367,7 @@ function searchDatasets() {
     var datasets = [];
     $("#selectDataset").html('').select2();
     getEndpointMetadataValue(properties.endpoint['statistical-resources'])
-        .done(function(endpoint) {
+        .done(function (endpoint) {
             url = endpoint + "/datasets.json?limit=1000&orderBy=ID ASC&query=STATISTICAL_OPERATION_URN EQ '" + $("#selectOperation").val() + "'";
             $.getJSON(url, function (resp) {
                 if (resp.dataset) {
