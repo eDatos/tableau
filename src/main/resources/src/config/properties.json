@@ -25,7 +25,7 @@
             },
             "version": "v1.0"
         },
-        "metadata": "http://estadisticas.arte-consultores.com/cmetadata/v1.0/"
+        "metadata": "https://estadisticas.arte-consultores.com/cmetadata/v1.0/"
     },
     "operations": {
         "status": {
