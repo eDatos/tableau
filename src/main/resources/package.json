@@ -5,15 +5,17 @@
         "copy:jquery": "shx cp node_modules/jquery/dist/jquery.min.js public/js/vendor",
         "copy:select2": "shx cp node_modules/select2/dist/js/select2.min.js public/js/vendor && shx cp node_modules/select2/dist/css/select2.min.css public/css",
         "copy:bootstrap": "shx cp node_modules/bootstrap/dist/js/bootstrap.min.js public/js/vendor && shx cp node_modules/bootstrap/dist/css/bootstrap.min.css public/css",
-        "copy:vendor": "npm run copy:bootstrap && npm run copy:jquery && npm run copy:fontawesome && npm run copy:select2",
+        "copy:vendor": "npm run copy:bootstrap && npm run copy:jquery && npm run copy:fontawesome && npm run copy:select2 && shx cp -r src/js/vendor public/js",
         "tsc": "tsc",
         "tsc:w": "tsc -w",
         "clean": "rimraf public",
         "prebuild": "mkdirp public/js/vendor && mkdirp public/fonts && mkdirp public/css",
-        "build": "npm run copy:vendor && shx cp -r src/* public"
+        "build": "npm run copy:vendor && shx cp -r src/config src/css src/fonts src/imgs src/templates src/translate src/*.html src/favicon.ico public && tsc"
     },
     "dependencies": {
         "@types/jquery": "^3.3.35",
+        "@types/lodash": "^4.14.149",
+        "@types/select2": "^4.0.48",
         "bootstrap": "3.3.6",
         "font-awesome": "4.7.0",
         "jquery": "^1.9.2",

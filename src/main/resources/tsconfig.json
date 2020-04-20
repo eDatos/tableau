@@ -1,0 +1,22 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "baseUrl": "./",
+        "outDir": "./public/js/app",
+        "sourceMap": true,
+        "declaration": false,
+        "downlevelIteration": true,
+        "target": "ES5",
+        "typeRoots": [
+            "node_modules/@types"
+        ],
+        "paths": {
+            "@app/*": [
+                "./src/app/*"
+            ]
+        }
+    },
+    "include": [
+        "./src/js/**/*.ts"
+    ]
+}

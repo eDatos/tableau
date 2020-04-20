@@ -6,17 +6,17 @@
 
     myConnector.getSchema = function (schemaCallback) {
         var schemaTables = [];
-        var urlObj = JSON.parse(tableau.connectionData);
+        var connectionData = JSON.parse(tableau.connectionData);
 
-        if (urlObj.decodeOptionEnabled) {
+        if (connectionData.decodeOptionEnabled) {
             var colsCodelist02 = [
                 { id: "Codigo_recodificado", columnRole: "dimension", dataType: tableau.dataTypeEnum.string },
                 { id: "Padre_recodificado", columnRole: "dimension", dataType: tableau.dataTypeEnum.string }
             ];
 
-            if (urlObj.allLanguages) {
-                for (i = 0; i < urlObj.languages.length; i++) {
-                    colsCodelist02.push({ id: "Nombre_recodificado_" + urlObj.languages[i], columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+            if (connectionData.allLanguages) {
+                for (let i = 0; i < connectionData.languages.length; i++) {
+                    colsCodelist02.push({ id: "Nombre_recodificado_" + connectionData.languages[i], columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
                 }
             } else {
                 colsCodelist02.push({ id: "Nombre_recodificado", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
@@ -29,7 +29,7 @@
 
             var tableCodelist02 = {
                 id: "codelist02Data",
-                alias: urlObj.codelist02Tablename,
+                alias: connectionData.codelist02Tablename,
                 columns: _.sortBy(colsCodelist02, 'id')
             };
             schemaTables.push(tableCodelist02);
@@ -47,9 +47,9 @@
             { id: "Padre_origen", columnRole: "dimension", dataType: tableau.dataTypeEnum.string }
         ];
 
-        if (urlObj.allLanguages) {
-            for (i = 0; i < urlObj.languages.length; i++) {
-                colsCodelist01.push({ id: "Nombre_origen_" + urlObj.languages[i], columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+        if (connectionData.allLanguages) {
+            for (let i = 0; i < connectionData.languages.length; i++) {
+                colsCodelist01.push({ id: "Nombre_origen_" + connectionData.languages[i], columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
             }
         } else {
             colsCodelist01.push({ id: "Nombre_origen", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
@@ -57,7 +57,7 @@
 
         var tableCodelist01 = {
             id: "codelist01Data",
-            alias: urlObj.codelist01Tablename,
+            alias: connectionData.codelist01Tablename,
             columns: _.sortBy(colsCodelist01, 'id')
         };
         schemaTables.push(tableCodelist01);
@@ -66,15 +66,15 @@
     };
 
     myConnector.getData = function (table, doneCallback) {
-        var urlObj = JSON.parse(tableau.connectionData);
+        var connectionData = JSON.parse(tableau.connectionData);
         var promises = [];
 
         if (table.tableInfo.id == "codelist01Data" || table.tableInfo.id == "intersectionData") {
-            promises.push($.getJSON(urlObj.url));
+            promises.push($.getJSON(connectionData.url));
         }
 
         if (table.tableInfo.id == "codelist02Data" || table.tableInfo.id == "intersectionData") {
-            promises.push($.getJSON(urlObj.urlDecodeCodelist));
+            promises.push($.getJSON(connectionData.urlDecodeCodelist));
         }
         $.when.apply($, promises).then(function () {
 
@@ -82,37 +82,37 @@
             if (table.tableInfo.id != "intersectionData") {
                 var dataResponse = arguments[0];
 
-                for (i = 0; i < dataResponse.code.length; i++) {
-                    var hash = {};
+                for (let i = 0; i < dataResponse.code.length; i++) {
+                    var dataEntry: CodelistDataEntry = {};
                     if (table.tableInfo.id == "codelist01Data") {
-                        hash.Codigo_origen = dataResponse.code[i].id;
-                        hash.Padre_origen = dataResponse.code[i].parent ? dataResponse.code[i].parent.substring(dataResponse.code[i].parent.lastIndexOf(".") + 1) : '';
+                        dataEntry.Codigo_origen = dataResponse.code[i].id;
+                        dataEntry.Padre_origen = dataResponse.code[i].parent ? dataResponse.code[i].parent.substring(dataResponse.code[i].parent.lastIndexOf(".") + 1) : '';
                     } else {
-                        hash.Codigo_recodificado = dataResponse.code[i].id;
-                        hash.Padre_recodificado = dataResponse.code[i].parent ? dataResponse.code[i].parent.substring(dataResponse.code[i].parent.lastIndexOf(".") + 1) : '';
+                        dataEntry.Codigo_recodificado = dataResponse.code[i].id;
+                        dataEntry.Padre_recodificado = dataResponse.code[i].parent ? dataResponse.code[i].parent.substring(dataResponse.code[i].parent.lastIndexOf(".") + 1) : '';
                     }
-                    if (urlObj.allLanguages) {
-                        for (j = 0; j < urlObj.languages.length; j++) {
+                    if (connectionData.allLanguages) {
+                        for (let j = 0; j < connectionData.languages.length; j++) {
                             if (table.tableInfo.id == "codelist01Data") {
-                                hash['Nombre_origen_' + urlObj.languages[j]] = _.keyBy(dataResponse.code[i].name.text, 'lang')[urlObj.languages[j]].value;
+                                dataEntry['Nombre_origen_' + connectionData.languages[j]] = _.keyBy(dataResponse.code[i].name.text, 'lang')[connectionData.languages[j]].value;
                             } else {
-                                hash['Nombre_recodificado_' + urlObj.languages[j]] = _.keyBy(dataResponse.code[i].name.text, 'lang')[urlObj.languages[j]].value;
+                                dataEntry['Nombre_recodificado_' + connectionData.languages[j]] = _.keyBy(dataResponse.code[i].name.text, 'lang')[connectionData.languages[j]].value;
                             }
                         }
                     } else {
                         if (table.tableInfo.id == "codelist01Data") {
-                            hash.Nombre_origen = _.keyBy(dataResponse.code[i].name.text, 'lang')[language].value;
+                            dataEntry.Nombre_origen = _.keyBy(dataResponse.code[i].name.text, 'lang')[language].value;
                         } else {
-                            hash.Nombre_recodificado = _.keyBy(dataResponse.code[i].name.text, 'lang')[language].value;
+                            dataEntry.Nombre_recodificado = _.keyBy(dataResponse.code[i].name.text, 'lang')[language].value;
                         }
                     }
-                    tableData.push(hash);
+                    tableData.push(dataEntry);
                 }
             } else {
                 var dataResponseCodelist1 = arguments[0][0];
                 var dataResponseCodelist2 = arguments[1][0];
-                var secondaryHash = {};
-                for (i = 0; i < dataResponseCodelist1.code.length; i++) {
+                var secondaryHash: CodelistDataEntry = {};
+                for (let i = 0; i < dataResponseCodelist1.code.length; i++) {
                     secondaryHash = {};
                     var variableElementId = dataResponseCodelist1.code[i].variableElement.id;
                     secondaryHash.Codigo_origen = dataResponseCodelist1.code[i].id;
@@ -154,13 +154,14 @@
                     tableau.connectionName = "Clasificación: ";
                     break;
             }
-            var urlObj = {
+            var connectionData: CodelistsConnectionData = {
                 url: urlCodelist.trim(),
                 urlDecodeCodelist: urlDecodeCodelist.trim(),
                 decodeOptionEnabled: $("#decode").is(":checked"),
                 codelist01Tablename: $("#selectCodelist option:checked").text(),
                 codelist02Tablename: $("#selectDecodeCodelist option:checked").text(),
-                allLanguages: $('#allLanguages').is(':checked')
+                allLanguages: $('#allLanguages').is(':checked'),
+                languages: []
             };
 
             function isValidUrl(url) {
@@ -168,29 +169,29 @@
                 return url.match(".+\/codes(.json)?.+(\\?fields=+variableElement)?$") != null;
             }
 
-            if (isValidUrl(urlObj.url) && (!$("#decode").is(":checked") || isValidUrl(urlObj.urlDecodeCodelist))) {
+            if (isValidUrl(connectionData.url) && (!$("#decode").is(":checked") || isValidUrl(connectionData.urlDecodeCodelist))) {
                 $('#errorMsg').html("");
                 $('#errorNotSelectedDecoded').css("right", "-350px");
 
-                urlObj.url = addJsonFormat(urlObj.url);
-                urlObj.urlDecodeCodelist = addJsonFormat(urlObj.urlDecodeCodelist);
+                connectionData.url = addJsonFormat(connectionData.url);
+                connectionData.urlDecodeCodelist = addJsonFormat(connectionData.urlDecodeCodelist);
 
-                $.getJSON(urlObj.url.substring(0, urlObj.url.indexOf('/codes')), function (resp) {
+                $.getJSON(connectionData.url.substring(0, connectionData.url.indexOf('/codes')), function (resp) {
                     tableau.connectionName = tableau.connectionName + _.keyBy(resp.name.text, 'lang')[language].value;
-                    if (urlObj.allLanguages) {
-                        languages = [];
-                        for (i = 0; i < resp.name.text.length; i++) {
+                    if (connectionData.allLanguages) {
+                        let languages = [];
+                        for (let i = 0; i < resp.name.text.length; i++) {
                             languages[i] = resp.name.text[i].lang;
                         }
-                        urlObj.languages = languages;
+                        connectionData.languages = languages;
                     }
-                    tableau.connectionData = JSON.stringify(urlObj);
+                    tableau.connectionData = JSON.stringify(connectionData);
                     tableau.submit();
-                }).error(function () {
+                }).fail(function () {
                     $("#errorMsg").html(errorMsg.error.submit);
                 });
             } else {
-                if (isNullOrBlank($("#selectDecodeCodelist").val()) && urlObj.decodeOptionEnabled) {
+                if (isNullOrBlank($("#selectDecodeCodelist").val()) && connectionData.decodeOptionEnabled) {
                     $('#errorNotSelectedDecoded').css("right", "0px");
                 } else {
                     $('#errorMsg').html(errorMsg.error.codelist.url);
@@ -220,7 +221,7 @@
      * @param {any} value
      * @returns
      */
-    function isNullOrBlank(value) {
+    function isNullOrBlank(value): boolean {
         return (value == null || value == undefined || value.length == 0);
     }
 
