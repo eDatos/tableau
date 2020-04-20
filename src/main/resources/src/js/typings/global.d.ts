@@ -1,4 +1,9 @@
 declare var tableau: any;
+
+interface Window {
+    dataLayer?: object[];
+}
+
 interface BaseConnectionData {
     url: string;
     allLanguages: boolean;

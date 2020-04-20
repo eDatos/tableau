@@ -47,7 +47,7 @@ function addGoogleAnalyticsScriptTag() {
 
 function executeGoogleAnalyticsInlineCode(trackingId) {
     window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
+    function gtag(key, value) { window.dataLayer.push(arguments); }
     gtag('js', new Date());
     gtag('config', trackingId);
 }
