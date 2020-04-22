@@ -282,8 +282,8 @@
                 }
             }
         }
-        if (connectionData.recodeDates && connectionData.timeDimension == connectionData.dimensions.id) {
-            dimensionCols.push({ id: "Fecha", alias: "Fecha", columnRole: "dimension", dataType: tableau.dataTypeEnum.date });
+        if (connectionData.recodeDates && connectionData.timeDimension == dimension.id) {
+            returnCols.push({ id: "Fecha", alias: "Fecha", columnRole: "dimension", dataType: tableau.dataTypeEnum.date });
         }
         return returnCols;
     }
