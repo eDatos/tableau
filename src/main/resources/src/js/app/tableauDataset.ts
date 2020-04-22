@@ -32,7 +32,7 @@
                 }
             }
         } else {
-            for (k = 0; k < Object.keys(connectionData.dimensions).length; k++) {
+            for (let i = 0; i < Object.keys(connectionData.dimensions).length; i++) {
                 if (connectionData.measureColumns && connectionData.dimensions[i].id == connectionData.measureColumns.dimension) {
                     for (let j = 0; j < connectionData.measureColumns.values.length; j++) {
                         cols.push({
@@ -41,7 +41,7 @@
                         });
                     }
                 } else {
-                    var columns = _buildColumns(connectionData, connectionData.dimensions[k], connectionData.languages);
+                    var columns = _buildColumns(connectionData, connectionData.dimensions[i], connectionData.languages);
                     columns.forEach(function (element) {
                         cols.push(element);
                     });
