@@ -223,7 +223,6 @@
                         if (dimension) {
                             measureColumns.dimension = dimension.id;
                             var values = [];
-                            for (i = 0; i < dimension.dimensionValues.value.length; i++) {
                             for (let i = 0; i < dimension.dimensionValues.value.length; i++) {
                                 values[i] = {
                                     id: dimension.dimensionValues.value[i].id,
