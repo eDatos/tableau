@@ -5,17 +5,18 @@ var endpoint;
 $.getJSON("config/properties.json", function (resp) {
     properties = resp;
     addGoogleAnalyticsScriptTag();
-    $("form").ready(function () {
-        if ($("input[name='datatype']:checked")[0]) {
-            switch ((<HTMLInputElement>$("input[name='datatype']:checked")[0]).value) {
+    $(document).ready(function () {
+        const dataType = <HTMLInputElement>$("input[name='datatype']:checked")[0];
+        if (dataType) {
+            switch (dataType.value) {
                 case "indicator":
-                    $("#labelSelectIndicator").ready(searchSubjects());
+                    searchSubjects();
                     break;
                 case "variableFamily":
-                    $("#selectVariableLabel").ready(searchVariableFamilies());
+                    searchVariableFamilies();
                     break;
                 case "operation":
-                    $("#labelSelectOperation").ready(searchOperations());
+                    searchOperations();
                     break;
             }
         }
