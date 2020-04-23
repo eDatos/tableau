@@ -9,7 +9,7 @@
         "tsc": "tsc",
         "tsc:w": "tsc -w",
         "clean": "rimraf public",
-        "prebuild": "mkdirp public/js/vendor && mkdirp public/fonts && mkdirp public/css",
+        "prebuild": "npm run clean && mkdirp public/js/vendor && mkdirp public/fonts && mkdirp public/css",
         "build": "npm run copy:vendor && shx cp -r src/config src/css src/fonts src/imgs src/templates src/translate src/*.html src/favicon.ico public && tsc"
     },
     "dependencies": {
