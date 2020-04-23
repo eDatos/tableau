@@ -1,10 +1,10 @@
-var properties;
+var properties: Configuration;
 
 var endpoint;
 
 $.getJSON("config/properties.json", function (resp) {
     properties = resp;
-    addGoogleAnalyticsScriptTag(); var a;
+    addGoogleAnalyticsScriptTag();
     $("form").ready(function () {
         if ($("input[name='datatype']:checked")[0]) {
             switch ((<HTMLInputElement>$("input[name='datatype']:checked")[0]).value) {
