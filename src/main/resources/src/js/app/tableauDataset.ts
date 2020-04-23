@@ -65,6 +65,9 @@
         $.getJSON(urlObj.url)
             .then(function (dataResponse) {
                 switch (urlObj.resourceType) {
+                    case "GPE_DATASET":
+                        parseGPEDatasetResponse(dataResponse, urlObj, table, doneCallback);
+                        break;
                     case "STATISTICAL_RESOURCE_DATASET":
                         parseStatisticalResourceDatasetResponse(dataResponse, urlObj, table, doneCallback);
                         break;
@@ -108,6 +111,9 @@
                 dimensions: {}
             };
             switch (connectionData.resourceType) {
+                case "GPE_DATASET":
+                    buildConnectionDataForGPE(connectionData);
+                    break;
                 case "STATISTICAL_RESOURCE_DATASET":
                     buildConnectionDataForStatisticalResources(connectionData);
                     break;
@@ -287,6 +293,49 @@
         });
     }
 
+    // Dataset GPE
+    function parseGPEDatasetResponse(dataResponse: GPE.Dataset, connectionData: DatasetsConnectionData, table, doneCallback) {
+        var tableData = [];
+        for (let i = 0; i < dataResponse.data.length; i++) {
+            let hash = {};
+            hash[connectionData.observationId] = parseFloat(dataResponse.data[i].Valor);
+            dataResponse.data[i].dimCodes.forEach((dimCode, index) => {
+                hash[index] = dimCode;
+            });
+            tableData.push(hash);
+        }
+        table.appendRows(_.values(tableData));
+        doneCallback();
+
+    };
+
+    function buildConnectionDataForGPE(connectionData: DatasetsConnectionData) {
+        if (!isValidUrl(connectionData.url)) {
+            $('#errorMsg').html(errorMsg.error.dataset.url.invalid);
+        }
+
+        $('#errorMsg').html("");
+        $.getJSON(connectionData.url, function (dataResponse: GPE.Dataset) {
+            tableau.connectionName = tableau.connectionName + dataResponse.title;
+            connectionData.name = dataResponse.title;
+            connectionData.observationId = "Valor";
+            connectionData.showMeasureColumns = false;
+
+            var dimensions = {};
+            dataResponse.categories.forEach((category, index) => {
+                dimensions[index] = {
+                    id: _.toString(index),
+                    label: category.variable
+                }
+            });
+            connectionData.dimensions = dimensions;
+
+            tableau.connectionData = JSON.stringify(connectionData);
+            tableau.submit();
+        }).fail(function () {
+            $("#errorMsg").html(errorMsg.error.submit);
+        });
+    }
 
     // Utils
     function calculateResourceType(url: string): DatasetsConnectionData["resourceType"] {
