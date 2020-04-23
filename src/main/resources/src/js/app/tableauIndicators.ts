@@ -1,7 +1,7 @@
 (function () {
 
     var myConnector = tableau.makeConnector();
-    var urlIndicator;
+    var urlIndicator: string;
     const CONNECTION_TABLE_NUMBER = 1;
     var number = 2;
 
@@ -13,7 +13,7 @@
         "INTERPERIOD_PUNTUAL_RATE": "_Variacion_interperiodica"
     }
 
-    myConnector.getSchema = function (schemaCallback) {
+    myConnector.getSchema = function (schemaCallback: Function) {
         var connectionData = JSON.parse(tableau.connectionData);
         var tables = [];
 
@@ -95,7 +95,7 @@
         schemaCallback(tables);
     };
 
-    myConnector.getData = function (table, doneCallback) {
+    myConnector.getData = function (table: Tableau.Table, doneCallback: Function) {
         var connectionData = JSON.parse(tableau.connectionData);
         var promises = [];
         var isMainTable = table.tableInfo.id == "indicatorData";
@@ -362,7 +362,7 @@
             (function (callback) {
                 switch ($('input[name="datatype"]:checked').val()) {
                     case 'url':
-                        urlIndicator = $('#inputUrl').val();
+                        urlIndicator = <string>$('#inputUrl').val();
                         tableau.connectionName = "Indicador: ";
                         callback();
                         break;
@@ -406,7 +406,7 @@
                     measureColumns: []
                 };
 
-                function isValidUrl(url) {
+                function isValidUrl(url: string): boolean {
                     url = url.toString();
                     return url.match(".+/data$") != null;
                 }
@@ -461,12 +461,12 @@
         });
     });
 
-    function _capitalize(value) {
+    function _capitalize(value: string): string {
         return value.charAt(0).toUpperCase() + value.substring(1).toLowerCase();
     }
 
-    function _buildCols(connectionData: IndicatorsConnectionData, columnsId, languages) {
-        var returnCols = [];
+    function _buildCols(connectionData: IndicatorsConnectionData, columnsId: string[], languages) {
+        var returnCols: Tableau.Column[] = [];
         returnCols.push({ id: columnsId[0], columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
         if (connectionData.granularity) {
             returnCols.push({ id: columnsId[1], columnRole: "dimension", dataType: tableau.dataTypeEnum.string });

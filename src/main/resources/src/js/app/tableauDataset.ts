@@ -49,7 +49,7 @@
             }
         }
 
-        var tableInfo = {
+        var tableInfo: Tableau.TableInfo = {
             id: "datasetData",
             alias: addNumber(number) + tableau.connectionName,
             columns: cols

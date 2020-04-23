@@ -18,14 +18,3 @@ interface CommonConnectionData extends BaseConnectionData {
     starModel: boolean;
     recodeDates: boolean;
 }
-
-declare interface DataEntry {
-    Codigo_geografico?: string;
-    Codigo_temporal?: string;
-    Codigo_medida?: string;
-    Granularidad_geografica?: any;
-    Etiqueta_geografica?: any;
-    Fecha?: any;
-    Granularidad_temporal?: any;
-    Etiqueta_temporal?: any;
-}
