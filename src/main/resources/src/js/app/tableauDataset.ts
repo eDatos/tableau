@@ -61,108 +61,20 @@
 
     myConnector.getData = function (table, doneCallback) {
         var urlObj = JSON.parse(tableau.connectionData);
-        var promises = [];
 
-        promises.push($.getJSON(urlObj.url));
-
-        $.when.apply($, promises).then(function () {
-            var tableData = [];
-            var dataResponse = arguments[0];
-            var observations = dataResponse.data.observations.split(" | ");
-            var total = 1;
-            for (let i = 0; i < Object.keys(urlObj.dimensions).length; i++) {
-                total = total * dataResponse.data.dimensions.dimension[i].representations.total;
-            }
-            if (table.tableInfo.id == "datasetData") {
-                for (let i = 0; i < observations.length; i++) {
-                    var hash = {};
-                    var copyHash = {};
-                    if (!urlObj.measureColumns) {
-                        hash[urlObj.observationId] = observations[i];
-                    }
-                    var remaining = i;
-                    var subtotal = total;
-
-                    for (let j = 0; j < dataResponse.data.dimensions.total; j++) {
-                        var totalDimension = dataResponse.data.dimensions.dimension[j].representations.total;
-                        subtotal = Math.floor(subtotal / totalDimension);
-                        let indDimension = Math.floor(remaining / subtotal);
-                        remaining = remaining % subtotal;
-                        if (urlObj.measureColumns) {
-                            if (urlObj.measureColumns.dimension == urlObj.dimensions[j].id) {
-                                copyHash[urlObj.measureColumns.dimension + "_" + _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code] = observations[i];
-                            } else {
-                                hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
-                                copyHash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
-                            }
-                        } else {
-                            hash[urlObj.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
-                        }
-                        if (!urlObj.starModel) {
-                            if (urlObj.recodeDates && urlObj.timeDimension == urlObj.dimensions[j].id) {
-                                hash["Fecha"] = calculateDate(_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code);;
-                            }
-                            if (urlObj.labels) {
-                                var dimension = _.keyBy(dataResponse.metadata.dimensions.dimension, "id")[urlObj.dimensions[j].id];
-                                var dimensionValue = _.keyBy(dimension.dimensionValues.value, "id")[hash[urlObj.dimensions[j].id]];
-                                var dimensionLabel = _.keyBy(dimensionValue.name.text, "lang");
-                                if (urlObj.allLanguages) {
-                                    for (let k = 0; k < urlObj.languages.length; k++) {
-                                        if (dimensionLabel[urlObj.languages[k]]) {
-                                            hash["Etiqueta_" + dimension.id + "_" + urlObj.languages[k]] = dimensionLabel[urlObj.languages[k]].value;
-                                        } else {
-                                            hash["Etiqueta_" + dimension.id + "_" + urlObj.languages[k]] = '';
-                                        }
-                                    }
-                                } else {
-                                    hash["Etiqueta_" + dimension.id] = dimensionLabel['es'].value;
-                                }
-                            }
-                        }
-                    }
-
-                    if (urlObj.measureColumns && table.tableInfo.id == "datasetData") {
-                        var keyHash = _.values(hash).join(',');
-                        if (tableData[keyHash]) {
-                            _.extend(tableData[keyHash], copyHash);
-                        } else {
-                            tableData[keyHash] = copyHash;
-                        }
-                    } else {
-                        tableData.push(hash);
-                    }
+        $.getJSON(urlObj.url)
+            .then(function (dataResponse) {
+                switch (urlObj.resourceType) {
+                    case "STATISTICAL_RESOURCE_DATASET":
+                        parseStatisticalResourceDatasetResponse(dataResponse, urlObj, table, doneCallback);
+                        break;
+                    default:
+                        $('#errorMsg').html(errorMsg.error.dataset.url.unsupportedResourceType);
+                        break;
                 }
-            } else {
-                var dimension = _.keyBy(dataResponse.metadata.dimensions.dimension, "id")[table.tableInfo.id];
-                for (let i = 0; i < dimension.dimensionValues.total; i++) {
-                    var hash = {};
-                    hash[table.tableInfo.id] = dimension.dimensionValues.value[i].id;
-                    if (urlObj.recodeDates && urlObj.timeDimension == table.tableInfo.id) {
-                        hash["Fecha"] = calculateDate(dimension.dimensionValues.value[i].id);
-                    }
-                    if (urlObj.labels) {
-                        var dimensionLabels = _.keyBy(dimension.dimensionValues.value[i].name.text, "lang");
-                        if (urlObj.allLanguages) {
-                            for (let k = 0; k < urlObj.languages.length; k++) {
-                                if (dimensionLabels[urlObj.languages[k]]) {
-                                    hash["Etiqueta_" + dimension.id + "_" + urlObj.languages[k]] = dimensionLabels[urlObj.languages[k]].value;
-                                } else {
-                                    hash["Etiqueta_" + dimension.id + "_" + urlObj.languages[k]] = '';
-                                }
-                            }
-                        } else {
-                            hash["Etiqueta_" + dimension.id] = dimensionLabels['es'].value;
-                        }
-                    }
-                    tableData.push(hash);
-                }
-            }
+            })
+            .fail(doneCallback);
 
-            table.appendRows(_.values(tableData));
-            doneCallback();
-        }, function () {
-            doneCallback();
-        })
     };
 
     tableau.registerConnector(myConnector);
@@ -195,80 +107,186 @@
                 timeDimension: "",
                 dimensions: {}
             };
-
-            function isValidUrl(url) {
-                url = url.toString();
-                return url.match(".+") != null;
-            }
-
-            if (isValidUrl(connectionData.url)) {
-                $('#errorMsg').html("");
-                connectionData.url = connectionData.url.replace("&fields=-metadata", "");
-                if (connectionData.url.indexOf("?") != -1) {
-                    if (connectionData.url.indexOf(".json") == -1) {
-                        connectionData.url = connectionData.url.replace("?", ".json?");
-                    }
-                } else {
-                    if (connectionData.url.indexOf(".json") == -1) {
-                        connectionData.url = connectionData.url + ".json";
-                    }
-                }
-                $.getJSON(connectionData.url, function (resp) {
-                    tableau.connectionName = tableau.connectionName + _.keyBy(resp.name.text, 'lang')[language].value;
-                    connectionData.name = _.keyBy(resp.name.text, 'lang')[language].value;
-                    connectionData.observationId = resp.id;
-
-                    if (connectionData.showMeasureColumns) {
-                        var measureColumns: DatasetMeasureColumn = {};
-                        var dimension = _.keyBy(resp.metadata.dimensions.dimension, 'type')['MEASURE_DIMENSION'];
-                        if (dimension) {
-                            measureColumns.dimension = dimension.id;
-                            var values = [];
-                            for (let i = 0; i < dimension.dimensionValues.value.length; i++) {
-                                values[i] = {
-                                    id: dimension.dimensionValues.value[i].id,
-                                    label: _.keyBy(dimension.dimensionValues.value[i].name.text, 'lang')['es'].value
-                                };
-                            }
-                            measureColumns.values = values;
-                            connectionData.measureColumns = measureColumns;
-                        } else {
-                            connectionData.showMeasureColumns = false;
-                        }
-                    }
-
-                    var dimensions = {};
-                    for (let i = 0; i < resp.metadata.dimensions.total; i++) {
-                        dimensions[i] = {
-                            id: resp.metadata.dimensions.dimension[i].id,
-                            label: _.keyBy(resp.metadata.dimensions.dimension[i].name.text, 'lang')[language].value
-                        }
-                    }
-
-                    if (connectionData.recodeDates) {
-                        var dimensionsByType = _.keyBy(resp.metadata.dimensions.dimension, 'type');
-                        if (dimensionsByType['TIME_DIMENSION']) {
-                            connectionData.timeDimension = dimensionsByType['TIME_DIMENSION'].id;
-                        } else {
-                            connectionData.recodeDates = false;
-                        }
-                    }
-
-                    if (connectionData.allLanguages) {
-                        connectionData.languages = resp.selectedLanguages.language;
-                    }
-
-                    connectionData.dimensions = dimensions;
-                    tableau.connectionData = JSON.stringify(connectionData);
-                    tableau.submit();
-                }).fail(function () {
-                    $("#errorMsg").html(errorMsg.error.submit);
-                });
-            } else {
-                $('#errorMsg').html(errorMsg.error.dataset.url);
+            switch (connectionData.resourceType) {
+                case "STATISTICAL_RESOURCE_DATASET":
+                    buildConnectionDataForStatisticalResources(connectionData);
+                    break;
+                default:
+                    $('#errorMsg').html(errorMsg.error.dataset.url.unsupportedResourceType);
+                    break;
             }
         });
     });
+
+
+    // Dataset
+    function parseStatisticalResourceDatasetResponse(dataResponse, connectionData, table, doneCallback) {
+        var tableData = [];
+        var observations = dataResponse.data.observations.split(" | ");
+        var total = 1;
+        for (let i = 0; i < Object.keys(connectionData.dimensions).length; i++) {
+            total = total * dataResponse.data.dimensions.dimension[i].representations.total;
+        }
+        if (table.tableInfo.id == "datasetData") {
+            for (let i = 0; i < observations.length; i++) {
+                var hash = {};
+                var copyHash = {};
+                if (!connectionData.showMeasureColumns) {
+                    hash[connectionData.observationId] = observations[i];
+                }
+                var remaining = i;
+                var subtotal = total;
+                for (let j = 0; j < dataResponse.data.dimensions.total; j++) {
+                    var totalDimension = dataResponse.data.dimensions.dimension[j].representations.total;
+                    subtotal = Math.floor(subtotal / totalDimension);
+                    let indDimension = Math.floor(remaining / subtotal);
+                    remaining = remaining % subtotal;
+                    if (connectionData.showMeasureColumns) {
+                        if (connectionData.measureColumns.dimension == connectionData.dimensions[j].id) {
+                            copyHash[connectionData.measureColumns.dimension + "_" + _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code] = observations[i];
+                        }
+                        else {
+                            hash[connectionData.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
+                            copyHash[connectionData.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
+                        }
+                    }
+                    else {
+                        hash[connectionData.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
+                    }
+                    if (!connectionData.starModel) {
+                        if (connectionData.recodeDates && connectionData.timeDimension == connectionData.dimensions[j].id) {
+                            hash["Fecha"] = calculateDate(_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code);
+                            ;
+                        }
+                        if (connectionData.labels) {
+                            var dimension = _.keyBy(dataResponse.metadata.dimensions.dimension, "id")[connectionData.dimensions[j].id];
+                            var dimensionValue = _.keyBy(dimension.dimensionValues.value, "id")[hash[connectionData.dimensions[j].id]];
+                            var dimensionLabel = _.keyBy(dimensionValue.name.text, "lang");
+                            if (connectionData.allLanguages) {
+                                for (let k = 0; k < connectionData.languages.length; k++) {
+                                    if (dimensionLabel[connectionData.languages[k]]) {
+                                        hash["Etiqueta_" + dimension.id + "_" + connectionData.languages[k]] = dimensionLabel[connectionData.languages[k]].value;
+                                    }
+                                    else {
+                                        hash["Etiqueta_" + dimension.id + "_" + connectionData.languages[k]] = '';
+                                    }
+                                }
+                            }
+                            else {
+                                hash["Etiqueta_" + dimension.id] = dimensionLabel['es'].value;
+                            }
+                        }
+                    }
+                }
+                if (connectionData.showMeasureColumns && table.tableInfo.id == "datasetData") {
+                    var keyHash = _.values(hash).join(',');
+                    if (tableData[keyHash]) {
+                        _.extend(tableData[keyHash], copyHash);
+                    }
+                    else {
+                        tableData[keyHash] = copyHash;
+                    }
+                }
+                else {
+                    tableData.push(hash);
+                }
+            }
+        } else {
+            var dimension = _.keyBy(dataResponse.metadata.dimensions.dimension, "id")[table.tableInfo.id];
+            for (let i = 0; i < dimension.dimensionValues.total; i++) {
+                var hash = {};
+                hash[table.tableInfo.id] = dimension.dimensionValues.value[i].id;
+                if (connectionData.recodeDates && connectionData.timeDimension == table.tableInfo.id) {
+                    hash["Fecha"] = calculateDate(dimension.dimensionValues.value[i].id);
+                }
+                if (connectionData.labels) {
+                    var dimensionLabels = _.keyBy(dimension.dimensionValues.value[i].name.text, "lang");
+                    if (connectionData.allLanguages) {
+                        for (let k = 0; k < connectionData.languages.length; k++) {
+                            if (dimensionLabels[connectionData.languages[k]]) {
+                                hash["Etiqueta_" + dimension.id + "_" + connectionData.languages[k]] = dimensionLabels[connectionData.languages[k]].value;
+                            }
+                            else {
+                                hash["Etiqueta_" + dimension.id + "_" + connectionData.languages[k]] = '';
+                            }
+                        }
+                    }
+                    else {
+                        hash["Etiqueta_" + dimension.id] = dimensionLabels['es'].value;
+                    }
+                }
+                tableData.push(hash);
+            }
+        }
+        table.appendRows(_.values(tableData));
+        doneCallback();
+    };
+
+    function buildConnectionDataForStatisticalResources(connectionData: DatasetsConnectionData) {
+        if (!isValidUrl(connectionData.url)) {
+            $('#errorMsg').html(errorMsg.error.dataset.url.invalid);
+        }
+
+        $('#errorMsg').html("");
+        connectionData.url = connectionData.url.replace("&fields=-metadata", "");
+        if (connectionData.url.indexOf("?") != -1) {
+            if (connectionData.url.indexOf(".json") == -1) {
+                connectionData.url = connectionData.url.replace("?", ".json?");
+            }
+        } else {
+            if (connectionData.url.indexOf(".json") == -1) {
+                connectionData.url = connectionData.url + ".json";
+            }
+        }
+        $.getJSON(connectionData.url, function (resp) {
+            tableau.connectionName = tableau.connectionName + _.keyBy(resp.name.text, 'lang')[language].value;
+            connectionData.name = _.keyBy(resp.name.text, 'lang')[language].value;
+            connectionData.observationId = resp.id;
+            if (connectionData.showMeasureColumns) {
+                var measureColumns: DatasetMeasureColumn = {};
+                var dimension = _.keyBy(resp.metadata.dimensions.dimension, 'type')['MEASURE_DIMENSION'];
+                if (dimension) {
+                    measureColumns.dimension = dimension.id;
+                    // FIXME revisar si esto no dara error y si puede ser un objeto
+                    var values = [];
+                    for (let i = 0; i < dimension.dimensionValues.value.length; i++) {
+                        values[i] = {
+                            id: dimension.dimensionValues.value[i].id,
+                            label: _.keyBy(dimension.dimensionValues.value[i].name.text, 'lang')['es'].value
+                        };
+                    }
+                    measureColumns.values = values;
+                    connectionData.measureColumns = measureColumns;
+                } else {
+                    connectionData.showMeasureColumns = false;
+                }
+            }
+            var dimensions = {};
+            for (let i = 0; i < resp.metadata.dimensions.total; i++) {
+                dimensions[i] = {
+                    id: resp.metadata.dimensions.dimension[i].id,
+                    label: _.keyBy(resp.metadata.dimensions.dimension[i].name.text, 'lang')[language].value
+                };
+            }
+            if (connectionData.recodeDates) {
+                var dimensionsByType = _.keyBy(resp.metadata.dimensions.dimension, 'type');
+                if (dimensionsByType['TIME_DIMENSION']) {
+                    connectionData.timeDimension = dimensionsByType['TIME_DIMENSION'].id;
+                } else {
+                    connectionData.recodeDates = false;
+                }
+            }
+            if (connectionData.allLanguages) {
+                connectionData.languages = resp.selectedLanguages.language;
+            }
+            connectionData.dimensions = dimensions;
+            tableau.connectionData = JSON.stringify(connectionData);
+            tableau.submit();
+        }).fail(function () {
+            $("#errorMsg").html(errorMsg.error.submit);
+        });
+    }
+
 
     // Utils
     function calculateResourceType(url: string): DatasetsConnectionData["resourceType"] {
@@ -295,6 +313,11 @@
             returnCols.push({ id: "Fecha", alias: "Fecha", columnRole: "dimension", dataType: tableau.dataTypeEnum.date });
         }
         return returnCols;
+    }
+
+    function isValidUrl(url) {
+        url = url.toString();
+        return url.match(".+") != null;
     }
 
 })();

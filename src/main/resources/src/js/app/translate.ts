@@ -10,7 +10,10 @@ var errorMsg = {
             "url": "La URL de la clasificación no es válida"
         },
         "dataset": {
-            "url": "La URL del cubo no es válida"
+            "url": {
+                "invalid": "La URL del cubo no es válida",
+                "unsupportedResourceType": "El tipo de recurso asociado a la URL no está soportado" // Este error nunca debe darse
+            }
         },
         "submit": "Ha ocurrido un error, es posible que la URL indicada sea incorrecta"
     }
