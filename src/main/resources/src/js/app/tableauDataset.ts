@@ -1,6 +1,6 @@
 (function () {
     var myConnector = tableau.makeConnector();
-    var urlDataset;
+    var urlDataset: string;
     var number = 1;
 
     myConnector.getSchema = function (schemaCallback) {
@@ -8,13 +8,13 @@
         var cols = [];
         var tables = [];
 
-        if (!connectionData.measureColumns) {
+        if (!connectionData.showMeasureColumns) {
             cols.push({ id: connectionData.observationId, alias: connectionData.name, dataType: tableau.dataTypeEnum.float });
         }
 
         if (connectionData.starModel) {
             for (let i = 0; i < Object.keys(connectionData.dimensions).length; i++) {
-                if (connectionData.measureColumns && connectionData.dimensions[i].id == connectionData.measureColumns.dimension) {
+                if (connectionData.showMeasureColumns && connectionData.dimensions[i].id == connectionData.measureColumns.dimension) {
                     for (let j = 0; j < connectionData.measureColumns.values.length; j++) {
                         cols.push({
                             id: connectionData.measureColumns.dimension + "_" + connectionData.measureColumns.values[j].id, alias: connectionData.measureColumns.values[j].label,
@@ -33,7 +33,7 @@
             }
         } else {
             for (let i = 0; i < Object.keys(connectionData.dimensions).length; i++) {
-                if (connectionData.measureColumns && connectionData.dimensions[i].id == connectionData.measureColumns.dimension) {
+                if (connectionData.showMeasureColumns && connectionData.dimensions[i].id == connectionData.measureColumns.dimension) {
                     for (let j = 0; j < connectionData.measureColumns.values.length; j++) {
                         cols.push({
                             id: connectionData.measureColumns.dimension + "_" + connectionData.measureColumns.values[j].id, alias: connectionData.measureColumns.values[j].label,
@@ -171,7 +171,7 @@
         $("#dataButton").click(function () {
             switch ($('input[name="datatype"]:checked').val()) {
                 case 'url':
-                    urlDataset = $('#inputUrl').val();
+                    urlDataset = <string>$('#inputUrl').val();
                     tableau.connectionName = "Cubo: ";
                     break;
                 case 'operation':
@@ -181,6 +181,7 @@
             }
             var connectionData: DatasetsConnectionData = {
                 url: urlDataset.trim(),
+                resourceType: calculateResourceType(urlDataset.trim()),
                 showMeasureColumns: $('#measureColumns').is(':checked'),
                 labels: $('#showLabels').is(':checked'),
                 starModel: $('#starModel').is(':checked'),
@@ -268,6 +269,15 @@
             }
         });
     });
+
+    // Utils
+    function calculateResourceType(url: string): DatasetsConnectionData["resourceType"] {
+        if (url.indexOf("tabla.do") >= 0) {
+            return "GPE_DATASET";
+        } else {
+            return "STATISTICAL_RESOURCE_DATASET";
+        }
+    }
 
     function _buildColumns(connectionData, dimension, languages) {
         var returnCols = [];
