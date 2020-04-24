@@ -77,15 +77,26 @@ function isGPEDataset() {
 function updateOptions() {
     const isUrlSelected = (<HTMLInputElement>$("input[name='datatype']:checked")[0]).value == "url";
     if (isUrlSelected && isGPEDataset()) {
-        $('#measureColumns').prop('disabled', true);
-        $('#starModel').prop('disabled', true);
-        $('#recodeDates').prop('disabled', true);
-        // $('#showLabels').prop('disabled', false);
+        disableCheckbox('#measureColumns');
+        disableCheckbox('#starModel');
+        disableCheckbox('#recodeDates');
+
+        enableCheckbox('#showLabels');
     } else {
-        $('#measureColumns').prop('disabled', false);
-        $('#starModel').prop('disabled', false);
-        $('#recodeDates').prop('disabled', false);
-        // $('#showLabels').prop('disabled', false);
+        enableCheckbox('#measureColumns');
+        enableCheckbox('#starModel');
+        enableCheckbox('#recodeDates');
+
+        enableCheckbox('#showLabels');
+    }
+
+    function enableCheckbox(checkbox: string) {
+        $(checkbox).prop('disabled', false);
+        $(checkbox).prop('checked', true);
+    }
+    function disableCheckbox(checkbox: string) {
+        $(checkbox).prop('disabled', true);
+        $(checkbox).prop('checked', false);
     }
 }
 
