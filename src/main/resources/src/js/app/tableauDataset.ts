@@ -296,18 +296,29 @@
     // Dataset GPE
     function parseGPEDatasetResponse(dataResponse: GPE.Dataset, connectionData: DatasetsConnectionData, table, doneCallback) {
         var tableData = [];
+        parseGPEDatasetResponseForDatasetData(table, dataResponse, connectionData, tableData);
+        table.appendRows(_.values(tableData));
+        doneCallback();
+    };
+
+
+    function parseGPEDatasetResponseForDatasetData(table: Tableau.Table, dataResponse: GPE.Dataset, connectionData: DatasetsConnectionData, tableData: any[]) {
         for (let i = 0; i < dataResponse.data.length; i++) {
             let hash = {};
             hash[connectionData.observationId] = parseFloat(dataResponse.data[i].Valor);
-            dataResponse.data[i].dimCodes.forEach((dimCode, index) => {
-                hash[index] = dimCode;
+            dataResponse.data[i].dimCodes.forEach((dimCode, categoryIndex) => {
+                hash[categoryIndex] = dimCode;
+                if (connectionData.labels) {
+                    const dimension = dataResponse.categories[categoryIndex];
+                    const dimIndex = _.indexOf(dimension.codes, dimCode);
+                    hash["Etiqueta_" + categoryIndex] = dimension.labels[dimIndex];
+                }
             });
+
             tableData.push(hash);
         }
-        table.appendRows(_.values(tableData));
-        doneCallback();
+    }
 
-    };
 
     function buildConnectionDataForGPE(connectionData: DatasetsConnectionData) {
         if (!isValidUrl(connectionData.url)) {
@@ -338,14 +349,6 @@
     }
 
     // Utils
-    function calculateResourceType(url: string): DatasetsConnectionData["resourceType"] {
-        if (url.indexOf("tabla.do") >= 0) {
-            return "GPE_DATASET";
-        } else {
-            return "STATISTICAL_RESOURCE_DATASET";
-        }
-    }
-
     function _buildColumns(connectionData, dimension, languages) {
         var returnCols = [];
         returnCols.push({ id: dimension.id, alias: dimension.label, columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
@@ -370,3 +373,11 @@
     }
 
 })();
+
+function calculateResourceType(url: string): DatasetsConnectionData["resourceType"] {
+    if (url.indexOf("tabla.do") >= 0) {
+        return "GPE_DATASET";
+    } else {
+        return "STATISTICAL_RESOURCE_DATASET";
+    }
+}

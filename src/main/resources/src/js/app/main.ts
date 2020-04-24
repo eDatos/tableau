@@ -20,6 +20,8 @@ $.getJSON("config/properties.json", function (resp) {
                     break;
             }
         }
+
+
     });
     $("#headerTemplate").ready(function () {
         switch (properties.installationEnvironmentType) {
@@ -67,7 +69,39 @@ function onDownloadDecodeSelected(downloadDecodeRadio) {
     }
 }
 
+function isGPEDataset() {
+    const resourceType = calculateResourceType(<string>$('#inputUrl').val());
+    return resourceType == "GPE_DATASET";
+}
+
+function updateOptions() {
+    const isUrlSelected = (<HTMLInputElement>$("input[name='datatype']:checked")[0]).value == "url";
+    if (isUrlSelected && isGPEDataset()) {
+        disableCheckbox('#measureColumns');
+        disableCheckbox('#starModel');
+        disableCheckbox('#recodeDates');
+
+        enableCheckbox('#showLabels');
+    } else {
+        enableCheckbox('#measureColumns');
+        enableCheckbox('#starModel');
+        enableCheckbox('#recodeDates');
+
+        enableCheckbox('#showLabels');
+    }
+
+    function enableCheckbox(checkbox: string) {
+        $(checkbox).prop('disabled', false);
+        $(checkbox).prop('checked', true);
+    }
+    function disableCheckbox(checkbox: string) {
+        $(checkbox).prop('disabled', true);
+        $(checkbox).prop('checked', false);
+    }
+}
+
 function chooseDataOption(radio) {
+    updateOptions();
     var radioDivs = document.getElementsByClassName("radioDiv") as HTMLCollectionOf<HTMLElement>;
     $(".first-loader:visible").hide();
     for (var i = 0; i < radioDivs.length; i++) {
@@ -394,7 +428,7 @@ function searchDatasets() {
 }
 
 function enableAllLanguages() {
-    if ($("#showLabels").is(":checked")) {
+    if ($("#showLabels").is(":checked") && !isGPEDataset()) {
         $("#allLanguages").prop("disabled", false);
     } else {
         $("#allLanguages").prop("checked", false);

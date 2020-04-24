@@ -39,7 +39,7 @@
                 </label>
                 <div class="row radioDiv" id="url" style="display: none">
                     <label id="labelUrl" class="col-xs-2"></label>
-                    <input class="col-xs-10" name="url" id="inputUrl" />
+                    <input type="text" class="col-xs-10" name="url" id="inputUrl" oninput="updateOptions(this)" />
                 </div>
 
                 <label id="labelSelectOperation" class="radioLabel">
@@ -48,7 +48,8 @@
                 <div id="loaderOperation" class="loader first-loader" style="display: none"></div>
                 <div class="selectDiv row radioDiv" id="operation">
                     <label id="operations" class="col-xs-2"></label>
-                    <select class="col-xs-10" id="selectOperation" style="width: 83.3%" onchange="searchDatasets()"></select>
+                    <select class="col-xs-10" id="selectOperation" style="width: 83.3%"
+                        onchange="searchDatasets()"></select>
                 </div>
                 <div id="loaderDataset" class="loader" style="display: none"></div>
                 <div class="selectDiv row radioDiv" style="display: none">
