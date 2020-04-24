@@ -338,14 +338,6 @@
     }
 
     // Utils
-    function calculateResourceType(url: string): DatasetsConnectionData["resourceType"] {
-        if (url.indexOf("tabla.do") >= 0) {
-            return "GPE_DATASET";
-        } else {
-            return "STATISTICAL_RESOURCE_DATASET";
-        }
-    }
-
     function _buildColumns(connectionData, dimension, languages) {
         var returnCols = [];
         returnCols.push({ id: dimension.id, alias: dimension.label, columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
@@ -370,3 +362,11 @@
     }
 
 })();
+
+function calculateResourceType(url: string): DatasetsConnectionData["resourceType"] {
+    if (url.indexOf("tabla.do") >= 0) {
+        return "GPE_DATASET";
+    } else {
+        return "STATISTICAL_RESOURCE_DATASET";
+    }
+}

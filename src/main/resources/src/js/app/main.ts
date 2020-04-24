@@ -20,6 +20,8 @@ $.getJSON("config/properties.json", function (resp) {
                     break;
             }
         }
+
+
     });
     $("#headerTemplate").ready(function () {
         switch (properties.installationEnvironmentType) {
@@ -67,7 +69,28 @@ function onDownloadDecodeSelected(downloadDecodeRadio) {
     }
 }
 
+function isGPEDataset() {
+    const resourceType = calculateResourceType(<string>$('#inputUrl').val());
+    return resourceType == "GPE_DATASET";
+}
+
+function updateOptions() {
+    const isUrlSelected = (<HTMLInputElement>$("input[name='datatype']:checked")[0]).value == "url";
+    if (isUrlSelected && isGPEDataset()) {
+        $('#measureColumns').prop('disabled', true);
+        $('#starModel').prop('disabled', true);
+        $('#recodeDates').prop('disabled', true);
+        // $('#showLabels').prop('disabled', false);
+    } else {
+        $('#measureColumns').prop('disabled', false);
+        $('#starModel').prop('disabled', false);
+        $('#recodeDates').prop('disabled', false);
+        // $('#showLabels').prop('disabled', false);
+    }
+}
+
 function chooseDataOption(radio) {
+    updateOptions();
     var radioDivs = document.getElementsByClassName("radioDiv") as HTMLCollectionOf<HTMLElement>;
     $(".first-loader:visible").hide();
     for (var i = 0; i < radioDivs.length; i++) {
@@ -394,7 +417,7 @@ function searchDatasets() {
 }
 
 function enableAllLanguages() {
-    if ($("#showLabels").is(":checked")) {
+    if ($("#showLabels").is(":checked") && !isGPEDataset()) {
         $("#allLanguages").prop("disabled", false);
     } else {
         $("#allLanguages").prop("checked", false);
