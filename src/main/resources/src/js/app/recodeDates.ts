@@ -75,7 +75,7 @@ const TIME_RANGE_TYPE                       = GROUP_LEFT + TIME_RANGE_TYPE_1 + G
 const PATTERN_TIME_RANGE                    = START + TIME_RANGE_TYPE + END;
 
 function calculateDate(time) {
-    date = null;
+    let date = null;
     if (isTimeRange(time)) {
         date = calculateTimeRangePeriod(time);
     } else if (isReportingTimePeriod(time)) {
@@ -110,7 +110,7 @@ function isGregorianTimePeriod(time) {
     // 2013-07-24T13:21:52.519+01:00/P1M
 function calculateTimeRangePeriod(time) {
     var split = time.split("/");
-    date = split[0];
+    let date = split[0];
     if (date.indexOf("T") != -1) {
         date = date.split("T")[0];
     }
@@ -131,35 +131,35 @@ function calculateReportingPeriod(time) {
         return "01-01-" + time.match(new RegExp(PATTERN_REPORTING_YEAR_TYPE))[1];
     }
     if (time.match(new RegExp(PATTERN_REPORTING_SEMESTER_TYPE))) {
-        year = time.match(new RegExp(PATTERN_REPORTING_SEMESTER_TYPE))[1];
-        month = (time.match(new RegExp(PATTERN_REPORTING_SEMESTER_TYPE))[3] - 1) * 6;
+        let year = time.match(new RegExp(PATTERN_REPORTING_SEMESTER_TYPE))[1];
+        let month = (time.match(new RegExp(PATTERN_REPORTING_SEMESTER_TYPE))[3] - 1) * 6;
         return "01-" + (month + 1) + "-" + year;
     }
     if (time.match(new RegExp(PATTERN_REPORTING_TRIMESTER_TYPE))) {
-        year = time.match(new RegExp(PATTERN_REPORTING_TRIMESTER_TYPE))[1];
-        month = (time.match(new RegExp(PATTERN_REPORTING_TRIMESTER_TYPE))[3] - 1) * 4;
+        let year = time.match(new RegExp(PATTERN_REPORTING_TRIMESTER_TYPE))[1];
+        let month = (time.match(new RegExp(PATTERN_REPORTING_TRIMESTER_TYPE))[3] - 1) * 4;
         return "01-" + (month + 1) + "-" + year;
     }
     if (time.match(new RegExp(PATTERN_REPORTING_QUARTER_TYPE))) {
-        year = time.match(new RegExp(PATTERN_REPORTING_QUARTER_TYPE))[1];
-        month = (time.match(new RegExp(PATTERN_REPORTING_QUARTER_TYPE))[3] - 1) * 3;
+        let year = time.match(new RegExp(PATTERN_REPORTING_QUARTER_TYPE))[1];
+        let month = (time.match(new RegExp(PATTERN_REPORTING_QUARTER_TYPE))[3] - 1) * 3;
         return "01-" + (month + 1) + "-" + year;
     }
     if (time.match(new RegExp(PATTERN_REPORTING_MONTH_TYPE))) {
-        year = time.match(new RegExp(PATTERN_REPORTING_MONTH_TYPE))[1];
-        month = time.match(new RegExp(PATTERN_REPORTING_MONTH_TYPE))[3];
+        let year = time.match(new RegExp(PATTERN_REPORTING_MONTH_TYPE))[1];
+        let month = time.match(new RegExp(PATTERN_REPORTING_MONTH_TYPE))[3];
         return "01-" + month + "-" + year;
     }
     if (time.match(new RegExp(PATTERN_REPORTING_WEEK_TYPE))) {
-        year = time.match(new RegExp(PATTERN_REPORTING_WEEK_TYPE))[1];
-        day = (time.match(new RegExp(PATTERN_REPORTING_WEEK_TYPE))[3] - 1) * 7;
-        date = new Date(year, "", day + 1);
+        let year = time.match(new RegExp(PATTERN_REPORTING_WEEK_TYPE))[1];
+        let day = (time.match(new RegExp(PATTERN_REPORTING_WEEK_TYPE))[3] - 1) * 7;
+        let date = new Date(year, 0, day + 1);
         return date.getDate() + "-" + (date.getMonth() + 1) + "-" + year;
     }
     if (time.match(new RegExp(PATTERN_REPORTING_DAY_TYPE))) {
-        year = time.match(new RegExp(PATTERN_REPORTING_DAY_TYPE))[1];
-        day = time.match(new RegExp(PATTERN_REPORTING_DAY_TYPE))[3];
-        date = new Date(year, "", day);
+        let year = time.match(new RegExp(PATTERN_REPORTING_DAY_TYPE))[1];
+        let day = time.match(new RegExp(PATTERN_REPORTING_DAY_TYPE))[3];
+        let date = new Date(year, 0, day);
         return date.getDate() + "-" + (date.getMonth() + 1) + "-" + year;
     }
 }
@@ -171,7 +171,7 @@ function calculateDateTime(time) {
     if (time.indexOf("T") != -1) {
         time = time.split("T")[0];
     }
-    date = time.split("-");
+    let date = time.split("-");
     return date[2] + "-" + date[1] + "-" + date[0];
 }
 
@@ -184,12 +184,9 @@ function calculateGregorianTimePeriod(time) {
     switch(time.length) {
         case 1:
             return "01-01-" + time[0];
-            break;
         case 2:
             return "01-" + time[1] + "-" + time[0];
-            break;
         case 3:
             return time[2] + "-" + time[1] + "-" + time[0];
-            break;
     }
 }
