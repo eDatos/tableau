@@ -1,6 +1,7 @@
 {
     "scripts": {
         "serve": "live-server --port=8888 --mount=/:./public --watch=public",
+        "serve:simulator": "live-server --port=8889 --mount=/:../../../etc/utils/simulator/2.1.0",
         "start": "npm run build && concurrently -n app,typescript \"npm run watch:app\" \"tsc -w\"",
         "copy:fontawesome": "shx cp node_modules/font-awesome/css/font-awesome.min.css public/css && shx cp node_modules/font-awesome/fonts/* public/fonts",
         "copy:jquery": "shx cp node_modules/jquery/dist/jquery.min.js public/js/vendor",
