@@ -79,14 +79,14 @@ function updateOptions() {
     if (isUrlSelected && isGPEDataset()) {
         disableCheckbox('#measureColumns');
         disableCheckbox('#starModel');
-        disableCheckbox('#recodeDates');
 
+        enableCheckbox('#recodeDates');
         enableCheckbox('#showLabels');
     } else {
         enableCheckbox('#measureColumns');
         enableCheckbox('#starModel');
-        enableCheckbox('#recodeDates');
 
+        enableCheckbox('#recodeDates');
         enableCheckbox('#showLabels');
     }
 

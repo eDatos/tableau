@@ -18,6 +18,10 @@ declare namespace GPE {
         stub: string[];
         heading: string[];
         categories: Category[];
+        temporals: string[];
+        spatials: string[];
+        contVariable: string;
+        notes: string[];
         source: string;
         surveyCode: string;
         surveyTitle: string;

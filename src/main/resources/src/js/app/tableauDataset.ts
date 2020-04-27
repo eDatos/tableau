@@ -313,6 +313,9 @@
                     const dimIndex = _.indexOf(dimension.codes, dimCode);
                     hash["Etiqueta_" + categoryIndex] = dimension.labels[dimIndex];
                 }
+                if (connectionData.recodeDates && connectionData.timeDimension == categoryIndex.toString()) {
+                    hash["Fecha"] = calculateDate(dimCode);
+                }
             });
 
             tableData.push(hash);
@@ -340,6 +343,14 @@
                 }
             });
             connectionData.dimensions = dimensions;
+
+            if (connectionData.recodeDates) {
+                if (dataResponse.temporals.length > 0) {
+                    connectionData.timeDimension = _.findIndex(dataResponse.categories, { variable: dataResponse.temporals[0] }).toString();
+                } else {
+                    connectionData.recodeDates = false;
+                }
+            }
 
             tableau.connectionData = JSON.stringify(connectionData);
             tableau.submit();
