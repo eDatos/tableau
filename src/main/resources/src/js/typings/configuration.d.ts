@@ -29,6 +29,7 @@ interface Endpoint {
     "structural-resources": StructuralResources;
     "statistical-resources": StatisticalResources;
     metadata: string;
+    complementosApps: string;
 }
 
 interface Status {

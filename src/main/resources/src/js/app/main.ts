@@ -1,9 +1,11 @@
 var properties: Configuration;
 
 var endpoint;
+var complementosAppsEndpoint;
 
 $.getJSON("config/properties.json", function (resp) {
     properties = resp;
+    complementosAppsEndpoint = properties.endpoint.complementosApps;
     addGoogleAnalyticsScriptTag();
     $(document).ready(function () {
         const dataType = <HTMLInputElement>$("input[name='datatype']:checked")[0];
