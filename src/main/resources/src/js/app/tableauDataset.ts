@@ -253,7 +253,7 @@
                 var dimension = _.keyBy(resp.metadata.dimensions.dimension, 'type')['MEASURE_DIMENSION'];
                 if (dimension) {
                     measureColumns.dimension = dimension.id;
-                    // FIXME revisar si esto no dara error y si puede ser un objeto
+                    // IDEA revisar si esto no dara error y si puede ser un objeto
                     var values = [];
                     for (let i = 0; i < dimension.dimensionValues.value.length; i++) {
                         values[i] = {
