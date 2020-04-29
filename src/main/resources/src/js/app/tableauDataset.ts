@@ -60,16 +60,16 @@
     };
 
     myConnector.getData = function (table, doneCallback) {
-        var urlObj = JSON.parse(tableau.connectionData);
+        var connectionData: DatasetsConnectionData = JSON.parse(tableau.connectionData);
 
-        $.getJSON(urlObj.url)
+        $.getJSON(connectionData.url)
             .then(function (dataResponse) {
-                switch (urlObj.resourceType) {
+                switch (connectionData.resourceType) {
                     case "GPE_DATASET":
-                        parseGPEDatasetResponse(dataResponse, urlObj, table, doneCallback);
+                        parseGPEDatasetResponse(dataResponse, connectionData, table, doneCallback);
                         break;
                     case "STATISTICAL_RESOURCE_DATASET":
-                        parseStatisticalResourceDatasetResponse(dataResponse, urlObj, table, doneCallback);
+                        parseStatisticalResourceDatasetResponse(dataResponse, connectionData, table, doneCallback);
                         break;
                     default:
                         $('#errorMsg').html(errorMsg.error.dataset.url.unsupportedResourceType);
@@ -328,6 +328,8 @@
             $('#errorMsg').html(errorMsg.error.dataset.url.invalid);
         }
 
+        connectionData.url = transformGPEUrlToProxyUrl(connectionData.url);
+
         $('#errorMsg').html("");
         $.getJSON(connectionData.url, function (dataResponse: GPE.Dataset) {
             tableau.connectionName = tableau.connectionName + dataResponse.title;
@@ -381,6 +383,12 @@
     function isValidUrl(url) {
         url = url.toString();
         return url.match(".+") != null;
+    }
+
+    // Transforms something like http://www.gobiernodecanarias.org/istac/jaxi-istac/tabla.do?accion=jsonMtd&uuidConsulta=d28e8036-16c8-44f7-91a8-1cc46738e0c8
+    // On something like https://www.gobiernodecanarias.org/aplicaciones/appsistac/jaxi-istac/tabla.do?accion=jsonMtd&uuidConsulta=d28e8036-16c8-44f7-91a8-1cc46738e0c8
+    function transformGPEUrlToProxyUrl(gpeUrl: string) {
+        return complementosAppsEndpoint + gpeUrl.substring(gpeUrl.indexOf("jaxi-istac"));
     }
 
 })();

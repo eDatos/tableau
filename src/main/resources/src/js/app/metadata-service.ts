@@ -8,7 +8,7 @@ function getMetadataValue(metadataKey) {
     }
     var metadataEndpoint = properties.endpoint.metadata;
     $.getJSON(metadataEndpoint + 'properties/' + metadataKey + '.json')
-        .done(function(response) {
+        .done(function (response) {
             metadatasLoaded[metadataKey] = response.value;
             deferred.resolve(response.value);
         });
@@ -28,10 +28,10 @@ function getEndpointMetadataValue(endpointInfo) {
     }
 
     getMetadataValue(metadataKey)
-        .done(function(endpointValue) {
+        .done(function (endpointValue) {
             endpoint = endpointValue + '/' + endpointInfo.version;
             deferred.resolve(endpoint);
         });
-    
+
     return deferred.promise();
 }
