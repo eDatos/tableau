@@ -25,7 +25,7 @@
             },
             "version": "v1.0"
         },
-        "complementosApps": "https://www.gobiernodecanarias.org/aplicaciones/appsistac/",
+        "complementosApps": "https://www3.gobiernodecanarias.org/aplicaciones/appsistac/",
         "metadata": "https://estadisticas.arte-consultores.com/cmetadata/v1.0/"
     },
     "operations": {
