@@ -1,7 +1,7 @@
 declare var tableau: any;
 
 interface Window {
-    dataLayer?: object[];
+    dataLayer: object[];
 }
 
 interface BaseConnectionData {
