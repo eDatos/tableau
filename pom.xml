@@ -3,7 +3,7 @@
 
 	<groupId>es.gobcan.istac.tableau</groupId>
 	<artifactId>tableau</artifactId>
-	<version>1.4.0</version>
+	<version>1.4.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>TABLEAU</name>
 	<description>Web Data Connector para Tableau</description>
@@ -105,7 +105,7 @@
 		<connection>scm:git:http://git.arte-consultores.com/istac/tableau</connection>
 		<developerConnection>scm:git:http://git.arte-consultores.com/istac/tableau</developerConnection>
 		<url>http://git.arte-consultores.com/istac/tableau</url>
-		<tag>20200429-1017-v1.4.0</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<issueManagement>
