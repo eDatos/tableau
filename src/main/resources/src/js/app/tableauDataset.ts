@@ -347,7 +347,7 @@
             connectionData.dimensions = dimensions;
 
             if (connectionData.recodeDates) {
-                if (dataResponse.temporals.length > 0) {
+                if (dataResponse.temporals?.length > 0) {
                     connectionData.timeDimension = _.findIndex(dataResponse.categories, { variable: dataResponse.temporals[0] }).toString();
                 } else {
                     connectionData.recodeDates = false;
