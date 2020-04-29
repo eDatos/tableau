@@ -3,7 +3,7 @@
     var urlDataset: string;
     var number = 1;
 
-    myConnector.getSchema = function (schemaCallback) {
+    myConnector.getSchema = function (schemaCallback: Function) {
         var connectionData = JSON.parse(tableau.connectionData);
         var cols = [];
         var tables = [];
@@ -253,7 +253,7 @@
                 var dimension = _.keyBy(resp.metadata.dimensions.dimension, 'type')['MEASURE_DIMENSION'];
                 if (dimension) {
                     measureColumns.dimension = dimension.id;
-                    // FIXME revisar si esto no dara error y si puede ser un objeto
+                    // IDEA revisar si esto no dara error y si puede ser un objeto
                     var values = [];
                     for (let i = 0; i < dimension.dimensionValues.value.length; i++) {
                         values[i] = {
@@ -347,7 +347,7 @@
             connectionData.dimensions = dimensions;
 
             if (connectionData.recodeDates) {
-                if (dataResponse.temporals?.length > 0) {
+                if (dataResponse.temporals && dataResponse.temporals.length > 0) {
                     connectionData.timeDimension = _.findIndex(dataResponse.categories, { variable: dataResponse.temporals[0] }).toString();
                 } else {
                     connectionData.recodeDates = false;
