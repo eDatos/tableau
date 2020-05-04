@@ -161,7 +161,7 @@
                     }
                     if (!connectionData.starModel) {
                         if (connectionData.recodeDates && connectionData.timeDimension == connectionData.dimensions[j].id) {
-                            hash["Fecha"] = calculateDate(_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code);
+                            hash["Fecha"] = calculateDateDataset(_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code);
                             ;
                         }
                         if (connectionData.labels) {
@@ -203,7 +203,7 @@
                 var hash = {};
                 hash[table.tableInfo.id] = dimension.dimensionValues.value[i].id;
                 if (connectionData.recodeDates && connectionData.timeDimension == table.tableInfo.id) {
-                    hash["Fecha"] = calculateDate(dimension.dimensionValues.value[i].id);
+                    hash["Fecha"] = calculateDateDataset(dimension.dimensionValues.value[i].id);
                 }
                 if (connectionData.labels) {
                     var dimensionLabels = _.keyBy(dimension.dimensionValues.value[i].name.text, "lang");
@@ -314,7 +314,7 @@
                     hash["Etiqueta_" + categoryIndex] = dimension.labels[dimIndex];
                 }
                 if (connectionData.recodeDates && connectionData.timeDimension == categoryIndex.toString()) {
-                    hash["Fecha"] = calculateDate(dimCode);
+                    hash["Fecha"] = calculateDateGPE(dimCode);
                 }
             });
 
