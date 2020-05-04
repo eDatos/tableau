@@ -358,13 +358,14 @@
     tableau.registerConnector(myConnector);
 
     $(document).ready(function () {
+
         $("#dataButton").click(function () {
-            (function (callback) {
+
                 switch ($('input[name="datatype"]:checked').val()) {
                     case 'url':
                         urlIndicator = <string>$('#inputUrl').val();
                         tableau.connectionName = "Indicador: ";
-                        callback();
+                    buildConnectionDataForIndicators();
                         break;
                     case 'indicator':
                         getEndpointMetadataValue(properties.endpoint.indicators)
@@ -374,7 +375,7 @@
                                     urlIndicator = '';
                                 }
                                 tableau.connectionName = "Indicador: ";
-                                callback();
+                            buildConnectionDataForIndicators();
                             });
                         break;
                     case 'indicatorInstance':
@@ -386,11 +387,14 @@
                                     urlIndicator = '';
                                 }
                                 tableau.connectionName = "Instancia de indicador: ";
-                                callback();
+                            buildConnectionDataForIndicators();
                             });
                         break;
                 }
-            })(function () {
+
+
+            function buildConnectionDataForIndicators() {
+
                 var connectionData: IndicatorsConnectionData = {
                     url: urlIndicator.trim(),
                     granularity: $('#showGranularity').is(':checked'),
@@ -411,7 +415,11 @@
                     return url.match(".+/data$") != null;
                 }
 
-                if (isValidUrl(connectionData.url)) {
+                if (!isValidUrl(connectionData.url)) {
+                    $('#errorMsg').html(errorMsg.error.indicator.url);
+                    return;
+                }
+
                     $('#errorMsg').html("");
                     $.getJSON(connectionData.url.substring(0, connectionData.url.indexOf('/data')), function (resp) {
                         connectionData.name = resp.title.__default__;
@@ -453,13 +461,11 @@
                     }).fail(function () {
                         $("#errorMsg").html(errorMsg.error.submit);
                     });
-                } else {
-                    $('#errorMsg').html(errorMsg.error.indicator.url);
                 }
             });
 
         });
-    });
+
 
     function _capitalize(value: string): string {
         return value.charAt(0).toUpperCase() + value.substring(1).toLowerCase();
