@@ -392,11 +392,3 @@
     }
 
 })();
-
-function calculateResourceType(url: string): DatasetsConnectionData["resourceType"] {
-    if (url.indexOf("tabla.do") >= 0) {
-        return "GPE_DATASET";
-    } else {
-        return "STATISTICAL_RESOURCE_DATASET";
-    }
-}
