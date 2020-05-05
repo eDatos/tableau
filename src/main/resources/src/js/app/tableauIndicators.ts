@@ -189,7 +189,7 @@
                     if (connectionData.recodeDates) {
                         var granularity = dimensions.TIME.representation[j].granularityCode;
                         var date: string = dimensions.TIME.representation[j].code;
-                        dataEntry.Fecha = recodeDates(date, granularity);
+                        dataEntry.Fecha = recodeDatesGPE(date, granularity);
                     }
 
                     dataEntry.Codigo_temporal = dimensions.TIME.representation[j].code;
@@ -225,7 +225,7 @@
                             if (connectionData.recodeDates) {
                                 var granularity = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
                                 var date = timeDimensions[j];
-                                dataEntry.Fecha = recodeDates(date, granularity);
+                                dataEntry.Fecha = recodeDatesGPE(date, granularity);
                             }
                             dataEntry.Codigo_temporal = timeDimensions[j];
 
@@ -261,7 +261,7 @@
                                 if (connectionData.recodeDates) {
                                     var granularity = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
                                     var date = timeDimensions[j];
-                                    dataEntry.Fecha = recodeDates(date, granularity);
+                                    dataEntry.Fecha = recodeDatesGPE(date, granularity);
                                 }
                                 dataEntry.Codigo_temporal = timeDimensions[j];
 
@@ -300,97 +300,46 @@
         })
     };
 
-    function recodeDates(date: string, granularity: string): string {
-        switch (granularity) {
-            case "YEARLY": {
-                if (date.match(new RegExp(START + GPE_YEARLY_PATTERN + END))) {
-                    return "01-01-" + date;
-                }
-                break;
-            }
-            case "BIYEARLY": {
-                if (date.match(new RegExp(START + GPE_BIYEARLY_PATTERN + END))) {
-                    var year: number = parseInt(date.match(new RegExp(START + GPE_BIYEARLY_PATTERN + END))[1]);
-                    var month: number = (parseInt(date.match(new RegExp(START + GPE_BIYEARLY_PATTERN + END))[2]) - 1) * 6;
-                    return "01-" + (month + 1) + "-" + year;
-                }
-                break;
-            }
-            case "QUARTERLY": {
-                if (date.match(new RegExp(START + GPE_QUARTERLY_PATTERN + END))) {
-                    var year: number = parseInt(date.match(new RegExp(START + GPE_QUARTERLY_PATTERN + END))[1]);
-                    var month: number = (parseInt(date.match(new RegExp(START + GPE_QUARTERLY_PATTERN + END))[2]) - 1) * 3;
-                    return "01-" + (month + 1) + "-" + year;
-                }
-                break;
-            }
-            case "MONTHLY": {
-                if (date.match(new RegExp(START + GPE_MONTHLY_PATTERN + END))) {
-                    var year: number = parseInt(date.match(new RegExp(START + GPE_MONTHLY_PATTERN + END))[1]);
-                    var month: number = parseInt(date.match(new RegExp(START + GPE_MONTHLY_PATTERN + END))[2]);
-                    return "01-" + month + "-" + year;
-                }
-                break;
-            }
-            case "WEEKLY": {
-                if (date.match(new RegExp(START + GPE_WEEKLY_PATTERN + END))) {
-                    var year: number = parseInt(date.match(new RegExp(START + GPE_WEEKLY_PATTERN + END))[1]);
-                    var day: number = (parseInt(date.match(new RegExp(START + GPE_WEEKLY_PATTERN + END))[2]) - 1) * 7;
-                    var calculatedDate: Date = new Date(year, 0, day + 1);
-                    return calculatedDate.getDate() + "-" + (calculatedDate.getMonth() + 1) + "-" + year;
-                }
-                break;
-            }
-            case "DAILY": {
-                if (date.match(new RegExp(START + GPE_DAILY_PATTERN + END))) {
-                    var year = parseInt(date.match(new RegExp(START + GPE_DAILY_PATTERN + END))[1]);
-                    var month = parseInt(date.match(new RegExp(START + GPE_DAILY_PATTERN + END))[2]);
-                    var day = parseInt(date.match(new RegExp(START + GPE_DAILY_PATTERN + END))[3]);
-                    return day + "-" + month + "-" + year;
-                }
-                break;
-            }
-        }
-
-        return calculateDate(date);
-    }
-
     tableau.registerConnector(myConnector);
 
     $(document).ready(function () {
+
         $("#dataButton").click(function () {
-            (function (callback) {
-                switch ($('input[name="datatype"]:checked').val()) {
-                    case 'url':
-                        urlIndicator = <string>$('#inputUrl').val();
-                        tableau.connectionName = "Indicador: ";
-                        callback();
-                        break;
-                    case 'indicator':
-                        getEndpointMetadataValue(properties.endpoint.indicators)
-                            .done(function (endpoint) {
-                                urlIndicator = endpoint + '/indicators/' + $('#selectIndicator').val() + '/data';
-                                if ($('#selectIndicator').val() == null || $('#selectIndicator').val() == undefined || (<string[]>$('#selectIndicator').val()).length == 0) {
-                                    urlIndicator = '';
-                                }
-                                tableau.connectionName = "Indicador: ";
-                                callback();
-                            });
-                        break;
-                    case 'indicatorInstance':
-                        getEndpointMetadataValue(properties.endpoint.indicators)
-                            .done(function (endpoint) {
-                                urlIndicator = endpoint + '/indicatorsSystems/' + $('#selectIndicatorSystem').val() + '/indicatorsInstances/' +
-                                    $('#selectIndicatorInstance').val() + '/data';
-                                if ($('#selectIndicatorInstance').val() == null || $('#selectIndicatorInstance').val() == undefined || (<string[]>$('#selectIndicatorInstance').val()).length == 0) {
-                                    urlIndicator = '';
-                                }
-                                tableau.connectionName = "Instancia de indicador: ";
-                                callback();
-                            });
-                        break;
-                }
-            })(function () {
+
+            switch ($('input[name="datatype"]:checked').val()) {
+                case 'url':
+                    urlIndicator = <string>$('#inputUrl').val();
+                    tableau.connectionName = "Indicador: ";
+                    buildConnectionDataForIndicators();
+                    break;
+                case 'indicator':
+                    getEndpointMetadataValue(properties.endpoint.indicators)
+                        .done(function (endpoint) {
+                            urlIndicator = endpoint + '/indicators/' + $('#selectIndicator').val() + '/data';
+                            if ($('#selectIndicator').val() == null || $('#selectIndicator').val() == undefined || (<string[]>$('#selectIndicator').val()).length == 0) {
+                                urlIndicator = '';
+                            }
+                            tableau.connectionName = "Indicador: ";
+                            buildConnectionDataForIndicators();
+                        });
+                    break;
+                case 'indicatorInstance':
+                    getEndpointMetadataValue(properties.endpoint.indicators)
+                        .done(function (endpoint) {
+                            urlIndicator = endpoint + '/indicatorsSystems/' + $('#selectIndicatorSystem').val() + '/indicatorsInstances/' +
+                                $('#selectIndicatorInstance').val() + '/data';
+                            if ($('#selectIndicatorInstance').val() == null || $('#selectIndicatorInstance').val() == undefined || (<string[]>$('#selectIndicatorInstance').val()).length == 0) {
+                                urlIndicator = '';
+                            }
+                            tableau.connectionName = "Instancia de indicador: ";
+                            buildConnectionDataForIndicators();
+                        });
+                    break;
+            }
+
+
+            function buildConnectionDataForIndicators() {
+
                 var connectionData: IndicatorsConnectionData = {
                     url: urlIndicator.trim(),
                     granularity: $('#showGranularity').is(':checked'),
@@ -411,55 +360,57 @@
                     return url.match(".+/data$") != null;
                 }
 
-                if (isValidUrl(connectionData.url)) {
-                    $('#errorMsg').html("");
-                    $.getJSON(connectionData.url.substring(0, connectionData.url.indexOf('/data')), function (resp) {
-                        connectionData.name = resp.title.__default__;
-                        if ($('input[name="datatype"]:checked').val() != "indicatorInstance") {
-                            connectionData.observationId = resp.code;
-                        } else {
-                            connectionData.observationId = resp.subjectCode;
-                        }
-                        tableau.connectionName = tableau.connectionName + resp.title.__default__;
-
-                        if (connectionData.allLanguages) {
-                            let geographicalLanguages: string[] = [];
-                            for (let i = 0; i < Object.keys(resp.dimension.GEOGRAPHICAL.representation[0].title).length; i++) {
-                                if (Object.keys(resp.dimension.GEOGRAPHICAL.representation[0].title)[i] != "__default__") {
-                                    geographicalLanguages.push(Object.keys(resp.dimension.GEOGRAPHICAL.representation[0].title)[i]);
-                                }
-                            }
-                            connectionData.geographicalLanguages = geographicalLanguages;
-
-                            let timeLanguages: string[] = [];
-                            for (let i = 0; i < Object.keys(resp.dimension.TIME.representation[0].title).length; i++) {
-                                if (Object.keys(resp.dimension.TIME.representation[0].title)[i] != "__default__") {
-                                    timeLanguages.push(Object.keys(resp.dimension.TIME.representation[0].title)[i]);
-                                }
-                            }
-                            connectionData.timeLanguages = timeLanguages;
-                        }
-
-                        if (connectionData.showMeasureColumns) {
-                            let measureColumns: string[] = [];
-                            for (let i = 0; i < resp.dimension.MEASURE.representation.length; i++) {
-                                measureColumns[i] = measuresIds[resp.dimension.MEASURE.representation[i].code];
-                            }
-                            connectionData.measureColumns = measureColumns;
-                        }
-
-                        tableau.connectionData = JSON.stringify(connectionData);
-                        tableau.submit();
-                    }).fail(function () {
-                        $("#errorMsg").html(errorMsg.error.submit);
-                    });
-                } else {
+                if (!isValidUrl(connectionData.url)) {
                     $('#errorMsg').html(errorMsg.error.indicator.url);
+                    return;
                 }
-            });
 
+                $('#errorMsg').html("");
+                $.getJSON(connectionData.url.substring(0, connectionData.url.indexOf('/data')), function (resp) {
+                    connectionData.name = resp.title.__default__;
+                    if ($('input[name="datatype"]:checked').val() != "indicatorInstance") {
+                        connectionData.observationId = resp.code;
+                    } else {
+                        connectionData.observationId = resp.subjectCode;
+                    }
+                    tableau.connectionName = tableau.connectionName + resp.title.__default__;
+
+                    if (connectionData.allLanguages) {
+                        let geographicalLanguages: string[] = [];
+                        for (let i = 0; i < Object.keys(resp.dimension.GEOGRAPHICAL.representation[0].title).length; i++) {
+                            if (Object.keys(resp.dimension.GEOGRAPHICAL.representation[0].title)[i] != "__default__") {
+                                geographicalLanguages.push(Object.keys(resp.dimension.GEOGRAPHICAL.representation[0].title)[i]);
+                            }
+                        }
+                        connectionData.geographicalLanguages = geographicalLanguages;
+
+                        let timeLanguages: string[] = [];
+                        for (let i = 0; i < Object.keys(resp.dimension.TIME.representation[0].title).length; i++) {
+                            if (Object.keys(resp.dimension.TIME.representation[0].title)[i] != "__default__") {
+                                timeLanguages.push(Object.keys(resp.dimension.TIME.representation[0].title)[i]);
+                            }
+                        }
+                        connectionData.timeLanguages = timeLanguages;
+                    }
+
+                    if (connectionData.showMeasureColumns) {
+                        let measureColumns: string[] = [];
+                        for (let i = 0; i < resp.dimension.MEASURE.representation.length; i++) {
+                            measureColumns[i] = measuresIds[resp.dimension.MEASURE.representation[i].code];
+                        }
+                        connectionData.measureColumns = measureColumns;
+                    }
+
+                    tableau.connectionData = JSON.stringify(connectionData);
+                    tableau.submit();
+                }).fail(function () {
+                    $("#errorMsg").html(errorMsg.error.submit);
+                });
+            }
         });
+
     });
+
 
     function _capitalize(value: string): string {
         return value.charAt(0).toUpperCase() + value.substring(1).toLowerCase();
