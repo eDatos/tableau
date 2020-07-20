@@ -130,8 +130,14 @@ function calculateReportingPeriod(time) {
     if (time.match(new RegExp(PATTERN_REPORTING_WEEK_TYPE))) {
         let year = time.match(new RegExp(PATTERN_REPORTING_WEEK_TYPE))[1];
         let day = (time.match(new RegExp(PATTERN_REPORTING_WEEK_TYPE))[3] - 1) * 7;
-        let date = new Date(year, 0, day + 1);
-        return date.getDate() + "-" + (date.getMonth() + 1) + "-" + year;
+        let firstWeekDay = new Date(year, 0, day + 1);
+        let firstMonday = firstWeekDay;
+        if (firstWeekDay.getDay() <= 4) { // ISO year starts on Thursday
+            firstMonday.setDate(firstWeekDay.getDate() - (firstWeekDay.getDay() - 1));
+        } else {
+            firstMonday.setDate(firstWeekDay.getDate() - (firstWeekDay.getDay() - 1) + 7);
+        }
+        return firstMonday.getDate() + "-" + (firstMonday.getMonth() + 1) + "-" + firstMonday.getFullYear();
     }
     if (time.match(new RegExp(PATTERN_REPORTING_DAY_TYPE))) {
         let year = time.match(new RegExp(PATTERN_REPORTING_DAY_TYPE))[1];

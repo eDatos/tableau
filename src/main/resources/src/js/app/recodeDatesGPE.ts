@@ -83,8 +83,14 @@ function recodeDatesGPE(date: string, granularity: string): string {
             if (date.match(patternWeeklyValue)) {
                 var year: number = parseInt(date.match(patternWeeklyValue)[1]);
                 var day: number = (parseInt(date.match(patternWeeklyValue)[2]) - 1) * 7;
-                var calculatedDate: Date = new Date(year, 0, day + 1);
-                return calculatedDate.getDate() + "-" + (calculatedDate.getMonth() + 1) + "-" + year;
+                let firstWeekDay = new Date(year, 0, day + 1);
+                let firstMonday = firstWeekDay;
+                if (firstWeekDay.getDay() <= 4) { // ISO year starts on Thursday
+                    firstMonday.setDate(firstWeekDay.getDate() - (firstWeekDay.getDay() - 1));
+                } else {
+                    firstMonday.setDate(firstWeekDay.getDate() - (firstWeekDay.getDay() - 1) + 7);
+                }
+                return firstMonday.getDate() + "-" + (firstMonday.getMonth() + 1) + "-" + firstMonday.getFullYear();
             }
             break;
         }
