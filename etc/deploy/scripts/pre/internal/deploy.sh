@@ -5,7 +5,7 @@ TRANSFER_PATH=$HOME_PATH/tmp
 ENV_CONF=$HOME_PATH/env
 DEPLOY_TARGET_PATH=/servers/static/istac/tableau-data-connector
 
-scp -o "StrictHostKeyChecking=no" -r etc/deploy/config/demo/* deploy@mgcarta.gobiernodecanarias.net:$ENV_CONF
+scp -o "StrictHostKeyChecking=no" -r etc/deploy/config/pre/* deploy@mgcarta.gobiernodecanarias.net:$ENV_CONF
 scp -o "StrictHostKeyChecking=no" -r target/tableau-*.jar deploy@mgcarta.gobiernodecanarias.net:$TRANSFER_PATH/tableau.jar
 ssh -o "StrictHostKeyChecking=no" deploy@mgcarta.gobiernodecanarias.net <<EOF
 
