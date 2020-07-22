@@ -22,8 +22,8 @@ ssh -o "StrictHostKeyChecking=no" deploy@mgcarta.gobiernodecanarias.net <<EOF
     sudo cp -rf $ENV_CONF/* $DEPLOY_TARGET_PATH
 
     sudo chown -R apache:apache $DEPLOY_TARGET_PATH
-    sudo rm -rf $TRANSFER_PATH/*
-    sudo rm -rf $ENV_CONF/*
+    #sudo rm -rf $TRANSFER_PATH/*
+    #sudo rm -rf $ENV_CONF/*
 	
 	echo "Finished deploy"
 	
