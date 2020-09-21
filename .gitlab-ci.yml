@@ -74,7 +74,7 @@ demo deploy:
     tags: ["deploy-vpn"]
     when: manual
     before_script:
-        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
+        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:tzz6HX+uCVdZMTV1KbUZVNIMwqUSdJLh5P4r0WtFULY= --csd-wrapper=/root/hipreport.sh && sleep 5"
 
 check pre internal server status:
     <<: *pre_job_definition
@@ -119,7 +119,7 @@ pre deploy external:
     tags: ["deploy-vpn"]
     when: manual
     before_script:
-        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
+        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:tzz6HX+uCVdZMTV1KbUZVNIMwqUSdJLh5P4r0WtFULY= --csd-wrapper=/root/hipreport.sh && sleep 5"
 
 check pro internal server status:
     <<: *pro_job_definition
