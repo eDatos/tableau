@@ -52,7 +52,11 @@ function addGoogleAnalyticsScriptTag() {
 
 function executeGoogleAnalyticsInlineCode(trackingId) {
     window.dataLayer = window.dataLayer || [];
-    function gtag(key, value) { window.dataLayer.push(arguments); }
+
+    function gtag(key, value) {
+        window.dataLayer.push(arguments);
+    }
+
     gtag('js', new Date());
     gtag('config', trackingId);
 }
@@ -96,6 +100,7 @@ function updateOptions() {
         $(checkbox).prop('disabled', false);
         $(checkbox).prop('checked', true);
     }
+
     function disableCheckbox(checkbox: string) {
         $(checkbox).prop('disabled', true);
         $(checkbox).prop('checked', false);
@@ -160,7 +165,7 @@ function searchSubjects() {
                 $('#selectSubject').select2({
                     data: _.sortBy(subjects, 'text'),
                     dropdownAutoWidth: true,
-                    width: '83.3%'
+                    width: '83.3%',
                 });
                 $("#loaderSubject").hide();
                 searchIndicators();
@@ -191,7 +196,7 @@ function searchIndicators() {
                 $('#selectIndicator').select2({
                     data: _.sortBy(indicators, 'text'),
                     dropdownAutoWidth: true,
-                    width: '83.3%'
+                    width: '83.3%',
                 });
                 $("#loaderIndicator").hide();
             }).fail(function () {
@@ -219,7 +224,7 @@ function searchIndicatorsSystems() {
                 $('#selectIndicatorSystem').select2({
                     data: _.sortBy(indicatorsSystems, 'text'),
                     dropdownAutoWidth: true,
-                    width: '83.3%'
+                    width: '83.3%',
                 });
                 $("#loaderIndicatorSystem").hide();
                 searchIndicatorsInstances();
@@ -236,26 +241,25 @@ function searchIndicatorsInstances() {
     document.getElementById("selectIndicatorInstance").parentElement.style.display = "block";
     var indicatorsInstances = [];
     $('#selectIndicatorInstance').html('').select2();
-    getEndpointMetadataValue(properties.endpoint.indicators).
-        done(function (endpoint) {
-            const url = endpoint + "/indicatorsSystems/" + (<HTMLInputElement>document.getElementById("selectIndicatorSystem")).value + "/indicatorsInstances?limit=1000&orderBy=ID ASC";
-            $.getJSON(url, function (resp) {
-                if (resp.items) {
-                    for (var i = 0; i < resp.items.length; i++) {
-                        indicatorsInstances[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
-                    }
+    getEndpointMetadataValue(properties.endpoint.indicators).done(function (endpoint) {
+        const url = endpoint + "/indicatorsSystems/" + (<HTMLInputElement>document.getElementById("selectIndicatorSystem")).value + "/indicatorsInstances?limit=1000&orderBy=ID ASC";
+        $.getJSON(url, function (resp) {
+            if (resp.items) {
+                for (var i = 0; i < resp.items.length; i++) {
+                    indicatorsInstances[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
                 }
-                $('#selectIndicatorInstance').select2({
-                    data: _.sortBy(indicatorsInstances, 'text'),
-                    dropdownAutoWidth: true,
-                    width: '83.3%'
-                });
-                $("#loaderIndicatorInstance").hide();
-            }).fail(function () {
-                $("#loaderVariableFamily").hide();
-                $('#errorMsg').html(errorMsg.error.request);
+            }
+            $('#selectIndicatorInstance').select2({
+                data: _.sortBy(indicatorsInstances, 'text'),
+                dropdownAutoWidth: true,
+                width: '83.3%',
             });
+            $("#loaderIndicatorInstance").hide();
+        }).fail(function () {
+            $("#loaderVariableFamily").hide();
+            $('#errorMsg').html(errorMsg.error.request);
         });
+    });
 }
 
 function searchVariableFamilies() {
@@ -277,7 +281,7 @@ function searchVariableFamilies() {
                 $('#selectVariableFamily').select2({
                     data: _.sortBy(variableFamilies, 'text'),
                     dropdownAutoWidth: true,
-                    width: '83.3%'
+                    width: '83.3%',
                 });
                 $("#loaderVariableFamily").hide();
                 searchVariables();
@@ -306,7 +310,7 @@ function searchVariables() {
         $("#selectVariable").select2({
             data: _.sortBy(variables, 'text'),
             dropdownAutoWidth: true,
-            width: '83.3%'
+            width: '83.3%',
         });
         $("#loaderVariable").hide();
         searchCodelists();
@@ -335,7 +339,7 @@ function searchCodelists() {
         $("#selectCodelist").select2({
             data: _.sortBy(codelists, 'text'),
             dropdownAutoWidth: true,
-            width: '83.3%'
+            width: '83.3%',
         });
         if ($("#decode").is(":checked")) {
             updateDecodelists();
@@ -362,8 +366,8 @@ function updateDecodelists() {
         language: {
             noResults: function () {
                 return "No hay ninguna clasificación de destino a la que poder recodificar";
-            }
-        }
+            },
+        },
     });
     $("#loaderDecode").hide();
 }
@@ -386,7 +390,7 @@ function searchOperations() {
                 $("#selectOperation").select2({
                     data: _.sortBy(operations, 'text'),
                     dropdownAutoWidth: true,
-                    width: '83.3%'
+                    width: '83.3%',
                 });
                 $("#loaderOperation").hide();
                 searchDatasets();
@@ -411,14 +415,14 @@ function searchDatasets() {
                     for (var i = 0; i < resp.dataset.length; i++) {
                         datasets[i] = {
                             id: resp.dataset[i].selfLink.href.substring(0, resp.dataset[i].selfLink.href.lastIndexOf('/')),
-                            text: _.keyBy(resp.dataset[i].name.text, 'lang')[language].value
+                            text: _.keyBy(resp.dataset[i].name.text, 'lang')[language].value,
                         };
                     }
                 }
                 $("#selectDataset").select2({
                     data: _.sortBy(_.uniqBy(datasets, 'id'), 'text'),
                     dropdownAutoWidth: true,
-                    width: '83.3%'
+                    width: '83.3%',
                 });
                 $("#loaderDataset").hide();
                 document.getElementById("selectDataset").parentElement.style.display = "block";

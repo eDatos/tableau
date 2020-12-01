@@ -18,7 +18,7 @@
                     for (let j = 0; j < connectionData.measureColumns.values.length; j++) {
                         cols.push({
                             id: connectionData.measureColumns.dimension + "_" + connectionData.measureColumns.values[j].id, alias: connectionData.measureColumns.values[j].label,
-                            dataType: tableau.dataTypeEnum.float
+                            dataType: tableau.dataTypeEnum.float,
                         });
                     }
                 } else {
@@ -26,7 +26,7 @@
                     tables.push({
                         id: connectionData.dimensions[i].id,
                         alias: addNumber(number) + connectionData.dimensions[i].label,
-                        columns: _buildColumns(connectionData, connectionData.dimensions[i], connectionData.languages)
+                        columns: _buildColumns(connectionData, connectionData.dimensions[i], connectionData.languages),
                     });
                     number++;
                 }
@@ -37,7 +37,7 @@
                     for (let j = 0; j < connectionData.measureColumns.values.length; j++) {
                         cols.push({
                             id: connectionData.measureColumns.dimension + "_" + connectionData.measureColumns.values[j].id, alias: connectionData.measureColumns.values[j].label,
-                            dataType: tableau.dataTypeEnum.float
+                            dataType: tableau.dataTypeEnum.float,
                         });
                     }
                 } else {
@@ -52,7 +52,7 @@
         var tableInfo: Tableau.TableInfo = {
             id: "datasetData",
             alias: addNumber(number) + tableau.connectionName,
-            columns: cols
+            columns: cols,
         };
         tables.push(tableInfo);
 
@@ -108,7 +108,7 @@
                 timeLanguages: [],
                 languages: [],
                 timeDimension: "",
-                dimensions: {}
+                dimensions: {},
             };
             switch (connectionData.resourceType) {
                 case "GPE_DATASET":
@@ -150,13 +150,11 @@
                     if (connectionData.showMeasureColumns) {
                         if (connectionData.measureColumns.dimension == connectionData.dimensions[j].id) {
                             copyHash[connectionData.measureColumns.dimension + "_" + _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code] = observations[i];
-                        }
-                        else {
+                        } else {
                             hash[connectionData.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
                             copyHash[connectionData.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
                         }
-                    }
-                    else {
+                    } else {
                         hash[connectionData.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
                     }
                     if (!connectionData.starModel) {
@@ -172,13 +170,11 @@
                                 for (let k = 0; k < connectionData.languages.length; k++) {
                                     if (dimensionLabel[connectionData.languages[k]]) {
                                         hash["Etiqueta_" + dimension.id + "_" + connectionData.languages[k]] = dimensionLabel[connectionData.languages[k]].value;
-                                    }
-                                    else {
+                                    } else {
                                         hash["Etiqueta_" + dimension.id + "_" + connectionData.languages[k]] = '';
                                     }
                                 }
-                            }
-                            else {
+                            } else {
                                 hash["Etiqueta_" + dimension.id] = dimensionLabel['es'].value;
                             }
                         }
@@ -188,12 +184,10 @@
                     var keyHash = _.values(hash).join(',');
                     if (tableData[keyHash]) {
                         _.extend(tableData[keyHash], copyHash);
-                    }
-                    else {
+                    } else {
                         tableData[keyHash] = copyHash;
                     }
-                }
-                else {
+                } else {
                     tableData.push(hash);
                 }
             }
@@ -211,13 +205,11 @@
                         for (let k = 0; k < connectionData.languages.length; k++) {
                             if (dimensionLabels[connectionData.languages[k]]) {
                                 hash["Etiqueta_" + dimension.id + "_" + connectionData.languages[k]] = dimensionLabels[connectionData.languages[k]].value;
-                            }
-                            else {
+                            } else {
                                 hash["Etiqueta_" + dimension.id + "_" + connectionData.languages[k]] = '';
                             }
                         }
-                    }
-                    else {
+                    } else {
                         hash["Etiqueta_" + dimension.id] = dimensionLabels['es'].value;
                     }
                 }
@@ -258,7 +250,7 @@
                     for (let i = 0; i < dimension.dimensionValues.value.length; i++) {
                         values[i] = {
                             id: dimension.dimensionValues.value[i].id,
-                            label: _.keyBy(dimension.dimensionValues.value[i].name.text, 'lang')['es'].value
+                            label: _.keyBy(dimension.dimensionValues.value[i].name.text, 'lang')['es'].value,
                         };
                     }
                     measureColumns.values = values;
@@ -271,7 +263,7 @@
             for (let i = 0; i < resp.metadata.dimensions.total; i++) {
                 dimensions[i] = {
                     id: resp.metadata.dimensions.dimension[i].id,
-                    label: _.keyBy(resp.metadata.dimensions.dimension[i].name.text, 'lang')[language].value
+                    label: _.keyBy(resp.metadata.dimensions.dimension[i].name.text, 'lang')[language].value,
                 };
             }
             if (connectionData.recodeDates) {
@@ -341,7 +333,7 @@
             dataResponse.categories.forEach((category, index) => {
                 dimensions[index] = {
                     id: _.toString(index),
-                    label: category.variable
+                    label: category.variable,
                 }
             });
             connectionData.dimensions = dimensions;
@@ -370,7 +362,12 @@
                 returnCols.push({ id: "Etiqueta_" + dimension.id, alias: dimension.label, columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
             } else {
                 for (var k = 0; k < connectionData.languages.length; k++) {
-                    returnCols.push({ id: "Etiqueta_" + dimension.id + "_" + languages[k], alias: dimension.label + "_" + languages[k], columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+                    returnCols.push({
+                        id: "Etiqueta_" + dimension.id + "_" + languages[k],
+                        alias: dimension.label + "_" + languages[k],
+                        columnRole: "dimension",
+                        dataType: tableau.dataTypeEnum.string,
+                    });
                 }
             }
         }
