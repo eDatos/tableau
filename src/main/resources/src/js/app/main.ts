@@ -76,35 +76,38 @@ function onDownloadDecodeSelected(downloadDecodeRadio) {
 }
 
 function isGPEDataset() {
-    const resourceType = calculateResourceType(<string>$('#inputUrl').val());
-    return resourceType == "GPE_DATASET";
+    return calculateResourceType(<string>$('#inputUrl').val()).then(resourceType => {
+        return resourceType === ResourceType.GPE_DATASET;
+    });
 }
 
 function updateOptions() {
     const isUrlSelected = (<HTMLInputElement>$("input[name='datatype']:checked")[0]).value == "url";
-    if (isUrlSelected && isGPEDataset()) {
-        disableCheckbox('#measureColumns');
-        disableCheckbox('#starModel');
+    isGPEDataset().then(isGPE => {
+        if (isUrlSelected && isGPE) {
+            disableCheckbox('#measureColumns');
+            disableCheckbox('#starModel');
 
-        enableCheckbox('#recodeDates');
-        enableCheckbox('#showLabels');
-    } else {
-        enableCheckbox('#measureColumns');
-        enableCheckbox('#starModel');
+            enableCheckbox('#recodeDates');
+            enableCheckbox('#showLabels');
+        } else {
+            enableCheckbox('#measureColumns');
+            enableCheckbox('#starModel');
 
-        enableCheckbox('#recodeDates');
-        enableCheckbox('#showLabels');
-    }
+            enableCheckbox('#recodeDates');
+            enableCheckbox('#showLabels');
+        }
 
-    function enableCheckbox(checkbox: string) {
-        $(checkbox).prop('disabled', false);
-        $(checkbox).prop('checked', true);
-    }
+        function enableCheckbox(checkbox: string) {
+            $(checkbox).prop('disabled', false);
+            $(checkbox).prop('checked', true);
+        }
 
-    function disableCheckbox(checkbox: string) {
-        $(checkbox).prop('disabled', true);
-        $(checkbox).prop('checked', false);
-    }
+        function disableCheckbox(checkbox: string) {
+            $(checkbox).prop('disabled', true);
+            $(checkbox).prop('checked', false);
+        }
+    });
 }
 
 function chooseDataOption(radio) {
@@ -434,19 +437,14 @@ function searchDatasets() {
 }
 
 function enableAllLanguages() {
-    if ($("#showLabels").is(":checked") && !isGPEDataset()) {
-        $("#allLanguages").prop("disabled", false);
-    } else {
-        $("#allLanguages").prop("checked", false);
-        $("#allLanguages").prop("disabled", true);
-    }
-}
-
-
-function calculateResourceType(url: string): DatasetsConnectionData["resourceType"] {
-    if (url.indexOf("tabla.do") >= 0) {
-        return "GPE_DATASET";
-    } else {
-        return "STATISTICAL_RESOURCE_DATASET";
-    }
+    isGPEDataset().then(isGPE => {
+        if ($("#showLabels").is(":checked") && !isGPE) {
+            $("#allLanguages")
+                .prop("disabled", false);
+        } else {
+            $("#allLanguages")
+                .prop("checked", false)
+                .prop("disabled", true);
+        }
+    });
 }

@@ -3,6 +3,7 @@
     var urlDataset: string;
     var number = 1;
 
+
     myConnector.getSchema = function (schemaCallback: Function) {
         var connectionData = JSON.parse(tableau.connectionData);
         var cols = [];
@@ -62,22 +63,22 @@
     myConnector.getData = function (table, doneCallback) {
         var connectionData: DatasetsConnectionData = JSON.parse(tableau.connectionData);
 
-        $.getJSON(connectionData.url)
-            .then(function (dataResponse) {
-                switch (connectionData.resourceType) {
-                    case "GPE_DATASET":
-                        parseGPEDatasetResponse(dataResponse, connectionData, table, doneCallback);
-                        break;
-                    case "STATISTICAL_RESOURCE_DATASET":
-                        parseStatisticalResourceDatasetResponse(dataResponse, connectionData, table, doneCallback);
-                        break;
-                    default:
-                        $('#errorMsg').html(errorMsg.error.dataset.url.unsupportedResourceType);
-                        break;
-                }
-            })
-            .fail(doneCallback);
+        $.getJSON(connectionData.url).then(dataResponse => {
 
+            type ParseDatasetDispatcher = { [key in ResourceType]: (response, connectionData: DatasetsConnectionData, table, doneCallback) => void };
+            const parseDatasetResponse: ParseDatasetDispatcher = {
+                "GPE_DATASET": parseGPEDatasetResponse,
+                "STATISTICAL_RESOURCE_DATASET": parseStatisticalResourceDatasetResponse,
+                "JSON_STAT_DATASET": parseJsonStatDatasetResponse,
+            }
+
+            if (connectionData.resourceType in parseDatasetResponse) {
+                parseDatasetResponse[connectionData.resourceType](dataResponse, connectionData, table, doneCallback);
+            } else {
+                $('#errorMsg').html(errorMsg.error.dataset.url.unsupportedResourceType);
+            }
+
+        }).fail(doneCallback);
     };
 
     tableau.registerConnector(myConnector);
@@ -94,33 +95,40 @@
                     tableau.connectionName = "Cubo: ";
                     break;
             }
-            var connectionData: DatasetsConnectionData = {
-                url: urlDataset.trim(),
-                resourceType: calculateResourceType(urlDataset.trim()),
-                showMeasureColumns: $('#measureColumns').is(':checked'),
-                labels: $('#showLabels').is(':checked'),
-                starModel: $('#starModel').is(':checked'),
-                recodeDates: $('#recodeDates').is(':checked'),
-                allLanguages: $('#allLanguages').is(':checked'),
-                name: "",
-                observationId: "",
-                measureColumns: {},
-                timeLanguages: [],
-                languages: [],
-                timeDimension: "",
-                dimensions: {},
-            };
-            switch (connectionData.resourceType) {
-                case "GPE_DATASET":
-                    buildConnectionDataForGPE(connectionData);
-                    break;
-                case "STATISTICAL_RESOURCE_DATASET":
-                    buildConnectionDataForStatisticalResources(connectionData);
-                    break;
-                default:
+
+            calculateResourceType(urlDataset.trim()).then(resourceType => {
+                console.log("Resource type is " + resourceType);
+                let connectionData: DatasetsConnectionData = {
+                    url: urlDataset.trim(),
+                    resourceType: resourceType,
+                    showMeasureColumns: $('#measureColumns').is(':checked'),
+                    labels: $('#showLabels').is(':checked'),
+                    starModel: $('#starModel').is(':checked'),
+                    recodeDates: $('#recodeDates').is(':checked'),
+                    allLanguages: $('#allLanguages').is(':checked'),
+                    name: "",
+                    observationId: "",
+                    measureColumns: {},
+                    timeLanguages: [],
+                    languages: [],
+                    timeDimension: "",
+                    dimensions: {},
+                };
+
+                type BuildConnectionDispatcher = { [key in ResourceType]: (arg: DatasetsConnectionData) => void };
+                const buildConnectionData: BuildConnectionDispatcher = {
+                    "GPE_DATASET": buildConnectionDataForGPE,
+                    "STATISTICAL_RESOURCE_DATASET": buildConnectionDataForStatisticalResources,
+                    "JSON_STAT_DATASET": buildConnectionDataForJsonStat,
+                }
+
+                if (connectionData.resourceType in buildConnectionData) {
+                    buildConnectionData[connectionData.resourceType](connectionData);
+                } else {
                     $('#errorMsg').html(errorMsg.error.dataset.url.unsupportedResourceType);
-                    break;
-            }
+                }
+
+            }).fail(err => console.log(err));
         });
     });
 
@@ -160,7 +168,6 @@
                     if (!connectionData.starModel) {
                         if (connectionData.recodeDates && connectionData.timeDimension == connectionData.dimensions[j].id) {
                             hash["Fecha"] = calculateDateDataset(_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code);
-                            ;
                         }
                         if (connectionData.labels) {
                             var dimension = _.keyBy(dataResponse.metadata.dimensions.dimension, "id")[connectionData.dimensions[j].id];
@@ -218,7 +225,40 @@
         }
         table.appendRows(_.values(tableData));
         doneCallback();
-    };
+    }
+
+    function parseJsonStatDatasetResponse(dataResponse: JsonStat.Dataset, connectionData: DatasetsConnectionData, table, doneCallback) {
+
+        if (dataResponse.class !== "dataset") {
+            // TODO: For now, only datasets will be allowed
+            const errMessage = "[Parse function] JsonStat type is not 'dataset'. Type: " + dataResponse.class;
+            $("#errorMsg").html(errMessage);
+            console.log(errMessage)
+            return;
+        }
+
+        const dataset = JSONstat(dataResponse).Dataset(0).toTable();
+        const columnsTitles = table.shift();
+        const indexOfValue = columnsTitles.indexOf("Value")
+
+        const tableData = [];
+        for (let rowIndex = 0; rowIndex < dataset.length; rowIndex++) {
+            let hash = {};
+            let row = dataset[rowIndex];
+
+            for (let columnIndex = 0; columnIndex < row.length; columnIndex++) {
+                if (indexOfValue === columnIndex) {
+                    hash[connectionData.observationId] = parseFloat(dataset[rowIndex][indexOfValue]); // TODO: los valores son siempre numéricos??? y si no lo son, qué?
+                } else {
+                    hash[columnIndex] = columnsTitles[columnIndex];
+                }
+            }
+
+            tableData.push(hash);
+        }
+        table.appendRows(_.values(tableData));
+        doneCallback();
+    }
 
     function buildConnectionDataForStatisticalResources(connectionData: DatasetsConnectionData) {
         if (!isValidUrl(connectionData.url)) {
@@ -291,7 +331,7 @@
         parseGPEDatasetResponseForDatasetData(table, dataResponse, connectionData, tableData);
         table.appendRows(_.values(tableData));
         doneCallback();
-    };
+    }
 
 
     function parseGPEDatasetResponseForDatasetData(table: Tableau.Table, dataResponse: GPE.Dataset, connectionData: DatasetsConnectionData, tableData: any[]) {
@@ -312,6 +352,46 @@
 
             tableData.push(hash);
         }
+    }
+
+    function buildConnectionDataForJsonStat(connectionData: DatasetsConnectionData) {
+        $.getJSON(connectionData.url, function (dataResponse: JsonStat.Dataset) {
+            if (dataResponse.class !== "dataset") {
+                // TODO: For now, only datasets will be allowed
+                const errMessage = "JsonStat type is not 'dataset'. Type: " + dataResponse.class;
+                $("#errorMsg").html(errMessage);
+                console.log(errMessage)
+                return;
+            }
+
+            tableau.connectionName = tableau.connectionName + dataResponse.label;
+
+            connectionData.name = dataResponse.label;
+            connectionData.observationId = "Valor";
+            connectionData.showMeasureColumns = false;
+
+            connectionData.dimensions = {};
+            dataResponse.id.forEach((category, index) => {
+                connectionData.dimensions[index] = {
+                    id: _.toString(index),
+                    label: category,
+                }
+            });
+
+            // TODO: Qué es temporals?
+            if (connectionData.recodeDates) {
+                // if (dataResponse.temporals && dataResponse.temporals.length > 0) {
+                //     connectionData.timeDimension = _.findIndex(dataResponse.categories, { variable: dataResponse.temporals[0] }).toString();
+                // } else {
+                connectionData.recodeDates = false;
+                // }
+            }
+
+            tableau.connectionData = JSON.stringify(connectionData);
+            tableau.submit();
+        }).fail(function () {
+            $("#errorMsg").html(errorMsg.error.submit);
+        });
     }
 
 
@@ -381,11 +461,96 @@
         url = url.toString();
         return url.match(".+") != null;
     }
+})();
 
-    // Transforms something like http://www.gobiernodecanarias.org/istac/jaxi-istac/tabla.do?accion=jsonMtd&uuidConsulta=d28e8036-16c8-44f7-91a8-1cc46738e0c8
-    // On something like https://www.gobiernodecanarias.org/aplicaciones/appsistac/jaxi-istac/tabla.do?accion=jsonMtd&uuidConsulta=d28e8036-16c8-44f7-91a8-1cc46738e0c8
-    function transformGPEUrlToProxyUrl(gpeUrl: string) {
-        return complementosAppsEndpoint + gpeUrl.substring(gpeUrl.indexOf("jaxi-istac"));
+enum ResourceType {
+    GPE_DATASET = "GPE_DATASET",
+    STATISTICAL_RESOURCE_DATASET = "STATISTICAL_RESOURCE_DATASET",
+    JSON_STAT_DATASET = "JSON_STAT_DATASET",
+}
+
+const DEFAULT_RESOURCE_TYPE: ResourceType = ResourceType.STATISTICAL_RESOURCE_DATASET;
+const schemas: Partial<{ [key in ResourceType]: {} }> = {};
+const ajv = getJsonSchemaValidator();
+
+// Load jsonstat schema
+$.getJSON("schemas/json-stat-2.0.json", jsonStatSchema => {
+    schemas.JSON_STAT_DATASET = jsonStatSchema;
+    console.log("Schemas loaded");
+}).fail(() => {
+    console.log("Could not access json stat schema");
+});
+
+function getJsonSchemaValidator() {
+    const _ajv = new Ajv({
+        schemaId: 'id', // draft-04 support requirement
+        allErrors: true,
+        jsonPointers: true,
+        meta: false,
+    });
+    _ajv.ready = false;
+
+    $.getJSON("http://json-schema.org/draft-04/schema#").then(metaSchema => {
+        _ajv.addMetaSchema(metaSchema);
+        _ajv._opts.defaultMeta = metaSchema.id;
+        _ajv.ready = true;
+        console.log("Schema validator ready");
+    });
+
+    return _ajv;
+}
+
+function calculateResourceType(url: string): JQuery.Promise<ResourceType> {
+    if (url.indexOf("tabla.do") >= 0) {
+        // Directly resolve to GPE_DATASET in case the URL have the specified pattern
+        return $.Deferred().resolve(ResourceType.GPE_DATASET).promise();
     }
 
-})();
+    return $.getJSON(url).then(data => {
+        hideErrorMessage();
+
+        // Try to match the data against a schema. If successfull, return the resource type
+        // that matched the schema, otherwise the default one
+        return getResourceTypeByMatchingJsonSchema(data) || DEFAULT_RESOURCE_TYPE;
+
+    }).fail((jqXHR, textStatus, errorThrown) => {
+        if (url.trim().length === 0) {
+            // don't show error if there's no text in the url field
+            hideErrorMessage();
+        } else {
+            let errorMessage = errorMsg.error.request;
+            if (errorThrown) {
+                errorMessage += ` (${errorThrown})`;
+            }
+            showErrorMessage(errorMessage);
+        }
+
+    }).promise();
+}
+
+// Transforms something like http://www.gobiernodecanarias.org/istac/jaxi-istac/tabla.do?accion=jsonMtd&uuidConsulta=d28e8036-16c8-44f7-91a8-1cc46738e0c8
+// On something like https://www.gobiernodecanarias.org/aplicaciones/appsistac/jaxi-istac/tabla.do?accion=jsonMtd&uuidConsulta=d28e8036-16c8-44f7-91a8-1cc46738e0c8
+function transformGPEUrlToProxyUrl(gpeUrl: string) {
+    return complementosAppsEndpoint + gpeUrl.substring(gpeUrl.indexOf("jaxi-istac"));
+}
+
+/**
+ * If the json data matchs a defined json schema, then return the resource type assigned to that schema.
+ * If no schema matchs, return null.
+ */
+function getResourceTypeByMatchingJsonSchema(data: any): ResourceType | null {
+    for (const resourceType in schemas) {
+        if (schemas.hasOwnProperty(resourceType) && ajv.validate(schemas[resourceType], data)) {
+            return resourceType as ResourceType;
+        }
+    }
+    return null;
+}
+
+function hideErrorMessage() {
+    $('#errorMsg').hide();
+}
+
+function showErrorMessage(errorMessage?: string) {
+    $('#errorMsg').html(errorMessage).show();
+}
