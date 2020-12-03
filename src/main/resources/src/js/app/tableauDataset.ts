@@ -13,7 +13,6 @@ const ajv = getJsonSchemaValidator();
     var urlDataset: string;
     var number = 1;
 
-    // Load jsonstat schema
     $.getJSON("schemas/json-stat-2.0.json", jsonStatSchema => {
         schemas.JSON_STAT_DATASET = jsonStatSchema;
         console.log("Schemas loaded");
@@ -243,19 +242,10 @@ const ajv = getJsonSchemaValidator();
     }
 
     function parseJsonStatDatasetResponse(dataResponse: JsonStat.Dataset, connectionData: DatasetsConnectionData, tableauTable, doneCallback) {
-
-        if (dataResponse.class !== "dataset") {
-            // TODO: For now, only datasets will be allowed
-            const errMessage = "[Parse function] JsonStat type is not 'dataset'. Type: " + dataResponse.class;
-            $("#errorMsg").html(errMessage);
-            console.log(errMessage)
-            return;
-        }
-
         const dataset = JSONstat(dataResponse).Dataset(0);
         const table = dataset.toTable({content: "id"});
-        const columnsTitles = table.shift();
-        const valueIndex = columnsTitles.indexOf("Value")
+        const columnTitles = table.shift();
+        const valueIndex = columnTitles.indexOf("Value")
 
         const tableData = [];
         for (let rowIndex = 0; rowIndex < table.length; rowIndex++) {
