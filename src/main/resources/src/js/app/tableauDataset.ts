@@ -257,6 +257,9 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
                 if (connectionData.labels) {
                     hash["Etiqueta_" + columnIndex] = dataset.Dimension(columnIndex).Category(row[columnIndex]).label;
                 }
+                if (connectionData.recodeDates && connectionData.timeDimension == columnIndex.toString()) {
+                    hash["Fecha"] = calculateDateGPE(row[columnIndex]);
+                }
             }
 
             tableData.push(hash);
@@ -384,13 +387,17 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
                 }
             });
 
-            // TODO: Qué es temporals?
             if (connectionData.recodeDates) {
-                // if (dataResponse.temporals && dataResponse.temporals.length > 0) {
-                //     connectionData.timeDimension = _.findIndex(dataResponse.categories, { variable: dataResponse.temporals[0] }).toString();
-                // } else {
-                connectionData.recodeDates = false;
-                // }
+                if (dataResponse.role.time && dataResponse.role.time.length > 0) {
+                    const results: any = _.filter(_.values(connectionData.dimensions), { label: dataResponse.role.time[0] });
+                    connectionData.timeDimension = results[0].id;
+                    // TODO
+                    //  For now, connectionData.timeDimension it's ment to be used with only one dimension.
+                    //  Future updates should include treatment of time metrics as multiple dimensions.
+                    //  It should be noted that JSONStat date recodification reuses the one used for GPE.
+                } else {
+                    connectionData.recodeDates = false;
+                }
             }
 
             tableau.connectionData = JSON.stringify(connectionData);
