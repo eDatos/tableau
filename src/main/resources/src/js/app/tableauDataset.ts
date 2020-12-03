@@ -242,7 +242,7 @@ const ajv = getJsonSchemaValidator();
         doneCallback();
     }
 
-    function parseJsonStatDatasetResponse(dataResponse: JsonStat.Dataset, connectionData: DatasetsConnectionData, table, doneCallback) {
+    function parseJsonStatDatasetResponse(dataResponse: JsonStat.Dataset, connectionData: DatasetsConnectionData, tableauTable, doneCallback) {
 
         if (dataResponse.class !== "dataset") {
             // TODO: For now, only datasets will be allowed
@@ -252,23 +252,28 @@ const ajv = getJsonSchemaValidator();
             return;
         }
 
-        const dataset = JSONstat(dataResponse).Dataset(0).toTable();
-        const columnsTitles = dataset.shift();
+        const dataset = JSONstat(dataResponse).Dataset(0);
+        const table = dataset.toTable({content: "id"});
+        const columnsTitles = table.shift();
         const valueIndex = columnsTitles.indexOf("Value")
 
         const tableData = [];
-        for (let rowIndex = 0; rowIndex < dataset.length; rowIndex++) {
+        for (let rowIndex = 0; rowIndex < table.length; rowIndex++) {
             let hash = {};
-            let row = dataset[rowIndex];
+            let row = table[rowIndex];
 
-            hash[connectionData.observationId] = parseFloat(dataset[rowIndex][valueIndex]); // TODO: los valores son siempre numéricos??? y si no lo son, qué?
+            hash[connectionData.observationId] = parseFloat(table[rowIndex][valueIndex]); // TODO: are all values numeric? what if not?
             for (let columnIndex = 0; columnIndex < row.length && columnIndex !== valueIndex; columnIndex++) {
                 hash[columnIndex] = row[columnIndex];
+                if (connectionData.labels) {
+                    hash["Etiqueta_" + columnIndex] = dataset.Dimension(columnIndex).Category(row[columnIndex]).label;
+                }
             }
 
             tableData.push(hash);
         }
-        table.appendRows(_.values(tableData));
+
+        tableauTable.appendRows(_.values(tableData));
         doneCallback();
     }
 
