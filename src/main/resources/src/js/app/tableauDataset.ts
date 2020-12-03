@@ -485,7 +485,7 @@ function getJsonSchemaValidator() {
     });
     _ajv.ready = false;
 
-    $.getJSON("http://json-schema.org/draft-04/schema#").then(metaSchema => {
+    $.getJSON("schemas/jsonstat_metaschema.json").then(metaSchema => {
         _ajv.addMetaSchema(metaSchema);
         _ajv._opts.defaultMeta = metaSchema.id;
         _ajv.ready = true;
