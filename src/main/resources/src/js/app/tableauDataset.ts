@@ -6,7 +6,6 @@ enum ResourceType {
 
 const DEFAULT_RESOURCE_TYPE: ResourceType = ResourceType.STATISTICAL_RESOURCE_DATASET;
 const schemas: Partial<{ [key in ResourceType]: {} }> = {};
-const ajv = getJsonSchemaValidator();
 
 (function () {
     var myConnector = tableau.makeConnector();
@@ -243,7 +242,7 @@ const ajv = getJsonSchemaValidator();
 
     function parseJsonStatDatasetResponse(dataResponse: JsonStat.Dataset, connectionData: DatasetsConnectionData, tableauTable, doneCallback) {
         const dataset = JSONstat(dataResponse).Dataset(0);
-        const table = dataset.toTable({content: "id"});
+        const table = dataset.toTable({ content: "id" });
         const columnTitles = table.shift();
         const valueIndex = columnTitles.indexOf("Value")
 
@@ -472,22 +471,22 @@ const ajv = getJsonSchemaValidator();
 })();
 
 function getJsonSchemaValidator() {
-    const _ajv = new Ajv({
+    const deferred = $.Deferred();
+    const ajv = new Ajv({
         schemaId: 'id', // draft-04 support requirement
         allErrors: true,
         jsonPointers: true,
         meta: false,
     });
-    _ajv.ready = false;
 
     $.getJSON("schemas/json-stat-meta-draft-04.json").then(metaSchema => {
-        _ajv.addMetaSchema(metaSchema);
-        _ajv._opts.defaultMeta = metaSchema.id;
-        _ajv.ready = true;
+        ajv.addMetaSchema(metaSchema);
+        ajv._opts.defaultMeta = metaSchema.id;
+        deferred.resolve(ajv);
         console.log("Schema validator ready");
     });
 
-    return _ajv;
+    return deferred.promise();
 }
 
 function calculateResourceType(url: string): JQuery.Promise<ResourceType> {
@@ -498,11 +497,11 @@ function calculateResourceType(url: string): JQuery.Promise<ResourceType> {
 
     return $.getJSON(url).then(data => {
         hideErrorMessage();
-
         // Try to match the data against a schema. If successfull, return the resource type
         // that matched the schema, otherwise the default one
-        return getResourceTypeByMatchingJsonSchema(data) || DEFAULT_RESOURCE_TYPE;
-
+        return getResourceTypeByMatchingJsonSchema(data);
+    }).then(schema => {
+        return schema || DEFAULT_RESOURCE_TYPE;
     }).fail((jqXHR, textStatus, errorThrown) => {
         if (url.trim().length === 0) {
             // don't show error if there's no text in the url field
@@ -514,7 +513,6 @@ function calculateResourceType(url: string): JQuery.Promise<ResourceType> {
             }
             showErrorMessage(errorMessage);
         }
-
     }).promise();
 }
 
@@ -528,13 +526,15 @@ function transformGPEUrlToProxyUrl(gpeUrl: string) {
  * If the json data matchs a defined json schema, then return the resource type assigned to that schema.
  * If no schema matchs, return null.
  */
-function getResourceTypeByMatchingJsonSchema(data: any): ResourceType | null {
-    for (const resourceType in schemas) {
-        if (schemas.hasOwnProperty(resourceType) && ajv.validate(schemas[resourceType], data)) {
-            return resourceType as ResourceType;
+function getResourceTypeByMatchingJsonSchema(data: any): JQuery.Promise<ResourceType | null> {
+    return getJsonSchemaValidator().then(ajv => {
+        for (const resourceType in schemas) {
+            if (schemas.hasOwnProperty(resourceType) && ajv.validate(schemas[resourceType], data)) {
+                return resourceType as ResourceType;
+            }
         }
-    }
-    return null;
+        return null;
+    }).promise();
 }
 
 function hideErrorMessage() {
