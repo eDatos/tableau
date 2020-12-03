@@ -75,16 +75,16 @@ function onDownloadDecodeSelected(downloadDecodeRadio) {
     }
 }
 
-function isGPEDataset() {
+function isGpeOrJsonStatDataset() {
     return calculateResourceType(<string>$('#inputUrl').val()).then(resourceType => {
-        return resourceType === ResourceType.GPE_DATASET;
+        return resourceType === ResourceType.GPE_DATASET || resourceType === ResourceType.JSON_STAT_DATASET;
     });
 }
 
 function updateOptions() {
     const isUrlSelected = (<HTMLInputElement>$("input[name='datatype']:checked")[0]).value == "url";
-    isGPEDataset().then(isGPE => {
-        if (isUrlSelected && isGPE) {
+    isGpeOrJsonStatDataset().then(isGpeOrJsonStat => {
+        if (isUrlSelected && isGpeOrJsonStat) {
             disableCheckbox('#measureColumns');
             disableCheckbox('#starModel');
 
@@ -437,7 +437,7 @@ function searchDatasets() {
 }
 
 function enableAllLanguages() {
-    isGPEDataset().then(isGPE => {
+    isGpeOrJsonStatDataset().then(isGPE => {
         if ($("#showLabels").is(":checked") && !isGPE) {
             $("#allLanguages")
                 .prop("disabled", false);

@@ -62,9 +62,7 @@
 
     myConnector.getData = function (table, doneCallback) {
         var connectionData: DatasetsConnectionData = JSON.parse(tableau.connectionData);
-
         $.getJSON(connectionData.url).then(dataResponse => {
-
             type ParseDatasetDispatcher = { [key in ResourceType]: (response, connectionData: DatasetsConnectionData, table, doneCallback) => void };
             const parseDatasetResponse: ParseDatasetDispatcher = {
                 "GPE_DATASET": parseGPEDatasetResponse,
@@ -238,20 +236,17 @@
         }
 
         const dataset = JSONstat(dataResponse).Dataset(0).toTable();
-        const columnsTitles = table.shift();
-        const indexOfValue = columnsTitles.indexOf("Value")
+        const columnsTitles = dataset.shift();
+        const valueIndex = columnsTitles.indexOf("Value")
 
         const tableData = [];
         for (let rowIndex = 0; rowIndex < dataset.length; rowIndex++) {
             let hash = {};
             let row = dataset[rowIndex];
 
-            for (let columnIndex = 0; columnIndex < row.length; columnIndex++) {
-                if (indexOfValue === columnIndex) {
-                    hash[connectionData.observationId] = parseFloat(dataset[rowIndex][indexOfValue]); // TODO: los valores son siempre numéricos??? y si no lo son, qué?
-                } else {
-                    hash[columnIndex] = columnsTitles[columnIndex];
-                }
+            hash[connectionData.observationId] = parseFloat(dataset[rowIndex][valueIndex]); // TODO: los valores son siempre numéricos??? y si no lo son, qué?
+            for (let columnIndex = 0; columnIndex < row.length && columnIndex !== valueIndex; columnIndex++) {
+                hash[columnIndex] = row[columnIndex];
             }
 
             tableData.push(hash);
