@@ -1,8 +1,25 @@
+enum ResourceType {
+    GPE_DATASET = "GPE_DATASET",
+    STATISTICAL_RESOURCE_DATASET = "STATISTICAL_RESOURCE_DATASET",
+    JSON_STAT_DATASET = "JSON_STAT_DATASET",
+}
+
+const DEFAULT_RESOURCE_TYPE: ResourceType = ResourceType.STATISTICAL_RESOURCE_DATASET;
+const schemas: Partial<{ [key in ResourceType]: {} }> = {};
+const ajv = getJsonSchemaValidator();
+
 (function () {
     var myConnector = tableau.makeConnector();
     var urlDataset: string;
     var number = 1;
 
+    // Load jsonstat schema
+    $.getJSON("schemas/json-stat-2.0.json", jsonStatSchema => {
+        schemas.JSON_STAT_DATASET = jsonStatSchema;
+        console.log("Schemas loaded");
+    }).fail(() => {
+        console.log("Could not access JSONStat schema");
+    });
 
     myConnector.getSchema = function (schemaCallback: Function) {
         var connectionData = JSON.parse(tableau.connectionData);
@@ -456,25 +473,8 @@
         url = url.toString();
         return url.match(".+") != null;
     }
+
 })();
-
-enum ResourceType {
-    GPE_DATASET = "GPE_DATASET",
-    STATISTICAL_RESOURCE_DATASET = "STATISTICAL_RESOURCE_DATASET",
-    JSON_STAT_DATASET = "JSON_STAT_DATASET",
-}
-
-const DEFAULT_RESOURCE_TYPE: ResourceType = ResourceType.STATISTICAL_RESOURCE_DATASET;
-const schemas: Partial<{ [key in ResourceType]: {} }> = {};
-const ajv = getJsonSchemaValidator();
-
-// Load jsonstat schema
-$.getJSON("schemas/json-stat-2.0.json", jsonStatSchema => {
-    schemas.JSON_STAT_DATASET = jsonStatSchema;
-    console.log("Schemas loaded");
-}).fail(() => {
-    console.log("Could not access json stat schema");
-});
 
 function getJsonSchemaValidator() {
     const _ajv = new Ajv({
