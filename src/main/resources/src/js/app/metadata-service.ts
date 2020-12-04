@@ -1,13 +1,13 @@
 'use strict';
 var metadatasLoaded = {};
 
-function getMetadataValue(metadataKey) {
+function getMetadataValue(metadataKey: string, data: {[key: string]: any} = null) {
     var deferred = $.Deferred();
     if (metadatasLoaded.hasOwnProperty(metadataKey)) {
         return deferred.resolve(metadatasLoaded[metadataKey]);
     }
     var metadataEndpoint = properties.endpoint.metadata;
-    $.getJSON(metadataEndpoint + 'properties/' + metadataKey + '.json')
+    $.getJSON(metadataEndpoint + 'properties/' + metadataKey + '.json', data)
         .done(function (response) {
             metadatasLoaded[metadataKey] = response.value;
             deferred.resolve(response.value);
