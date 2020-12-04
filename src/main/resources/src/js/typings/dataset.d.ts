@@ -4,7 +4,7 @@ interface DatasetMeasureColumn {
 }
 
 interface DatasetsConnectionData extends CommonConnectionData {
-    resourceType: "GPE_DATASET" | "STATISTICAL_RESOURCE_DATASET"
+    resourceType: ResourceType
     dimensions: {};
     languages: string[];
     measureColumns: DatasetMeasureColumn;

@@ -5,30 +5,34 @@
         "start": "npm run build && concurrently -n app,typescript \"npm run watch:app\" \"tsc -w\"",
         "copy:fontawesome": "shx cp node_modules/font-awesome/css/font-awesome.min.css public/css && shx cp node_modules/font-awesome/fonts/* public/fonts",
         "copy:jquery": "shx cp node_modules/jquery/dist/jquery.min.js public/js/vendor",
+        "copy:jsonstat-toolkit": "shx cp node_modules/jsonstat-toolkit/iife.js public/js/vendor/jsonstat-toolkit-iife.js",
+        "copy:ajv": "shx cp node_modules/ajv/dist/ajv.min.js public/js/vendor",
         "copy:select2": "shx cp node_modules/select2/dist/js/select2.min.js public/js/vendor && shx cp node_modules/select2/dist/css/select2.min.css public/css",
         "copy:bootstrap": "shx cp node_modules/bootstrap/dist/js/bootstrap.min.js public/js/vendor && shx cp node_modules/bootstrap/dist/css/bootstrap.min.css public/css",
-        "copy:vendor": "npm run copy:bootstrap && npm run copy:jquery && npm run copy:fontawesome && npm run copy:select2 && shx cp -r src/js/vendor public/js",
-        "copy:app": "shx cp -r src/config src/css src/fonts src/imgs src/templates src/translate src/*.html src/favicon.ico public",
+        "copy:vendor": "npm run copy:bootstrap && npm run copy:jquery && npm run copy:fontawesome && npm run copy:jsonstat-toolkit && npm run copy:ajv && npm run copy:select2 && shx cp -r src/js/vendor public/js",
+        "copy:app": "shx cp -r src/config src/css src/fonts src/imgs src/templates src/translate src/schemas src/*.html src/favicon.ico public",
         "watch:app": "watch \"npm run copy:app\" src",
         "prebuild": "rimraf public && mkdirp public/js/vendor && mkdirp public/fonts && mkdirp public/css",
         "build": "concurrently -n copy:vendor,copy:app,typescript \"npm run copy:vendor\" \"npm run copy:app\" \"tsc\" "
     },
     "dependencies": {
+        "ajv": "==6.12.3",
         "bootstrap": "3.3.6",
         "font-awesome": "4.7.0",
         "jquery": "^1.9.2",
+        "jsonstat-toolkit": "^1.0.8",
         "select2": "4.0.3"
     },
     "devDependencies": {
         "@types/jquery": "^3.3.35",
         "@types/lodash": "^4.14.149",
         "@types/select2": "^4.0.48",
+        "concurrently": "^5.2.0",
         "live-server": "^1.2.1",
         "mkdirp": "^1.0.4",
         "rimraf": "^3.0.2",
         "shx": "^0.3.2",
         "typescript": "^3.8.3",
-        "concurrently": "^5.2.0",
         "watch": "^1.0.2"
     },
     "engines": {
