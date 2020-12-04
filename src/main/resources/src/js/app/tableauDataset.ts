@@ -258,7 +258,7 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
                     hash["Etiqueta_" + columnIndex] = dataset.Dimension(columnIndex).Category(row[columnIndex]).label;
                 }
                 if (connectionData.recodeDates && connectionData.timeDimension == columnIndex.toString()) {
-                    hash["Fecha"] = calculateDateGPE(row[columnIndex]);
+                    hash["Fecha"] = calculateDateJsonStat(row[columnIndex]);
                 }
             }
 
@@ -550,4 +550,13 @@ function hideErrorMessage() {
 
 function showErrorMessage(errorMessage?: string) {
     $('#errorMsg').html(errorMessage).show();
+}
+
+function calculateDateJsonStat(date: string) {
+    // GPE and the JSONStat files from IBESTAT follows the same pattern for specifying month periods.
+    // They don't follow the SDMX exactly, since that standard specifies that a hyphen must separate
+    // the year and the month char. I.e. 2020-M01. However, GPE and JSONStat (IBESTAT) don't follow that
+    // standard since the hyphen does not appear on periods. I.e. 2016M01.
+    // That's why JsonStat dates are recoded the same way the GPE's.
+    return calculateDateGPE(date);
 }
