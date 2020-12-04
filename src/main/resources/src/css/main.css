@@ -163,25 +163,25 @@ body {
 
 @media (max-width: 767px) {
     .content {
-        padding-bottom: 700px;
+        padding-bottom: 40px;
     }
 
 }
 
 @media (min-width: 768px) and (max-width: 1199px) {
     .content {
-        padding-bottom: 400px;
+        padding-bottom: 40px;
     }
 
     
     #footerTemplate .footer-content > div {
-        height: 170px;
+        height: 35px;
     }
 }
 
 @media (min-width: 1200px) { 
     .content {
-        padding-bottom: 200px;
+        padding-bottom: 40px;
     }
 
     #footerTemplate .footer-content .links {
@@ -193,7 +193,7 @@ body {
     }
 
     #footerTemplate .footer-content > div {
-        height: 170px;
+        height: 35px;
     }
 
 }
