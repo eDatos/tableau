@@ -58,9 +58,9 @@ function loadTexts() {
     $("#descWDC").text("Los Web Data Connectors de Tableau permiten conectar la herramienta con datos externos para poder obtenerlos de manera automática y muy sencilla.");
     $("#descIstac").text("El ISTAC ha desarrollado su propio conjunto de conectores webs para Tableau para simplificar la reutilización de la información que se publica.");
     $("#olConnectors").text("En concreto los conectores disponibles están destinados a los siguientes fines:");
-    $("#liIndicators").append(". Permite obtener datos de cualquier indicador y/o instancia de indicador que publica el ISTAC.");
-    $("#liDatasets").append(". Permite obtener datos de cualquier dataset y/o consulta publicada por el ISTAC.");
-    $("#liCodelists").append(". Permite obtener cualquier clasificación usada por el ISTAC para codificar sus datasets y consultas.");
+    $("#pIndicators").append("Permite obtener datos de cualquier indicador y/o instancia de indicador que publica el ISTAC.");
+    $("#pDatasets").append("Permite obtener datos de cualquier dataset y/o consulta publicada por el ISTAC.");
+    $("#pCodelists").append("Permite obtener cualquier clasificación usada por el ISTAC para codificar sus datasets y consultas.");
     $("#aIndicators").text("Indicadores");
     $("#aDatasets").text("Cubos");
     $("#aCodelists").text("Clasificaciones");
