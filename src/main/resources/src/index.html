@@ -3,8 +3,8 @@
 <head>
     <title>WDC ISTAC</title>
     <meta charset="UTF-8">
-    <meta http-equiv="Cache-Control" content="no-store" />
-    <link rel="icon" type="image/png" href="favicon.ico" />
+    <meta http-equiv="Cache-Control" content="no-store"/>
+    <link rel="icon" type="image/png" href="favicon.ico"/>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet">
     <link href="css/main.css" rel="stylesheet">
@@ -15,42 +15,114 @@
     <script src="js/app/translate.js" type="text/javascript"></script>
     <script>
         $(function () {
-            $("#headerTemplate").load("templates/header.html", function () {
-                $("#home").addClass("active");
+            $.when(getHeaderUrl(), getFooterUrl()).done(function (headerUrl, footerUrl) {
+                $("#headerTemplate").load(headerUrl);
+                $("#footerTemplate").load(footerUrl);
             });
-            $("#footerTemplate").load("templates/footer.html");
         });
     </script>
+
+    <style>
+
+        /* BEGIN APIS */
+        .apis {
+            padding-top: 30px;
+        }
+
+        .apis, .apis p {
+            font-family: "Droid Sans", sans-serif;
+            font-size: 15px;
+            color: #000;
+            max-width: 960px;
+            margin: 0 auto;
+            clear: both;
+        }
+
+        .apis .apis-list {
+            list-style: none;
+            padding: 10px 10px 0;
+            padding-inline-start: 0;
+        }
+
+        .apis .izq {
+            float: left
+        }
+
+        .apis .der {
+            float: right
+        }
+
+        .apis h1, .apis h2 {
+            padding-bottom: 10px;
+            font-weight: 700;
+            font-size: 25px
+        }
+
+        .apis h2 {
+            border-bottom: 1px solid #d6d6d6;
+            box-sizing: border-box
+        }
+
+        .apis h2 a {
+            color: #999;
+            font-size: 18px;
+            text-decoration: none
+        }
+
+        .apis h2 a:hover {
+            color: #000;
+            text-decoration: underline
+        }
+
+        .apis ol li, .apis p {
+            line-height: 1.4em;
+            padding: 0 0 10px;
+            color: #333;
+            text-align: justify
+        }
+
+        /* END APIS */
+
+        h1 {
+            font-family: "Roboto", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-weight: normal;
+        }
+
+        /* END TITLE BAR */
+    </style>
+
 </head>
 
 <body>
-    <div id="headerTemplate"></div>
-    <div class="content">
-        <div class="section">
-            <h3 id="titleWDC"></h3>
-            <div class="text">
-                <p id="descTableau"></p>
-                <p id="descWDC"></p>
-                <p id="descIstac"></p>
-                <p id="olConnectors"></p>
-                <ul>
-                    <li id="liIndicators">
-                        <a id="aIndicators" href="indicadores.html"></a>
-                    </li>
-                    <li id="liDatasets">
-                        <a id="aDatasets" href="cubos.html"></a>
-                    </li>
-                    <li id="liCodelists">
-                        <a id="aCodelists" href="clasificaciones.html"></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+<div id="headerTemplate"></div>
+<div class="content">
+    <div class="apis">
+        <p id="descTableau"></p>
+        <p id="descWDC"></p>
+        <p id="olConnectors"></p>
+
+        <ul class="apis-list">
+            <li class="apis-item">
+                <h2><a id="aIndicators" href="indicadores.html"></a></h2>
+                <p id="pIndicators"></p>
+            </li>
+
+            <li class="apis-item">
+                <h2><a id="aDatasets" href="cubos.html">Cubos</a></h2>
+                <p id="pDatasets"></p>
+            </li>
+
+            <li class="apis-item">
+                <h2><a id="aCodelists" href="clasificaciones.html">Clasificaciones</a></h2>
+                <p id="pCodelists"></p>
+            </li>
+        </ul>
     </div>
     <div id="footerTemplate"></div>
+</div>
 </body>
+
 <script>
     loadTexts();
 </script>
-
 </html>

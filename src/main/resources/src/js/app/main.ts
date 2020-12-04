@@ -3,7 +3,7 @@ var properties: Configuration;
 var endpoint;
 var complementosAppsEndpoint;
 
-$.getJSON("config/properties.json", function (resp) {
+getProperties().then(function (resp) {
     properties = resp;
     complementosAppsEndpoint = properties.endpoint.complementosApps;
     addGoogleAnalyticsScriptTag();
@@ -36,6 +36,18 @@ $.getJSON("config/properties.json", function (resp) {
         }
     });
 });
+
+function getProperties(): JQuery.Promise<Configuration> {
+    const deferred = $.Deferred();
+    if (properties != null) {
+        return deferred.resolve(properties).promise();
+    } else {
+        return $.getJSON("config/properties.json").then(resp => {
+            properties = resp;
+            return properties;
+        }).promise();
+    }
+}
 
 function addGoogleAnalyticsScriptTag() {
     $.getJSON(properties.endpoint.metadata + 'properties/metamac.analytics.google.tracking_id.json', function (resp) {
@@ -447,4 +459,22 @@ function enableAllLanguages() {
                 .prop("disabled", true);
         }
     });
+}
+
+function getHeaderUrl(): JQuery.Deferred<any> | JQuery.Promise<any> {
+    return getProperties()
+        .then(prop => getMetadataValue(
+            prop.endpoint.layout.metadataKey.header.key,
+            prop.endpoint.layout.metadataKey.header.parameters)
+        )
+        .then(url => url);
+}
+
+function getFooterUrl(): JQuery.Deferred<any> | JQuery.Promise<any> {
+    return getProperties()
+        .then(prop => {
+                return getMetadataValue(
+                    prop.endpoint.layout.metadataKey.footer.key,
+                    prop.endpoint.layout.metadataKey.footer.parameters);
+        }).then(url => url);
 }
