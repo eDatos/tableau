@@ -31,7 +31,7 @@
                     "key": "metamac.app.style.header.url",
                     "parameters": {
                         "appName": "Conector web de Tableau",
-                        "appUrl": "index.html"
+                        "appUrl": "/"
                     }
                 },
                 "footer": {
