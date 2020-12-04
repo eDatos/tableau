@@ -24,10 +24,10 @@
     <script src="js/app/translate.js" type="text/javascript"></script>
     <script>
         $(function () {
-            $("#headerTemplate").load("templates/header.html", function () {
-                $("#cubos").addClass("active");
+            $.when(getHeaderUrl(), getFooterUrl()).done(function (headerUrl, footerUrl) {
+                $("#headerTemplate").load(headerUrl);
+                $("#footerTemplate").load(footerUrl);
             });
-            $("#footerTemplate").load("templates/footer.html");
         });
     </script>
 </head>
