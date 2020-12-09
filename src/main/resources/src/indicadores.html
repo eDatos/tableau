@@ -21,9 +21,10 @@
     <script src="js/app/translate.js" type="text/javascript"></script>
     <script>
         $(function () {
-            $.when(getHeaderUrl(), getFooterUrl()).done(function (headerUrl, footerUrl) {
+            $.when(getHeaderUrl(), getFooterUrl(), getFaviconUrl()).done(function (headerUrl, footerUrl, faviconUrl) {
                 $("#headerTemplate").load(headerUrl);
                 $("#footerTemplate").load(footerUrl);
+                $("#favicon").attr("href", faviconUrl);
             });
         });
     </script>
