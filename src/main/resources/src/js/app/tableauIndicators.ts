@@ -189,7 +189,7 @@
                     if (connectionData.recodeDates) {
                         var granularity = dimensions.TIME.representation[j].granularityCode;
                         var date: string = dimensions.TIME.representation[j].code;
-                        dataEntry.Fecha = recodeDatesGPE(date, granularity);
+                        dataEntry.Fecha = recodeDatesPx(date, granularity);
                     }
 
                     dataEntry.Codigo_temporal = dimensions.TIME.representation[j].code;
@@ -225,7 +225,7 @@
                             if (connectionData.recodeDates) {
                                 var granularity = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
                                 var date = timeDimensions[j];
-                                dataEntry.Fecha = recodeDatesGPE(date, granularity);
+                                dataEntry.Fecha = recodeDatesPx(date, granularity);
                             }
                             dataEntry.Codigo_temporal = timeDimensions[j];
 
@@ -261,7 +261,7 @@
                                 if (connectionData.recodeDates) {
                                     var granularity = indexedTimeRepresentations[timeDimensions[j]].granularityCode;
                                     var date = timeDimensions[j];
-                                    dataEntry.Fecha = recodeDatesGPE(date, granularity);
+                                    dataEntry.Fecha = recodeDatesPx(date, granularity);
                                 }
                                 dataEntry.Codigo_temporal = timeDimensions[j];
 
