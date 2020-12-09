@@ -115,5 +115,5 @@ function recodeDatesPx(date: string, granularity: string): string {
         }
     }
 
-    return calculateDateDataset(date);
+    return calculateDateSdmx(date);
 }

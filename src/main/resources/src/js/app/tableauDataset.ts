@@ -180,7 +180,7 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
                     }
                     if (!connectionData.starModel) {
                         if (connectionData.recodeDates && connectionData.timeDimension == connectionData.dimensions[j].id) {
-                            hash["Fecha"] = calculateDateDataset(_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code);
+                            hash["Fecha"] = calculateDateSdmx(_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code);
                         }
                         if (connectionData.labels) {
                             var dimension = _.keyBy(dataResponse.metadata.dimensions.dimension, "id")[connectionData.dimensions[j].id];
@@ -217,7 +217,7 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
                 var hash = {};
                 hash[table.tableInfo.id] = dimension.dimensionValues.value[i].id;
                 if (connectionData.recodeDates && connectionData.timeDimension == table.tableInfo.id) {
-                    hash["Fecha"] = calculateDateDataset(dimension.dimensionValues.value[i].id);
+                    hash["Fecha"] = calculateDateSdmx(dimension.dimensionValues.value[i].id);
                 }
                 if (connectionData.labels) {
                     var dimensionLabels = _.keyBy(dimension.dimensionValues.value[i].name.text, "lang");
