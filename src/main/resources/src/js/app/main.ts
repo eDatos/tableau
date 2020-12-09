@@ -451,23 +451,22 @@ function enableAllLanguages() {
     });
 }
 
-function getHeaderUrl(): JQuery.Deferred<any> | JQuery.Promise<any> {
+function getHeaderUrl(): JQuery.Promise<string> {
     return getProperties()
         .then(prop => getMetadataValue(
             prop.endpoint.layout.metadataKey.header.key,
-            prop.endpoint.layout.metadataKey.header.parameters)
+            prop.endpoint.layout.metadataKey.header.parameters),
         );
 }
 
-function getFooterUrl(): JQuery.Deferred<any> | JQuery.Promise<any> {
+function getFooterUrl(): JQuery.Promise<string> {
     return getProperties()
-        .then(prop => {
-                return getMetadataValue(
-                    prop.endpoint.layout.metadataKey.footer.key,
-                    prop.endpoint.layout.metadataKey.footer.parameters);
-        });
+        .then(prop => getMetadataValue(
+            prop.endpoint.layout.metadataKey.footer.key,
+            prop.endpoint.layout.metadataKey.footer.parameters),
+        );
 }
 
-function getFaviconUrl(): JQuery.Deferred<any> | JQuery.Promise<any> {
+function getFaviconUrl(): JQuery.Promise<string> {
     return getProperties().then(prop => getMetadataValue(prop.endpoint.favicon.metadataKey));
 }
