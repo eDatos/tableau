@@ -37,16 +37,8 @@ getProperties().then(function (resp) {
     });
 });
 
-function getProperties(): JQuery.Promise<Configuration> {
-    const deferred = $.Deferred();
-    if (properties != null) {
-        return deferred.resolve(properties).promise();
-    } else {
-        return $.getJSON("config/properties.json").then(resp => {
-            properties = resp;
-            return properties;
-        }).promise();
-    }
+function getProperties(): JQuery.jqXHR<Configuration> {
+    return $.getJSON("config/properties.json").promise();
 }
 
 function addGoogleAnalyticsScriptTag() {
@@ -466,8 +458,7 @@ function getHeaderUrl(): JQuery.Deferred<any> | JQuery.Promise<any> {
         .then(prop => getMetadataValue(
             prop.endpoint.layout.metadataKey.header.key,
             prop.endpoint.layout.metadataKey.header.parameters)
-        )
-        .then(url => url);
+        );
 }
 
 function getFooterUrl(): JQuery.Deferred<any> | JQuery.Promise<any> {
@@ -476,7 +467,7 @@ function getFooterUrl(): JQuery.Deferred<any> | JQuery.Promise<any> {
                 return getMetadataValue(
                     prop.endpoint.layout.metadataKey.footer.key,
                     prop.endpoint.layout.metadataKey.footer.parameters);
-        }).then(url => url);
+        });
 }
 
 function getFaviconUrl(): JQuery.Deferred<any> | JQuery.Promise<any> {
