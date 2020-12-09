@@ -18,9 +18,13 @@ interface Operations {
     version: string;
 }
 
-interface Indicators {
+interface VersionedMetadataKey {
     metadataKey: string;
     version: string;
+}
+
+interface SimpleMetadataKey {
+    metadataKey: string;
 }
 
 interface LayoutResources {
@@ -40,10 +44,11 @@ interface StatisticalResources {
 
 interface Endpoint {
     operations: Operations;
-    indicators: Indicators;
+    indicators: VersionedMetadataKey;
     "structural-resources": StructuralResources;
     "statistical-resources": StatisticalResources;
     layout: LayoutResources;
+    favicon: SimpleMetadataKey;
     metadata: string;
     complementosApps: string;
 }

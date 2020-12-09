@@ -478,3 +478,7 @@ function getFooterUrl(): JQuery.Deferred<any> | JQuery.Promise<any> {
                     prop.endpoint.layout.metadataKey.footer.parameters);
         }).then(url => url);
 }
+
+function getFaviconUrl(): JQuery.Deferred<any> | JQuery.Promise<any> {
+    return getProperties().then(prop => getMetadataValue(prop.endpoint.favicon.metadataKey));
+}
