@@ -243,7 +243,7 @@ const ajv = getJsonSchemaValidator();
 
     function parseJsonStatDatasetResponse(dataResponse: JsonStat.Dataset, connectionData: DatasetsConnectionData, tableauTable, doneCallback) {
         const dataset = JSONstat(dataResponse).Dataset(0);
-        const table = dataset.toTable({content: "id"});
+        const table = dataset.toTable({ content: "id" });
         const columnTitles = table.shift();
         const valueIndex = columnTitles.indexOf("Value")
 
@@ -407,36 +407,38 @@ const ajv = getJsonSchemaValidator();
             $('#errorMsg').html(errorMsg.error.dataset.url.invalid);
         }
 
-        connectionData.url = transformGPEUrlToProxyUrl(connectionData.url);
+        transformGPEUrlToProxyUrl(connectionData.url).then(url => {
+            connectionData.url = url;
 
-        $('#errorMsg').html("");
-        $.getJSON(connectionData.url, function (dataResponse: GPE.Dataset) {
-            tableau.connectionName = tableau.connectionName + dataResponse.title;
-            connectionData.name = dataResponse.title;
-            connectionData.observationId = "Valor";
-            connectionData.showMeasureColumns = false;
+            $('#errorMsg').html("");
+            $.getJSON(connectionData.url, function (dataResponse: GPE.Dataset) {
+                tableau.connectionName = tableau.connectionName + dataResponse.title;
+                connectionData.name = dataResponse.title;
+                connectionData.observationId = "Valor";
+                connectionData.showMeasureColumns = false;
 
-            var dimensions = {};
-            dataResponse.categories.forEach((category, index) => {
-                dimensions[index] = {
-                    id: _.toString(index),
-                    label: category.variable,
+                var dimensions = {};
+                dataResponse.categories.forEach((category, index) => {
+                    dimensions[index] = {
+                        id: _.toString(index),
+                        label: category.variable,
+                    }
+                });
+                connectionData.dimensions = dimensions;
+
+                if (connectionData.recodeDates) {
+                    if (dataResponse.temporals && dataResponse.temporals.length > 0) {
+                        connectionData.timeDimension = _.findIndex(dataResponse.categories, { variable: dataResponse.temporals[0] }).toString();
+                    } else {
+                        connectionData.recodeDates = false;
+                    }
                 }
+
+                tableau.connectionData = JSON.stringify(connectionData);
+                tableau.submit();
+            }).fail(function () {
+                $("#errorMsg").html(errorMsg.error.submit);
             });
-            connectionData.dimensions = dimensions;
-
-            if (connectionData.recodeDates) {
-                if (dataResponse.temporals && dataResponse.temporals.length > 0) {
-                    connectionData.timeDimension = _.findIndex(dataResponse.categories, { variable: dataResponse.temporals[0] }).toString();
-                } else {
-                    connectionData.recodeDates = false;
-                }
-            }
-
-            tableau.connectionData = JSON.stringify(connectionData);
-            tableau.submit();
-        }).fail(function () {
-            $("#errorMsg").html(errorMsg.error.submit);
         });
     }
 
@@ -518,10 +520,14 @@ function calculateResourceType(url: string): JQuery.Promise<ResourceType> {
     }).promise();
 }
 
-// Transforms something like http://www.gobiernodecanarias.org/istac/jaxi-istac/tabla.do?accion=jsonMtd&uuidConsulta=d28e8036-16c8-44f7-91a8-1cc46738e0c8
-// On something like https://www.gobiernodecanarias.org/aplicaciones/appsistac/jaxi-istac/tabla.do?accion=jsonMtd&uuidConsulta=d28e8036-16c8-44f7-91a8-1cc46738e0c8
+/**
+ * Transforms something like (A) http://www.gobiernodecanarias.org/istac/jaxi-istac/tabla.do?accion=jsonMtd&uuidConsulta=d28e8036-16c8-44f7-91a8-1cc46738e0c8
+ * onto something like (B) https://www.gobiernodecanarias.org/aplicaciones/appsistac/jaxi-istac/tabla.do?accion=jsonMtd&uuidConsulta=d28e8036-16c8-44f7-91a8-1cc46738e0c8
+ *
+ * This is needed because CORS. The request to (A) transforms into (B), which acts as a proxy so CORS is avoided.
+ */
 function transformGPEUrlToProxyUrl(gpeUrl: string) {
-    return complementosAppsEndpoint + gpeUrl.substring(gpeUrl.indexOf("jaxi-istac"));
+    return getMetadataValue(properties.endpoint.complementosApps.metadataKey).then(url => url + "/" + gpeUrl.substring(gpeUrl.indexOf("jaxi-istac")));
 }
 
 /**

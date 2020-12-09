@@ -44,7 +44,9 @@
         "favicon": {
             "metadataKey": "metamac.app.style.favicon.url"
         },
-        "complementosApps": "https://www3.gobiernodecanarias.org/aplicaciones/appsistac/",
+        "complementosApps": {
+            "metadataKey": "metamac.apps.web.external.url"
+        },
         "metadata": "https://estadisticas.arte-consultores.com/cmetadata/v1.0/"
     },
     "operations": {

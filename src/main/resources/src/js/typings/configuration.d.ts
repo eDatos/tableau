@@ -50,7 +50,7 @@ interface Endpoint {
     layout: LayoutResources;
     favicon: SimpleMetadataKey;
     metadata: string;
-    complementosApps: string;
+    complementosApps: SimpleMetadataKey;
 }
 
 interface Status {
