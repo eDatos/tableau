@@ -46,7 +46,7 @@ function loadTexts() {
     $("#labelAllLanguages").append("Añadir todos los idiomas");
     $("#dataButton").text("Obtener datos");
     $("#descIndicator").prepend("Este conector le permite cargar los datos de un indicador o de una instancia de indicador. Estos datos se publican originalmente a través de la ");
-    $("#linkIndicatorAPI").attr("href", "http://www.gobiernodecanarias.org/istac/api/indicators/v1.0");
+    getProperties().then(properties => getEndpointMetadataValue(properties.endpoint.indicators).then(url => $("#linkIndicatorAPI").attr("href", url)));
     $("#linkIndicatorAPI").text("API de indicadores");
     $("#descIndicator").append(".");
     $("#indicatorUse").text("A la hora de seleccionar los datos del indicador a cargar tiene varias opciones:");
@@ -71,7 +71,7 @@ function loadTexts() {
     $("#datasets").text("Cubos: ");
     $("#labelShowLabelsDataset").append("Añadir las etiquetas de las dimensiones al conjunto de datos");
     $("#descDataset").prepend("Este conector le permite cargar los datos de un dataset o una consulta. Estos datos se publican originalmente a través de la ");
-    $("#linkDatasetAPI").attr("href", "http://estadisticas.arte-consultores.com/statistical-resources/v1.0");
+    getProperties().then(properties => getEndpointMetadataValue(properties.endpoint["statistical-resources"]).then(url => $("#linkDatasetAPI").attr("href", url)));
     $("#linkDatasetAPI").text("API de Recursos Estadísticos");
     $("#descDataset").append(".")
     $("#datasetUse").text("A la hora de seleccionar los datos a cargar disponemos de varias opciones:");
@@ -93,7 +93,7 @@ function loadTexts() {
     $("#decoding").prepend("Recodificación");
     $("#labelDecode").append("¿Desea realizar un recodificación?");
     $("#descCodelist").prepend("Este conector le permite cargar cualquiera de las clasificaciones que se utilizan para codificar sus variables/conceptos.");
-    $("#linkCodelistAPI").attr("href", "http://www.gobiernodecanarias.org/istac/api/structural-resources");
+    getProperties().then(properties => getEndpointMetadataValue(properties.endpoint["structural-resources"]).then(url => $("#linkCodelistAPI").attr("href", url)));
     $("#linkCodelistAPI").text("API de Recursos Estructurales");
     $("#descCodelist").append(".");
     $("#codelistUse").text("A la hora de seleccionar la clasificación que se desea obtener disponemos de varias opciones:");

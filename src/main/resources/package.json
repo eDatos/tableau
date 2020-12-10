@@ -10,7 +10,7 @@
         "copy:select2": "shx cp node_modules/select2/dist/js/select2.min.js public/js/vendor && shx cp node_modules/select2/dist/css/select2.min.css public/css",
         "copy:bootstrap": "shx cp node_modules/bootstrap/dist/js/bootstrap.min.js public/js/vendor && shx cp node_modules/bootstrap/dist/css/bootstrap.min.css public/css",
         "copy:vendor": "npm run copy:bootstrap && npm run copy:jquery && npm run copy:fontawesome && npm run copy:jsonstat-toolkit && npm run copy:ajv && npm run copy:select2 && shx cp -r src/js/vendor public/js",
-        "copy:app": "shx cp -r src/config src/css src/fonts src/imgs src/templates src/translate src/schemas src/*.html src/favicon.ico public",
+        "copy:app": "shx cp -r src/config src/css src/fonts src/imgs src/templates src/schemas src/*.html src/favicon.ico public",
         "watch:app": "watch \"npm run copy:app\" src",
         "prebuild": "rimraf public && mkdirp public/js/vendor && mkdirp public/fonts && mkdirp public/css",
         "build": "concurrently -n copy:vendor,copy:app,typescript \"npm run copy:vendor\" \"npm run copy:app\" \"tsc\" "
