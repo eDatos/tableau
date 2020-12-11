@@ -28,7 +28,7 @@
         "layout":  {
             "metadataKey": {
                 "header": {
-                    "key": "metamac.api.style.header.url",
+                    "key": "metamac.app.style.header.url",
                     "parameters": {
                         "appName": "Conector web de Tableau",
                         "appUrl": "index.html"
