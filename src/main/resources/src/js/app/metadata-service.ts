@@ -7,10 +7,14 @@ function getMetadataValue(metadataKey: string, data: { [key: string]: any } = nu
         return deferred.resolve(metadatasLoaded[metadataKey]).promise();
     }
     getProperties().then(properties => {
-        $.getJSON(properties.endpoint.metadata + 'properties/' + metadataKey + '.json', data)
+        $.getJSON(properties.endpoint.metadata + 'properties/' + metadataKey + '.json')
             .done(function (response) {
                 metadatasLoaded[metadataKey] = response.value;
-                deferred.resolve(response.value);
+                let queryUrl = response.value;
+                if (data && !_.isEmpty(data)) {
+                    queryUrl += "?" + $.param(data);
+                }
+                deferred.resolve(queryUrl);
             });
     });
     return deferred.promise();
