@@ -391,10 +391,9 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
                 if (dataResponse.role.time && dataResponse.role.time.length > 0) {
                     const results: any = _.filter(_.values(connectionData.dimensions), { label: dataResponse.role.time[0] });
                     connectionData.timeDimension = results[0].id;
-                    // TODO
-                    //  For now, connectionData.timeDimension it's ment to be used with only one dimension.
-                    //  Future updates should include treatment of time metrics as multiple dimensions.
-                    //  It should be noted that JSONStat date recodification reuses the one used for GPE.
+                    if (dataResponse.role.time.length > 1) {
+                        console.warn(`Only the first time dimension is being considered in this dataset. ${dataResponse.role.time.length} dimensions were detected.`)
+                    }
                 } else {
                     connectionData.recodeDates = false;
                 }
