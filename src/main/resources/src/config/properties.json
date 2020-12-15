@@ -25,7 +25,28 @@
             },
             "version": "v1.0"
         },
-        "complementosApps": "https://www3.gobiernodecanarias.org/aplicaciones/appsistac/",
+        "layout":  {
+            "metadataKey": {
+                "header": {
+                    "key": "metamac.app.style.header.url",
+                    "parameters": {
+                        "appName": "Conector web de Tableau",
+                        "appUrl": "/"
+                    }
+                },
+                "footer": {
+                    "key": "metamac.app.style.footer.url",
+                    "parameters": {}
+                }
+            },
+            "version": "v1.0"
+        },
+        "favicon": {
+            "metadataKey": "metamac.app.style.favicon.url"
+        },
+        "complementosApps": {
+            "metadataKey": "metamac.apps.web.external.url"
+        },
         "metadata": "https://estadisticas.arte-consultores.com/cmetadata/v1.0/"
     },
     "operations": {

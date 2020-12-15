@@ -46,21 +46,19 @@ function loadTexts() {
     $("#labelAllLanguages").append("Añadir todos los idiomas");
     $("#dataButton").text("Obtener datos");
     $("#descIndicator").prepend("Este conector le permite cargar los datos de un indicador o de una instancia de indicador. Estos datos se publican originalmente a través de la ");
-    $("#linkIndicatorAPI").attr("href", "http://www.gobiernodecanarias.org/istac/api/indicators/v1.0");
+    getProperties().then(properties => getEndpointMetadataValue(properties.endpoint.indicators).then(url => $("#linkIndicatorAPI").attr("href", url)));
     $("#linkIndicatorAPI").text("API de indicadores");
     $("#descIndicator").append(".");
     $("#indicatorUse").text("A la hora de seleccionar los datos del indicador a cargar tiene varias opciones:");
     $("#liUrlIndicator").text("Introducir la URL de los datos que desea cargar. Esta URL debe ser una petición de las que finalizan en \"data\" de la API anteriormente mencionada.");
     $("#liCriteriaIndicator").text("Navegador por distintos criterios para seleccionar el recurso que desea cargar.");
 
-    $("#titleWDC").text("ISTAC Web Data Connector");
     $("#descTableau").text("Tableau es una herramienta que permite crear visualizaciones de manera muy rápida sobre cualquier conjunto de datos. Con esta herramienta podrá crear sus propios cuadros de mandos y aprovechar así la potencia que le brinda Tableau para realizar análisis sobre los datos.");
     $("#descWDC").text("Los Web Data Connectors de Tableau permiten conectar la herramienta con datos externos para poder obtenerlos de manera automática y muy sencilla.");
-    $("#descIstac").text("El ISTAC ha desarrollado su propio conjunto de conectores webs para Tableau para simplificar la reutilización de la información que se publica.");
     $("#olConnectors").text("En concreto los conectores disponibles están destinados a los siguientes fines:");
-    $("#liIndicators").append(". Permite obtener datos de cualquier indicador y/o instancia de indicador que publica el ISTAC.");
-    $("#liDatasets").append(". Permite obtener datos de cualquier dataset y/o consulta publicada por el ISTAC.");
-    $("#liCodelists").append(". Permite obtener cualquier clasificación usada por el ISTAC para codificar sus datasets y consultas.");
+    $("#pIndicators").append("Permite obtener datos de cualquier indicador y/o instancia de indicador que se publica a través de eDatos.");
+    $("#pDatasets").append("Permite obtener datos de cualquier dataset y/o consulta que se publica a través de eDatos. De la misma manera, este conector también permite la importación de ficheros que estén publicados haciendo uso del estándar JSONStat (https://json-stat.org/). Para hacer uso de esta opción bastará con que se especifique la URL en la que se publica el recurso en el formato indicado.");
+    $("#pCodelists").append("Permite obtener cualquier clasificación publicada a través de eDatos. Estas clasificaciones son especialmente útiles puesto que son las utilizadas en la codificación de las variables de los datasets y las publicaciones.");
     $("#aIndicators").text("Indicadores");
     $("#aDatasets").text("Cubos");
     $("#aCodelists").text("Clasificaciones");
@@ -73,7 +71,7 @@ function loadTexts() {
     $("#datasets").text("Cubos: ");
     $("#labelShowLabelsDataset").append("Añadir las etiquetas de las dimensiones al conjunto de datos");
     $("#descDataset").prepend("Este conector le permite cargar los datos de un dataset o una consulta. Estos datos se publican originalmente a través de la ");
-    $("#linkDatasetAPI").attr("href", "http://estadisticas.arte-consultores.com/statistical-resources/v1.0");
+    getProperties().then(properties => getEndpointMetadataValue(properties.endpoint["statistical-resources"]).then(url => $("#linkDatasetAPI").attr("href", url)));
     $("#linkDatasetAPI").text("API de Recursos Estadísticos");
     $("#descDataset").append(".")
     $("#datasetUse").text("A la hora de seleccionar los datos a cargar disponemos de varias opciones:");
@@ -94,8 +92,8 @@ function loadTexts() {
     $("#decodeCodelists").append("Clasificación a recodificar:");
     $("#decoding").prepend("Recodificación");
     $("#labelDecode").append("¿Desea realizar un recodificación?");
-    $("#descCodelist").prepend("Este conector le permite cargar cualquiera de las clasificaciones que utiliza el ISTAC para codificar sus variables / conceptos. Estos datos se publican originalmente a través de la ");
-    $("#linkCodelistAPI").attr("href", "http://www.gobiernodecanarias.org/istac/api/structural-resources");
+    $("#descCodelist").prepend("Este conector le permite cargar cualquiera de las clasificaciones que se utilizan para codificar sus variables/conceptos.");
+    getProperties().then(properties => getEndpointMetadataValue(properties.endpoint["structural-resources"]).then(url => $("#linkCodelistAPI").attr("href", url)));
     $("#linkCodelistAPI").text("API de Recursos Estructurales");
     $("#descCodelist").append(".");
     $("#codelistUse").text("A la hora de seleccionar la clasificación que se desea obtener disponemos de varias opciones:");

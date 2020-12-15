@@ -51,7 +51,7 @@ const TIME_RANGE_TYPE = GROUP_LEFT + TIME_RANGE_TYPE_1 + GROUP_RIGHT + "|" + GRO
 
 const PATTERN_TIME_RANGE = START + TIME_RANGE_TYPE + END;
 
-function calculateDateDataset(time) {
+function calculateDateSdmx(time) {
     let date = null;
     if (isTimeRange(time)) {
         date = calculateTimeRangePeriod(time);

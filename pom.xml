@@ -80,9 +80,9 @@
 						</delimiters>
 						<resources>
 							<resource>
-								<directory>src/main/resources/</directory>
+								<directory>src/main/resources/public/</directory>
 								<include>
-									public/**/*
+									**/*
 								</include>
 							</resource>
 						</resources>

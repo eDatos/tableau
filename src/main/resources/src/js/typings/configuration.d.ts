@@ -1,3 +1,13 @@
+interface Parameter {
+    key: string;
+    parameters: {[key: string]: string | number};
+}
+
+interface Layout {
+    header: Parameter;
+    footer: Parameter;
+}
+
 interface MetadataKey {
     EXTERNAL: string;
     INTERNAL: string;
@@ -8,8 +18,17 @@ interface Operations {
     version: string;
 }
 
-interface Indicators {
+interface VersionedMetadataKey {
     metadataKey: string;
+    version: string;
+}
+
+interface SimpleMetadataKey {
+    metadataKey: string;
+}
+
+interface LayoutResources {
+    metadataKey: Layout;
     version: string;
 }
 
@@ -25,11 +44,13 @@ interface StatisticalResources {
 
 interface Endpoint {
     operations: Operations;
-    indicators: Indicators;
+    indicators: VersionedMetadataKey;
     "structural-resources": StructuralResources;
     "statistical-resources": StatisticalResources;
+    layout: LayoutResources;
+    favicon: SimpleMetadataKey;
     metadata: string;
-    complementosApps: string;
+    complementosApps: SimpleMetadataKey;
 }
 
 interface Status {
