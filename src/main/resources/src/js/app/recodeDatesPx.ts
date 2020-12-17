@@ -25,9 +25,19 @@ const patternMonthlyValue = new RegExp(START + GPE_MONTHLY_PATTERN + END);
 const patternWeeklyValue = new RegExp(START + GPE_WEEKLY_PATTERN + END);
 const patternDailyValue = new RegExp(START + GPE_DAILY_PATTERN + END);
 
-function calculateDateGPE(date: string) {
+/**
+ * GPE and the JSONStat files from IBESTAT follows the same pattern for specifying month periods.
+ * They don't follow the SDMX exactly, since that standard specifies that a hyphen must separate
+ * the year and the month char. I.e. 2020-M01. However, ISTAC GPE's and IBESTAT JsonStat's files
+ * don't follow that standard since the hyphen does not appear on time periods. I.e. 2016M01.
+ *
+ * That's why IBESTAT dates are recoded the same way the ISTAC GPE's.
+ *
+ * The standard used in this case was created by the ISTAC, then the IBESTAT adopted it too.
+ */
+function calculateDatePx(date: string) {
     const granularity = guessTimeGranularity(date);
-    return recodeDatesGPE(date, granularity);
+    return recodeDatesPx(date, granularity);
 }
 
 function guessTimeGranularity(date: string): string {
@@ -47,7 +57,7 @@ function guessTimeGranularity(date: string): string {
     return null;
 }
 
-function recodeDatesGPE(date: string, granularity: string): string {
+function recodeDatesPx(date: string, granularity: string): string {
     switch (granularity) {
         case "YEARLY": {
             if (date.match(patternYearlyValue)) {
@@ -105,5 +115,5 @@ function recodeDatesGPE(date: string, granularity: string): string {
         }
     }
 
-    return calculateDateDataset(date);
+    return calculateDateSdmx(date);
 }

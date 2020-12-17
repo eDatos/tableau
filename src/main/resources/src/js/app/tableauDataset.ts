@@ -180,7 +180,7 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
                     }
                     if (!connectionData.starModel) {
                         if (connectionData.recodeDates && connectionData.timeDimension == connectionData.dimensions[j].id) {
-                            hash["Fecha"] = calculateDateDataset(_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code);
+                            hash["Fecha"] = calculateDateSdmx(_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code);
                         }
                         if (connectionData.labels) {
                             var dimension = _.keyBy(dataResponse.metadata.dimensions.dimension, "id")[connectionData.dimensions[j].id];
@@ -217,7 +217,7 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
                 var hash = {};
                 hash[table.tableInfo.id] = dimension.dimensionValues.value[i].id;
                 if (connectionData.recodeDates && connectionData.timeDimension == table.tableInfo.id) {
-                    hash["Fecha"] = calculateDateDataset(dimension.dimensionValues.value[i].id);
+                    hash["Fecha"] = calculateDateSdmx(dimension.dimensionValues.value[i].id);
                 }
                 if (connectionData.labels) {
                     var dimensionLabels = _.keyBy(dimension.dimensionValues.value[i].name.text, "lang");
@@ -258,7 +258,7 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
                     hash["Etiqueta_" + columnIndex] = dataset.Dimension(columnIndex).Category(row[columnIndex]).label;
                 }
                 if (connectionData.recodeDates && connectionData.timeDimension == columnIndex.toString()) {
-                    hash["Fecha"] = calculateDateJsonStat(row[columnIndex]);
+                    hash["Fecha"] = calculateDatePx(row[columnIndex]);
                 }
             }
 
@@ -355,7 +355,7 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
                     hash["Etiqueta_" + categoryIndex] = dimension.labels[dimIndex];
                 }
                 if (connectionData.recodeDates && connectionData.timeDimension == categoryIndex.toString()) {
-                    hash["Fecha"] = calculateDateGPE(dimCode);
+                    hash["Fecha"] = calculateDatePx(dimCode);
                 }
             });
 
@@ -413,36 +413,38 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
             $('#errorMsg').html(errorMsg.error.dataset.url.invalid);
         }
 
-        connectionData.url = transformGPEUrlToProxyUrl(connectionData.url);
+        transformGPEUrlToProxyUrl(connectionData.url).then(url => {
+            connectionData.url = url;
 
-        $('#errorMsg').html("");
-        $.getJSON(connectionData.url, function (dataResponse: GPE.Dataset) {
-            tableau.connectionName = tableau.connectionName + dataResponse.title;
-            connectionData.name = dataResponse.title;
-            connectionData.observationId = "Valor";
-            connectionData.showMeasureColumns = false;
+            $('#errorMsg').html("");
+            $.getJSON(connectionData.url, function (dataResponse: GPE.Dataset) {
+                tableau.connectionName = tableau.connectionName + dataResponse.title;
+                connectionData.name = dataResponse.title;
+                connectionData.observationId = "Valor";
+                connectionData.showMeasureColumns = false;
 
-            var dimensions = {};
-            dataResponse.categories.forEach((category, index) => {
-                dimensions[index] = {
-                    id: _.toString(index),
-                    label: category.variable,
+                var dimensions = {};
+                dataResponse.categories.forEach((category, index) => {
+                    dimensions[index] = {
+                        id: _.toString(index),
+                        label: category.variable,
+                    }
+                });
+                connectionData.dimensions = dimensions;
+
+                if (connectionData.recodeDates) {
+                    if (dataResponse.temporals && dataResponse.temporals.length > 0) {
+                        connectionData.timeDimension = _.findIndex(dataResponse.categories, { variable: dataResponse.temporals[0] }).toString();
+                    } else {
+                        connectionData.recodeDates = false;
+                    }
                 }
+
+                tableau.connectionData = JSON.stringify(connectionData);
+                tableau.submit();
+            }).fail(function () {
+                $("#errorMsg").html(errorMsg.error.submit);
             });
-            connectionData.dimensions = dimensions;
-
-            if (connectionData.recodeDates) {
-                if (dataResponse.temporals && dataResponse.temporals.length > 0) {
-                    connectionData.timeDimension = _.findIndex(dataResponse.categories, { variable: dataResponse.temporals[0] }).toString();
-                } else {
-                    connectionData.recodeDates = false;
-                }
-            }
-
-            tableau.connectionData = JSON.stringify(connectionData);
-            tableau.submit();
-        }).fail(function () {
-            $("#errorMsg").html(errorMsg.error.submit);
         });
     }
 
@@ -523,10 +525,14 @@ function calculateResourceType(url: string): JQuery.Promise<ResourceType> {
     }).promise();
 }
 
-// Transforms something like http://www.gobiernodecanarias.org/istac/jaxi-istac/tabla.do?accion=jsonMtd&uuidConsulta=d28e8036-16c8-44f7-91a8-1cc46738e0c8
-// On something like https://www.gobiernodecanarias.org/aplicaciones/appsistac/jaxi-istac/tabla.do?accion=jsonMtd&uuidConsulta=d28e8036-16c8-44f7-91a8-1cc46738e0c8
+/**
+ * Transforms something like (A) http://www.gobiernodecanarias.org/istac/jaxi-istac/tabla.do?accion=jsonMtd&uuidConsulta=d28e8036-16c8-44f7-91a8-1cc46738e0c8
+ * onto something like (B) https://www.gobiernodecanarias.org/aplicaciones/appsistac/jaxi-istac/tabla.do?accion=jsonMtd&uuidConsulta=d28e8036-16c8-44f7-91a8-1cc46738e0c8
+ *
+ * This is needed because CORS. The request to (A) transforms into (B), which acts as a proxy so CORS is avoided.
+ */
 function transformGPEUrlToProxyUrl(gpeUrl: string) {
-    return complementosAppsEndpoint + gpeUrl.substring(gpeUrl.indexOf("jaxi-istac"));
+    return getMetadataValue(properties.endpoint.complementosApps.metadataKey).then(url => url + "/" + gpeUrl.substring(gpeUrl.indexOf("jaxi-istac")));
 }
 
 /**
@@ -550,13 +556,4 @@ function hideErrorMessage() {
 
 function showErrorMessage(errorMessage?: string) {
     $('#errorMsg').html(errorMessage).show();
-}
-
-function calculateDateJsonStat(date: string) {
-    // GPE and the JSONStat files from IBESTAT follows the same pattern for specifying month periods.
-    // They don't follow the SDMX exactly, since that standard specifies that a hyphen must separate
-    // the year and the month char. I.e. 2020-M01. However, GPE and JSONStat (IBESTAT) don't follow that
-    // standard since the hyphen does not appear on periods. I.e. 2016M01.
-    // That's why JsonStat dates are recoded the same way the GPE's.
-    return calculateDateGPE(date);
 }
