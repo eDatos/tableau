@@ -64,11 +64,6 @@ body {
     background-color: #59656E;
 }
 
-#footerTemplate .footer-content {
-    padding: 0 20px;
-
-}
-
 #footerTemplate table {
     line-height: 1.05;
     color: white;
@@ -143,13 +138,6 @@ body {
     margin-bottom: 10px;
 }
 
-#footerTemplate .footer-content > div {
-    float: left;
-    margin: 20px 0px;
-    padding: 0px 20px;
-    height: 150px;
-}
-
 @media (min-width: 768px) { 
 
     #footerTemplate .footer-content .contact {
@@ -190,10 +178,6 @@ body {
 
     #footerTemplate .footer-content .logos {
         border-right: white solid 2px; 
-    }
-
-    #footerTemplate .footer-content > div {
-        height: 35px;
     }
 
 }
