@@ -33,6 +33,15 @@
     border-color: #8CD2EA;
 }
 
+.navbar-collapse {
+    padding: 0px !important;
+}
+
+.navbar-brand {
+    height: inherit !important;
+}
+
+
 body {
     position: relative;
     min-height: 100%;
