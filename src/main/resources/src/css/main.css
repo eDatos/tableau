@@ -41,7 +41,6 @@
     height: inherit !important;
 }
 
-
 body {
     position: relative;
     min-height: 100%;
@@ -170,10 +169,6 @@ body {
         padding-bottom: 40px;
     }
 
-    
-    #footerTemplate .footer-content > div {
-        height: 35px;
-    }
 }
 
 @media (min-width: 1200px) { 
