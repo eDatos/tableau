@@ -85,7 +85,7 @@ function isGpeOrJsonStatDataset() {
 
 function updateOptions() {
     const isUrlSelected = (<HTMLInputElement>$("input[name='datatype']:checked")[0]).value == "url";
-    if($('#inputUrl').attr("name") === "datasetUrl") {
+    if($('#inputUrl').data("inputType") === "datasetUrl") {
         isGpeOrJsonStatDataset().then(isGpeOrJsonStat => {
             if (isUrlSelected && isGpeOrJsonStat) {
                 disableCheckbox('#measureColumns');
