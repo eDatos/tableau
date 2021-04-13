@@ -138,6 +138,7 @@
             switch ($('input[name="datatype"]:checked').val()) {
                 case 'url':
                     urlCodelist = $('#inputUrl').val();
+                    urlDecodeCodelist = $('#selectDecodeCodelist').val() + '/codes?fields=+variableElement';
                     tableau.connectionName = "Clasificación: ";
                     break;
                 case 'variableFamily':
