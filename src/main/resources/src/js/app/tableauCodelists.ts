@@ -138,22 +138,22 @@
             switch ($('input[name="datatype"]:checked').val()) {
                 case 'url':
                     urlCodelist = $('#inputUrl').val();
-                    urlDecodeCodelist = $('#selectDecodeCodelist').val() + '/codes?fields=+variableElement';
                     tableau.connectionName = "Clasificación: ";
                     break;
                 case 'variableFamily':
                     urlCodelist = $('#selectCodelist').val() + '/codes?fields=+variableElement';
                     urlDecodeCodelist = $('#selectDecodeCodelist').val() + '/codes?fields=+variableElement';
 
-                    if (!$("#decode").is(":checked") || isNullOrBlank($("#selectDecodeCodelist").val())) {
-                        urlDecodeCodelist = '';
-                    }
-
                     if (isNullOrBlank($('#selectCodelist').val())) {
                         urlCodelist = '';
                     }
                     tableau.connectionName = "Clasificación: ";
                     break;
+            }
+            if ($('#decode').is(':checked') && !isNullOrBlank($('#selectDecodeCodelist').val())) {
+                urlDecodeCodelist = $('#selectDecodeCodelist').val() + '/codes?fields=+variableElement';
+            } else {
+                urlDecodeCodelist = '';
             }
             var connectionData: CodelistsConnectionData = {
                 url: urlCodelist.trim(),
