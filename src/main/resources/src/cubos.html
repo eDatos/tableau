@@ -48,8 +48,8 @@
                     <input type="radio" name="datatype" onclick="chooseDataOption(this)" value="url">
                 </label>
                 <div class="row radioDiv" id="url" style="display: none">
-                    <label id="labelUrl" class="col-xs-2"></label>
-                    <input type="text" class="col-xs-10" name="url" id="inputUrl" oninput="updateOptions(this)" />
+                    <label id="labelUrl" for="inputUrl" class="col-xs-2"></label>
+                    <input type="text" class="col-xs-10" name="inputUrl" id="inputUrl" data-input-type="dataset" oninput="updateOptions(this)"/>
                 </div>
 
                 <label id="labelSelectOperation" class="radioLabel">
