@@ -167,7 +167,7 @@
 
             function isValidUrl(url) {
                 url = url.toString();
-                return url.match(".+\/codes(.json)?.+(\\?fields=+variableElement)?$") != null;
+                return url.match(/.+\/codes(.json)?(\?fields=\+variableElement)?$/) != null;
             }
 
             if (isValidUrl(connectionData.url) && (!$("#decode").is(":checked") || isValidUrl(connectionData.urlDecodeCodelist))) {
