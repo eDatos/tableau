@@ -1,4 +1,5 @@
 (function () {
+    type CodeListType = 'url' | 'variableFamily';
 
     var myConnector = tableau.makeConnector();
     var urlDecodeCodelist;
@@ -135,7 +136,8 @@
 
     $(document).ready(function () {
         $("#dataButton").click(function () {
-            switch ($('input[name="datatype"]:checked').val()) {
+            const codeListType: CodeListType = $('input[name="datatype"]:checked').val() as CodeListType;
+            switch (codeListType) {
                 case 'url':
                     urlCodelist = $('#inputUrl').val();
                     tableau.connectionName = "Clasificación: ";
@@ -159,7 +161,7 @@
                 url: urlCodelist.trim(),
                 urlDecodeCodelist: urlDecodeCodelist.trim(),
                 decodeOptionEnabled: $("#decode").is(":checked"),
-                codelist01Tablename: $("#selectCodelist option:checked").text(),
+                codelist01Tablename: codeListType === 'url' ? "Clasificación" : $("#selectCodelist option:checked").text(),
                 codelist02Tablename: $("#selectDecodeCodelist option:checked").text(),
                 allLanguages: $('#allLanguages').is(':checked'),
                 languages: []
