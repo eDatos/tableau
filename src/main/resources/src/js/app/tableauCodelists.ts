@@ -135,6 +135,13 @@
     tableau.registerConnector(myConnector);
 
     $(document).ready(function () {
+        $('#codelistUrlInput').on('click', () => {
+            $('#decode').prop('disabled', true).prop('checked', false);
+        });
+        $('#selectVariableInput').on('click', () => {
+            $('#decode').prop('disabled', false);
+        });
+
         $("#dataButton").click(function () {
             const codeListType: CodeListType = $('input[name="datatype"]:checked').val() as CodeListType;
             switch (codeListType) {
