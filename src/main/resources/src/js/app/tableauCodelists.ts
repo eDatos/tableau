@@ -141,6 +141,10 @@
         $('#selectVariableInput').on('click', () => {
             $('#decode').prop('disabled', false);
         });
+        const decodeCheckbox = $('#decode');
+        decodeCheckbox.on('click', () => {
+            $('#codelistUrlInput').prop('disabled', decodeCheckbox.prop('checked'));
+        });
 
         $("#dataButton").click(function () {
             const codeListType: CodeListType = $('input[name="datatype"]:checked').val() as CodeListType;
