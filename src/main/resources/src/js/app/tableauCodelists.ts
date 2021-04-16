@@ -1,4 +1,5 @@
 (function () {
+    type CodeListType = 'url' | 'variableFamily';
 
     var myConnector = tableau.makeConnector();
     var urlDecodeCodelist;
@@ -134,8 +135,20 @@
     tableau.registerConnector(myConnector);
 
     $(document).ready(function () {
+        $('#codelistUrlInput').on('click', () => {
+            $('#decode').prop('disabled', true).prop('checked', false);
+        });
+        $('#selectVariableInput').on('click', () => {
+            $('#decode').prop('disabled', false);
+        });
+        const decodeCheckbox = $('#decode');
+        decodeCheckbox.on('click', () => {
+            $('#codelistUrlInput').prop('disabled', decodeCheckbox.prop('checked'));
+        });
+
         $("#dataButton").click(function () {
-            switch ($('input[name="datatype"]:checked').val()) {
+            const codeListType: CodeListType = $('input[name="datatype"]:checked').val() as CodeListType;
+            switch (codeListType) {
                 case 'url':
                     urlCodelist = $('#inputUrl').val();
                     tableau.connectionName = "Clasificación: ";
@@ -144,21 +157,22 @@
                     urlCodelist = $('#selectCodelist').val() + '/codes?fields=+variableElement';
                     urlDecodeCodelist = $('#selectDecodeCodelist').val() + '/codes?fields=+variableElement';
 
-                    if (!$("#decode").is(":checked") || isNullOrBlank($("#selectDecodeCodelist").val())) {
-                        urlDecodeCodelist = '';
-                    }
-
                     if (isNullOrBlank($('#selectCodelist').val())) {
                         urlCodelist = '';
                     }
                     tableau.connectionName = "Clasificación: ";
                     break;
             }
+            if ($('#decode').is(':checked') && !isNullOrBlank($('#selectDecodeCodelist').val())) {
+                urlDecodeCodelist = $('#selectDecodeCodelist').val() + '/codes?fields=+variableElement';
+            } else {
+                urlDecodeCodelist = '';
+            }
             var connectionData: CodelistsConnectionData = {
                 url: urlCodelist.trim(),
                 urlDecodeCodelist: urlDecodeCodelist.trim(),
                 decodeOptionEnabled: $("#decode").is(":checked"),
-                codelist01Tablename: $("#selectCodelist option:checked").text(),
+                codelist01Tablename: codeListType === 'url' ? "Clasificación" : $("#selectCodelist option:checked").text(),
                 codelist02Tablename: $("#selectDecodeCodelist option:checked").text(),
                 allLanguages: $('#allLanguages').is(':checked'),
                 languages: []
@@ -166,7 +180,7 @@
 
             function isValidUrl(url) {
                 url = url.toString();
-                return url.match(".+\/codes(.json)?.+(\\?fields=+variableElement)?$") != null;
+                return url.match(/.+\/codes(.json)?(\?fields=\+variableElement)?$/) != null;
             }
 
             if (isValidUrl(connectionData.url) && (!$("#decode").is(":checked") || isValidUrl(connectionData.urlDecodeCodelist))) {

@@ -85,31 +85,33 @@ function isGpeOrJsonStatDataset() {
 
 function updateOptions() {
     const isUrlSelected = (<HTMLInputElement>$("input[name='datatype']:checked")[0]).value == "url";
-    isGpeOrJsonStatDataset().then(isGpeOrJsonStat => {
-        if (isUrlSelected && isGpeOrJsonStat) {
-            disableCheckbox('#measureColumns');
-            disableCheckbox('#starModel');
+    if($('#inputUrl').data("inputType") === "datasetUrl") {
+        isGpeOrJsonStatDataset().then(isGpeOrJsonStat => {
+            if (isUrlSelected && isGpeOrJsonStat) {
+                disableCheckbox('#measureColumns');
+                disableCheckbox('#starModel');
 
-            enableCheckbox('#recodeDates');
-            enableCheckbox('#showLabels');
-        } else {
-            enableCheckbox('#measureColumns');
-            enableCheckbox('#starModel');
+                enableCheckbox('#recodeDates');
+                enableCheckbox('#showLabels');
+            } else {
+                enableCheckbox('#measureColumns');
+                enableCheckbox('#starModel');
 
-            enableCheckbox('#recodeDates');
-            enableCheckbox('#showLabels');
-        }
+                enableCheckbox('#recodeDates');
+                enableCheckbox('#showLabels');
+            }
 
-        function enableCheckbox(checkbox: string) {
-            $(checkbox).prop('disabled', false);
-            $(checkbox).prop('checked', true);
-        }
+            function enableCheckbox(checkbox: string) {
+                $(checkbox).prop('disabled', false);
+                $(checkbox).prop('checked', true);
+            }
 
-        function disableCheckbox(checkbox: string) {
-            $(checkbox).prop('disabled', true);
-            $(checkbox).prop('checked', false);
-        }
-    });
+            function disableCheckbox(checkbox: string) {
+                $(checkbox).prop('disabled', true);
+                $(checkbox).prop('checked', false);
+            }
+        });
+    }
 }
 
 function chooseDataOption(radio) {
