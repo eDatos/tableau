@@ -78,40 +78,46 @@ function onDownloadDecodeSelected(downloadDecodeRadio) {
 }
 
 function isGpeOrJsonStatDataset() {
-    return calculateResourceType(<string>$('#inputUrl').val()).then(resourceType => {
-        return resourceType === ResourceType.GPE_DATASET || resourceType === ResourceType.JSON_STAT_DATASET;
-    });
+    const isDatasetMode = $('#inputUrl').data("inputType") === "dataset";
+    if (isDatasetMode) {
+        // calculateResourceType is only available from tableauDataset
+        return calculateResourceType(<string>$('#inputUrl').val()).then(resourceType => {
+            return resourceType === ResourceType.GPE_DATASET || resourceType === ResourceType.JSON_STAT_DATASET;
+        });
+    } else {
+        var deferred = $.Deferred();
+        deferred.resolve(false);
+        return deferred.promise();
+    }
 }
 
 function updateOptions() {
     const isUrlSelected = (<HTMLInputElement>$("input[name='datatype']:checked")[0]).value == "url";
-    if($('#inputUrl').data("inputType") === "datasetUrl") {
-        isGpeOrJsonStatDataset().then(isGpeOrJsonStat => {
-            if (isUrlSelected && isGpeOrJsonStat) {
-                disableCheckbox('#measureColumns');
-                disableCheckbox('#starModel');
+    isGpeOrJsonStatDataset().then(isGpeOrJsonStat => {
+        if (isUrlSelected && isGpeOrJsonStat) {
+            disableCheckbox('#measureColumns');
+            disableCheckbox('#starModel');
 
-                enableCheckbox('#recodeDates');
-                enableCheckbox('#showLabels');
-            } else {
-                enableCheckbox('#measureColumns');
-                enableCheckbox('#starModel');
+            enableCheckbox('#recodeDates');
+            enableCheckbox('#showLabels');
+        } else {
+            enableCheckbox('#measureColumns');
+            enableCheckbox('#starModel');
 
-                enableCheckbox('#recodeDates');
-                enableCheckbox('#showLabels');
-            }
+            enableCheckbox('#recodeDates');
+            enableCheckbox('#showLabels');
+        }
 
-            function enableCheckbox(checkbox: string) {
-                $(checkbox).prop('disabled', false);
-                $(checkbox).prop('checked', true);
-            }
+        function enableCheckbox(checkbox: string) {
+            $(checkbox).prop('disabled', false);
+            $(checkbox).prop('checked', true);
+        }
 
-            function disableCheckbox(checkbox: string) {
-                $(checkbox).prop('disabled', true);
-                $(checkbox).prop('checked', false);
-            }
-        });
-    }
+        function disableCheckbox(checkbox: string) {
+            $(checkbox).prop('disabled', true);
+            $(checkbox).prop('checked', false);
+        }
+    });
 }
 
 function chooseDataOption(radio) {
@@ -441,8 +447,8 @@ function searchDatasets() {
 }
 
 function enableAllLanguages() {
-    isGpeOrJsonStatDataset().then(isGPE => {
-        if ($("#showLabels").is(":checked") && !isGPE) {
+    isGpeOrJsonStatDataset().then(isGpeOrJsonStatDataset => {
+        if ($("#showLabels").is(":checked") && !isGpeOrJsonStatDataset) {
             $("#allLanguages")
                 .prop("disabled", false);
         } else {
