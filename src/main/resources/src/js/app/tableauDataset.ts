@@ -453,7 +453,7 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
         returnCols.push({ id: dimension.id, alias: dimension.label, columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
         if (connectionData.labels) {
             if (!connectionData.allLanguages) {
-                returnCols.push({ id: "Etiqueta_" + dimension.id, alias: dimension.label, columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
+                returnCols.push({ id: "Etiqueta_" + dimension.id, alias: dimension.label + " (etiqueta)", columnRole: "dimension", dataType: tableau.dataTypeEnum.string });
             } else {
                 for (var k = 0; k < connectionData.languages.length; k++) {
                     returnCols.push({
