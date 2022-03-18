@@ -201,11 +201,12 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
                     }
                 }
                 if (connectionData.showMeasureColumns && table.tableInfo.id == "datasetData") {
-                    var keyHash = _.values(hash).join(',');
-                    if (tableData[keyHash]) {
-                        _.extend(tableData[keyHash], copyHash);
-                    } else {
-                        tableData[keyHash] = copyHash;
+                    var index = _.findIndex(tableData, hash);
+                    if (index != -1) {
+                        _.extend(tableData[index], copyHash);
+                    }
+                    else {
+                        tableData.push(copyHash);
                     }
                 } else {
                     tableData.push(hash);
