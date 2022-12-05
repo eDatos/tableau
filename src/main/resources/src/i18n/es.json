@@ -1,0 +1,126 @@
+{
+    "tableau": {
+        "title": "Conector web de Tableau",
+        "descTableau": "Tableau es una herramienta que permite crear visualizaciones de manera muy rápida sobre cualquier conjunto de datos. Con esta herramienta podrá crear sus propios cuadros de mandos y aprovechar así la potencia que le brinda Tableau para realizar análisis sobre los datos.",
+        "descWDC": "Los Web Data Connectors de Tableau permiten conectar la herramienta con datos externos para poder obtenerlos de manera automática y muy sencilla.",
+        "olConnectors": "En concreto los conectores disponibles están destinados a los siguientes fines:"
+    },
+    "forms": {
+        "dataSelectionHeader": "Seleccione los datos que desea obtener:",
+        "responseFormatHeader": "Formato de respuesta:",
+        "dataModel": "Modelo de datos",
+        "labeling": "Etiquetado",
+        "decoding": "Recodificación",
+        "button": "Obtener datos"
+    },
+    "indicators": {
+        "title": "Indicadores",
+        "func": "Permite obtener datos de cualquier indicador y/o instancia de indicador que se publica a través de eDatos.",
+        "form": {
+            "labels": {
+                "indicatorUrl": "URL del indicador / instancia de indicador",
+                "selectIndicator": "Seleccionar indicador",
+                "indicatorInstance": "Seleccionar instancia de indicador",
+                "measureColumns": "Visualizar las medidas como columnas",
+                "starModel": "Modelo estrella",
+                "recodeDates": "Incluir campo calculado con fecha a partir de periodos de referencia",
+                "showGranularity": "Añadir las columnas \"Granularidad geográfica\" y \"Granularidad temporal\"",
+                "showLabels": "Añadir las etiquetas geográficas y temporales al conjunto de datos",
+                "allLanguages": "Añadir todos los idiomas",
+                "url": "URL:",
+                "subjects": "Temas",
+                "indicators": "Indicadores",
+                "indicatorSystems": "Sistemas de indicadores:",
+                "indicatorInstances": "Instancias de indicadores"
+            }
+        },
+        "buttons": {
+            "searchIndicators": "Buscar indicadores",
+            "searchIndicatorSystems": "Buscar sistemas de indicadores",
+            "searchIndicatorInstancesButton": "Buscar instancias de indicadores"
+        },
+        "descIndicator": "Este conector le permite cargar los datos de un indicador o de una instancia de indicador. Estos datos se publican originalmente a través de la ",
+        "linkIndicatorAPI": "API de indicadores",
+        "indicatorUse": "A la hora de seleccionar los datos del indicador a cargar tiene varias opciones:",
+        "liUrlIndicator": "Introducir la URL de los datos que desea cargar. Esta URL debe ser una petición de las que finalizan en \"data\" de la API anteriormente mencionada.",
+        "liCriteriaIndicator": "Navegador por distintos criterios para seleccionar el recurso que desea cargar."
+    },
+    "datasets": {
+        "title": "Cubos",
+        "func": "Permite obtener datos de cualquier dataset y/o consulta que se publica a través de eDatos. De la misma manera, este conector también permite la importación de ficheros que estén publicados haciendo uso del estándar JSONStat (https://json-stat.org/). Para hacer uso de esta opción bastará con que se especifique la URL en la que se publica el recurso en el formato indicado.",
+        "form": {
+            "labels": {
+                "datasetUrl": "URL del cubo / consulta de datos",
+                "selectOperation": "Seleccionar operación estadística",
+                "measureColumns": "Visualizar las medidas como columnas",
+                "starModel": "Modelo estrella",
+                "recodeDates": "Incluir campo calculado con fecha a partir de periodos de referencia",
+                "showLabelsDataset": "Añadir las etiquetas de las dimensiones al conjunto de datos",
+                "allLanguages": "Añadir todos los idiomas",
+                "url": "URL:",
+                "operations": "Operaciones estadísticas:",
+                "datasets": "Cubos:"
+            }
+        },
+        "buttons": {
+            "searchOperations": "Buscar operaciones",
+            "searchDatasets": "Buscar cubos"
+        },
+        "descDataset": "Este conector le permite cargar los datos de un dataset o una consulta. Estos datos se publican originalmente a través de la ",
+        "linkDatasetAPI": "API de Recursos Estadísticos",
+        "datasetUse": "A la hora de seleccionar los datos a cargar disponemos de varias opciones:",
+        "liUrlDataset": "Introducir la URL de los datos que se desean cargar. Esta URL debe ser una petición para obtener un dataset o una query de la API. Además, en el caso de los datasets podrá hacer uso del parámetro \"dim\" para filtrar los datos a obtener y así reducir el tamaño de la respuesta.",
+        "liOperationDataset": "Navegar por operación estadística para seleccionar el dataset o query que desea cargar."
+    },
+    "codelists": {
+        "title": "Clasificaciones",
+        "func": "Permite obtener cualquier clasificación publicada a través de eDatos. Estas clasificaciones son especialmente útiles puesto que son las utilizadas en la codificación de las variables de los datasets y las publicaciones.",
+        "form": {
+            "labels": {
+                "codelistUrl": "URL de la clasificación",
+                "selectVariable": "Seleccionar variable",
+                "decode": "¿Desea realizar un recodificación?",
+                "allLanguages": "Añadir todos los idiomas",
+                "url": "URL:",
+                "decodeCodelists": "Clasificación a recodificar:",
+                "families": "Familias de variables:",
+                "variables": "Variables:",
+                "codelists": "Clasificaciones:"
+            }
+        },
+        "buttons": {
+            "searchVariableFamilies": "Buscar familias de variables",
+            "searchVariables": "Buscar variables",
+            "searchCodelists": "Buscar clasificaciones"
+            
+        },
+        "downloadDecodeLabel": "Indique la operación que desea realizar:",
+        "labelDownloadCodelist": "Descargar una clasificación",
+        "labelDecodeCodelist": "Recodificar una clasificación",
+        
+        "descCodelist": "Este conector le permite cargar cualquiera de las clasificaciones que se utilizan para codificar sus variables/conceptos. ",
+        "linkCodelistAPI": "API de Recursos Estructurales",
+        "codelistUse": "A la hora de seleccionar la clasificación que se desea obtener disponemos de varias opciones:",
+        "liUrlCodelist": "Introducir la URL de los datos que se desea cargar. Esta URL debe ser una petición que devuelva los códigos de una clasificación y, por tanto, debe acabar en \"/codes\".",
+        "liCriteriaCodelist": "Navegar por distintos criterios para seleccionar el recurso que desea cargar."
+    },
+    "errorMsg": {
+        "error": {
+            "endpoint": "El endpoint indicado no existe",
+            "request": "Ha ocurrido un error al realizar la petición",
+            "indicator": {
+                "url": "La URL del indicador no es válida"
+            },
+            "codelist": {
+                "url": "La URL de la clasificación no es válida"
+            },
+            "dataset": {
+                "url": {
+                    "invalid": "La URL del cubo no es válida",
+                    "unsupportedResourceType": "El tipo de recurso asociado a la URL no está soportado"
+                }
+            },
+            "submit": "Ha ocurrido un error, es posible que la URL indicada sea incorrecta"
+        }
+    }
+}

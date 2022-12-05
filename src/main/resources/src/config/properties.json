@@ -47,6 +47,9 @@
         "complementosApps": {
             "metadataKey": "metamac.apps.web.external.url"
         },
+        "cookie": {
+            "metadataKey": "metamac.internationalization.cookieId"
+        },
         "metadata": "https://estadisticas.arte-consultores.com/cmetadata/v1.0/"
     },
     "operations": {

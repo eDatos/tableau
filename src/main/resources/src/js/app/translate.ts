@@ -1,102 +1,129 @@
-var language = "es";
-var errorMsg = {
+var language = "";
+var appTitle = "";
+var errorMsg =  {
     "error": {
-        "endpoint": "El endpoint indicado no existe",
-        "request": "Ha ocurrido un error al realizar la petición",
-        "indicator": {
-            "url": "La URL del indicador no es válida"
-        },
-        "codelist": {
-            "url": "La URL de la clasificación no es válida"
-        },
-        "dataset": {
-            "url": {
-                "invalid": "La URL del cubo no es válida",
-                "unsupportedResourceType": "El tipo de recurso asociado a la URL no está soportado" // Este error nunca debe darse
-            }
-        },
-        "submit": "Ha ocurrido un error, es posible que la URL indicada sea incorrecta"
+        "endpoint": "",
+        "request": "",
     }
 };
 
-function loadTexts() {
-    $("#titleForm").text("Seleccione los datos que desea obtener:");
-    $("#labelIndicatorUrl").append("URL del indicador / instancia de indicador");
-    $("#labelUrl").text("URL: ");
-    $("#labelSelectIndicator").append("Seleccionar indicador");
+
+//Detectar el idioma del navegador
+getCookieLanguage().done(function() { 
+    getLanguageFile();
+});
+function getCookieLanguage() {
+    var deferred = $.Deferred();
+
+    getInternationalizationCookieName().done(function(cookieName) {
+        if (document.cookie.indexOf(cookieName) >= 0) {
+            let lang = document.cookie.indexOf(cookieName);
+            let langStr = document.cookie.substring(lang + 13, lang + 15);
+            language = langStr;
+        } else {
+            // No cookie - show default language
+            language = "es";
+        }
+        deferred.resolve(); 
+    });
+    return deferred.promise();
+}
+
+//Solicitar el archivo de traducciones
+function getLanguageFile() {
+    fetch(`./i18n/${language}.json`)
+    .then(response => response.json())
+    .then(translations => {
+        loadTexts(translations);
+        errorMsg = translations.errorMsg;
+        appTitle = translations.tableau.title;
+    })
+    .catch(function(err) {
+        console.log("Unable to fetch -", err);
+    });
+}
+
+// Cargar las traducciones
+function loadTexts(translations) {
+    $("#titleTableau").text(translations.tableau.title);
+    $("#titleForm").text(translations.forms.dataSelectionHeader);
+    $("#labelIndicatorUrl").append(translations.indicators.form.labels.indicatorUrl);
+    $("#labelUrl").text(translations.indicators.form.labels.url);
+    $("#labelSelectIndicator").append(translations.indicators.form.labels.selectIndicator);
     $.each($(".labelEndpoint"), function (_, endpoint) {
         $(endpoint).text("Endpoint:");
     });
-    $("#searchIndicatorsButton").text("Buscar indicadores");
-    $("#subjects").text("Temas");
-    $("#indicators").text("Indicadores");
-    $("#labelIndicatorInstance").append("Seleccionar instancia de indicador");
-    $("#searchIndicatorSystemsButton").text("Buscar sistemas de indicadores");
-    $("#indicatorSystems").text("Sistemas de indicadores:");
-    $("#searchIndicatorInstancesButton").text("Buscar instancias de indicadores");
-    $("#indicatorInstances").text("Instancias de indicadores");
-    $("#responseFormat").text("Formato de respuesta:");
-    $("#dataModel").prepend("Modelo de datos");
-    $("#labelMeasureColumns").append("Visualizar las medidas como columnas");
-    $("#labelStarModel").append("Modelo estrella");
-    $("#labeling").prepend("Etiquetado");
-    $("#labelRecodeDates").append("Incluir campo calculado con fecha a partir de periodos de referencia");
-    $("#labelShowGranularity").append("Añadir las columnas \"Granularidad geográfica\" y \"Granularidad temporal\"");
-    $("#labelShowLabels").append("Añadir las etiquetas geográficas y temporales al conjunto de datos");
-    $("#labelAllLanguages").append("Añadir todos los idiomas");
-    $("#dataButton").text("Obtener datos");
-    $("#descIndicator").prepend("Este conector le permite cargar los datos de un indicador o de una instancia de indicador. Estos datos se publican originalmente a través de la ");
+    $("#searchIndicatorsButton").text(translations.indicators.buttons.searchIndicators);
+    $("#subjects").text(translations.indicators.form.labels.subjects);
+    $("#indicators").text(translations.indicators.form.labels.indicators);
+    $("#labelIndicatorInstance").append(translations.indicators.form.labels.indicatorInstance);
+    $("#searchIndicatorSystemsButton").text(translations.indicators.buttons.searchIndicatorsSystems);
+    $("#indicatorSystems").text(translations.indicators.form.labels.indicatorsSystems);
+    $("#searchIndicatorInstancesButton").text(translations.indicators.buttons.searchIndicatorsInstances);
+    $("#indicatorInstances").text(translations.indicators.form.labels.indicatorsInstances);
+    $("#responseFormat").text(translations.forms.responseFormatHeader);
+    $("#dataModel").prepend(translations.forms.dataModel);
+    $("#labelMeasureColumns").append(translations.indicators.form.labels.measureColumns);
+    $("#labelStarModel").append(translations.indicators.form.labels.starModel);
+    $("#labeling").prepend(translations.forms.labeling);
+    $("#labelRecodeDates").append(translations.indicators.form.labels.recodeDates);
+    $("#labelShowGranularity").append(translations.indicators.form.labels.showGranularity);
+    $("#labelShowLabels").append(translations.indicators.form.labels.showLabels);
+    $("#labelAllLanguages").append(translations.indicators.form.labels.allLanguages);
+    $("#dataButton").text(translations.forms.button);
+    $("#descIndicator").prepend(translations.indicators.descIndicator);
     getProperties().then(properties => getEndpointMetadataValue(properties.endpoint.indicators).then(url => $("#linkIndicatorAPI").attr("href", url)));
-    $("#linkIndicatorAPI").text("API de indicadores");
+    $("#linkIndicatorAPI").text(translations.indicators.linkIndicatorAPI);
     $("#descIndicator").append(".");
-    $("#indicatorUse").text("A la hora de seleccionar los datos del indicador a cargar tiene varias opciones:");
-    $("#liUrlIndicator").text("Introducir la URL de los datos que desea cargar. Esta URL debe ser una petición de las que finalizan en \"data\" de la API anteriormente mencionada.");
-    $("#liCriteriaIndicator").text("Navegador por distintos criterios para seleccionar el recurso que desea cargar.");
+    $("#indicatorUse").text(translations.indicators.indicatorUse);
+    $("#liUrlIndicator").text(translations.indicators.liUrlIndicator);
+    $("#liCriteriaIndicator").text(translations.indicators.liCriteriaIndicator);
 
-    $("#descTableau").text("Tableau es una herramienta que permite crear visualizaciones de manera muy rápida sobre cualquier conjunto de datos. Con esta herramienta podrá crear sus propios cuadros de mandos y aprovechar así la potencia que le brinda Tableau para realizar análisis sobre los datos.");
-    $("#descWDC").text("Los Web Data Connectors de Tableau permiten conectar la herramienta con datos externos para poder obtenerlos de manera automática y muy sencilla.");
-    $("#olConnectors").text("En concreto los conectores disponibles están destinados a los siguientes fines:");
-    $("#pIndicators").append("Permite obtener datos de cualquier indicador y/o instancia de indicador que se publica a través de eDatos.");
-    $("#pDatasets").append("Permite obtener datos de cualquier dataset y/o consulta que se publica a través de eDatos. De la misma manera, este conector también permite la importación de ficheros que estén publicados haciendo uso del estándar JSONStat (https://json-stat.org/). Para hacer uso de esta opción bastará con que se especifique la URL en la que se publica el recurso en el formato indicado.");
-    $("#pCodelists").append("Permite obtener cualquier clasificación publicada a través de eDatos. Estas clasificaciones son especialmente útiles puesto que son las utilizadas en la codificación de las variables de los datasets y las publicaciones.");
-    $("#aIndicators").text("Indicadores");
-    $("#aDatasets").text("Cubos");
-    $("#aCodelists").text("Clasificaciones");
+    $("#descTableau").text(translations.tableau.descTableau);
+    $("#descWDC").text(translations.tableau.descWDC);
+    $("#olConnectors").text(translations.tableau.olConnectors);
+    $("#pIndicators").append(translations.indicators.func);
+    $("#pDatasets").append(translations.datasets.func);
+    $("#pCodelists").append(translations.codelists.func);
+    $("#aIndicators").text(translations.indicators.title);
+    $("#aDatasets").text(translations.datasets.title);
+    $("#aCodelists").text(translations.codelists.title);
 
-    $("#labelDatasetUrl").append("URL del cubo / consulta de datos");
-    $("#labelSelectOperation").append("Seleccionar operación estadística");
-    $("#searchOperationsButton").text("Buscar operaciones");
-    $("#operations").text("Operaciones estadísticas:");
-    $("#searchDatasetsButton").text("Buscar cubos");
-    $("#datasets").text("Cubos: ");
-    $("#labelShowLabelsDataset").append("Añadir las etiquetas de las dimensiones al conjunto de datos");
-    $("#descDataset").prepend("Este conector le permite cargar los datos de un dataset o una consulta. Estos datos se publican originalmente a través de la ");
+    $("#labelDatasetUrl").append(translations.datasets.form.labels.datasetUrl);
+    $("#labelSelectOperation").append(translations.datasets.form.labels.selectOperation);
+    $("#searchOperationsButton").text(translations.datasets.buttons.searchOperations);
+    $("#operations").text(translations.datasets.form.labels.operations);
+    $("#searchDatasetsButton").text(translations.datasets.buttons.searchDatasets);
+    $("#datasets").text(translations.datasets.form.labels.datasets);
+    $("#labelShowLabelsDataset").append(translations.datasets.form.labels.showLabelsDataset);
+    $("#descDataset").prepend(translations.datasets.descDataset);
     getProperties().then(properties => getEndpointMetadataValue(properties.endpoint["statistical-resources"]).then(url => $("#linkDatasetAPI").attr("href", url)));
-    $("#linkDatasetAPI").text("API de Recursos Estadísticos");
+    $("#linkDatasetAPI").text(translations.datasets.linkDatasetAPI);
     $("#descDataset").append(".")
-    $("#datasetUse").text("A la hora de seleccionar los datos a cargar disponemos de varias opciones:");
-    $("#liUrlDataset").text("Introducir la URL de los datos que se desean cargar. Esta URL debe ser una petición para obtener un dataset o una query de la API. Además, en el caso de los datasets podrá hacer uso del parámetro \"dim\" para filtrar los datos a obtener y así reducir el tamaño de la respuesta.");
-    $("#liOperationDataset").text("Navegar por operación estadística para seleccionar el dataset o query que desea cargar.");
+    $("#datasetUse").text(translations.datasets.datasetUse);
+    $("#liUrlDataset").text(translations.datasets.liUrlDataset);
+    $("#liOperationDataset").text(translations.datasets.liOperationDataset);
 
-    $("#downloadDecodeLabel").append("Indique la operación que desea realizar:");
-    $("#labelDownloadCodelist").append("Descargar una clasificación");
-    $("#labelDecodeCodelist").append("Recodificar una clasificación");
-    $("#labelCodelistUrl").append("URL de la clasificación");
-    $("#selectVariableLabel").append("Seleccionar variable");
-    $("#searchVariableFamiliesButton").text("Buscar familias de variables");
-    $("#families").text("Familias de variables:");
-    $("#searchVariablesButton").text("Buscar variables");
-    $("#variables").text("Variables:");
-    $("#searchCodelistsButton").text("Buscar clasificaciones");
-    $("#codelists").text("Clasificaciones:");
-    $("#decodeCodelists").append("Clasificación a recodificar:");
-    $("#decoding").prepend("Recodificación");
-    $("#labelDecode").append("¿Desea realizar un recodificación?");
-    $("#descCodelist").prepend("Este conector le permite cargar cualquiera de las clasificaciones que se utilizan para codificar sus variables/conceptos.");
+    $("#downloadDecodeLabel").append(translations.codelists.downloadDecodeLabel);
+    $("#labelDownloadCodelist").append(translations.codelists.labelDownloadCodelist);
+    $("#labelDecodeCodelist").append(translations.codelists.labelDecodeCodelist);
+    $("#labelCodelistUrl").append(translations.codelists.form.labels.codelistUrl);
+    $("#selectVariableLabel").append(translations.codelists.form.labels.selectVariable);
+    $("#searchVariableFamiliesButton").text(translations.codelists.buttons.searchVariableFamilies);
+    $("#families").text(translations.codelists.form.labels.families);
+    $("#searchVariablesButton").text(translations.codelists.buttons.searchVariables);
+    $("#variables").text(translations.codelists.form.labels.variables);
+    $("#searchCodelistsButton").text(translations.codelists.buttons.searchCodelists);
+    $("#codelists").text(translations.codelists.form.labels.codelist);
+    $("#decodeCodelists").append(translations.codelists.form.labels.decodeCodelists);
+    $("#decoding").prepend(translations.forms.decoding);
+    $("#labelDecode").append(translations.codelists.form.labels.decode);
+    $("#descCodelist").prepend(translations.codelists.descCodelist);
     getProperties().then(properties => getEndpointMetadataValue(properties.endpoint["structural-resources"]).then(url => $("#linkCodelistAPI").attr("href", url)));
-    $("#linkCodelistAPI").text("API de Recursos Estructurales");
+    $("#linkCodelistAPI").text(translations.codelists.linkCodelistAPI);
     $("#descCodelist").append(".");
-    $("#codelistUse").text("A la hora de seleccionar la clasificación que se desea obtener disponemos de varias opciones:");
-    $("#liUrlCodelist").text("Introducir la URL de los datos que se desea cargar. Esta URL debe ser una petición que devuelva los códigos de una clasificación y, por tanto, debe acabar en \"/codes\".");
-    $("#liCriteriaCodelist").text("Navegar por distintos criterios para seleccionar el recurso que desea cargar.");
+    $("#codelistUse").text(translations.codelists.codelistUse);
+    $("#liUrlCodelist").text(translations.codelists.liUrlCodelist);
+    $("#liCriteriaCodelist").text(translations.codelists.liCriteriaCodelist);
+
 };
