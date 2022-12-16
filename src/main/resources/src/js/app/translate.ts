@@ -9,37 +9,47 @@ var errorMsg =  {
 
 
 //Detectar el idioma del navegador
-getCookieLanguage().done(function() { 
+getLanguage().done(function() { 
     getLanguageFile();
 });
-function getCookieLanguage() {
+
+
+//obtener el valor de la cookie
+const getCookieValue = (name) => (
+    document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || ''
+);
+
+function getLanguage() {
     var deferred = $.Deferred();
 
     getInternationalizationCookieName().done(function(cookieName) {
         if (document.cookie.indexOf(cookieName) >= 0) {
-            let lang = document.cookie.indexOf(cookieName);
-            let langStr = document.cookie.substring(lang + 13, lang + 15);
+            let langStr = getCookieValue(cookieName);
+            /*
+            let langLength = cookieName.length;
+            let langStr = document.cookie.substring(langLength + 1, langLength + 3);
+            */
             language = langStr;
         } else {
             // No cookie - show default language
             language = "es";
         }
-        deferred.resolve(); 
+        deferred.resolve(language); 
     });
     return deferred.promise();
 }
 
 //Solicitar el archivo de traducciones
 function getLanguageFile() {
-    fetch(`./i18n/${language}.json`)
-    .then(response => response.json())
-    .then(translations => {
+    $.getJSON(`./i18n/${language}.json`, function(resp) {
+        console.log('resp ', resp);
+        let translations = resp;
         loadTexts(translations);
         errorMsg = translations.errorMsg;
         appTitle = translations.tableau.title;
     })
-    .catch(function(err) {
-        console.log("Unable to fetch -", err);
+    .fail(function () {
+        $("#errorMsg").html(errorMsg.error.request);
     });
 }
 
