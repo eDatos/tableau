@@ -50,6 +50,9 @@
         "cookie": {
             "metadataKey": "metamac.internationalization.cookieId"
         },
+        "languages": {
+            "metadataKey": "metamac.edition.languages"
+        },
         "metadata": "https://estadisticas.arte-consultores.com/cmetadata/v1.0/"
     },
     "operations": {

@@ -1,4 +1,4 @@
-var language = "";
+
 var appTitle = "";
 var errorMsg =  {
     "error": {
@@ -8,9 +8,21 @@ var errorMsg =  {
 };
 
 
-//Detectar el idioma del navegador
-getLanguage().done(function() { 
-    getLanguageFile();
+//Detectar el idioma
+getLanguage().then(language=> {
+    if (language === '') {
+        //  No cookie - show navigator language
+        let langNav = window.navigator.language;
+        getLanguageFile(langNav)
+        .fail(e=> {
+            //  No file for navigator language - show default language
+            getDefaultLanguage().then(defaultLanguage=> {
+                getLanguageFile(defaultLanguage);
+            });
+        });
+    } else {
+        getLanguageFile(language);
+    }
 });
 
 
@@ -20,37 +32,45 @@ const getCookieValue = (name) => (
 );
 
 function getLanguage() {
+    
     var deferred = $.Deferred();
 
     getInternationalizationCookieName().done(function(cookieName) {
-        if (document.cookie.indexOf(cookieName) >= 0) {
-            let langStr = getCookieValue(cookieName);
-            /*
-            let langLength = cookieName.length;
-            let langStr = document.cookie.substring(langLength + 1, langLength + 3);
-            */
-            language = langStr;
-        } else {
-            // No cookie - show default language
-            language = "es";
+        let langCookie = getCookieValue(cookieName);
+
+        deferred.resolve(langCookie);
+    });
+
+    return deferred.promise();
+}
+
+function getDefaultLanguage() {
+    var deferred = $.Deferred();
+    getLanguages().done(function(languages) {
+        if (languages.length !== 0) {
+            var arrLanguage = languages.split(",", 1);
+
+            deferred.resolve(arrLanguage[0]);
         }
-        deferred.resolve(language); 
     });
     return deferred.promise();
 }
 
 //Solicitar el archivo de traducciones
-function getLanguageFile() {
+function getLanguageFile(language: string) {
+    var deferred = $.Deferred();
     $.getJSON(`./i18n/${language}.json`, function(resp) {
-        console.log('resp ', resp);
         let translations = resp;
         loadTexts(translations);
         errorMsg = translations.errorMsg;
         appTitle = translations.tableau.title;
+        deferred.resolve(translations);
     })
     .fail(function () {
         $("#errorMsg").html(errorMsg.error.request);
+        deferred.reject();
     });
+    return deferred.promise();
 }
 
 // Cargar las traducciones

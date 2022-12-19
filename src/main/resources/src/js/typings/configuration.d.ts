@@ -50,6 +50,7 @@ interface Endpoint {
     layout: LayoutResources;
     favicon: SimpleMetadataKey;
     cookie: SimpleMetadataKey;
+    languages: SimpleMetadataKey;
     metadata: string;
     complementosApps: SimpleMetadataKey;
 }

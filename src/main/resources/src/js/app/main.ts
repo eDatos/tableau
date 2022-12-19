@@ -484,3 +484,9 @@ function getInternationalizationCookieName(): JQuery.Promise<string> {
         getMetadataValue(prop.endpoint.cookie.metadataKey)
     );
 }
+
+function getLanguages(): JQuery.Promise<string> {
+    return getProperties().then(prop => 
+        getMetadataValue(prop.endpoint.languages.metadataKey)
+    );
+}
