@@ -9,14 +9,14 @@ var errorMsg =  {
 
 
 //Detectar el idioma
-getLanguage().then(language=> {
+getLanguage().then(language => {
     if (language === '') {
         //  No cookie - show navigator language
         let langNav = window.navigator.language;
         getLanguageFile(langNav)
-        .fail(e=> {
+        .fail(error => {
             //  No file for navigator language - show default language
-            getDefaultLanguage().then(defaultLanguage=> {
+            getDefaultLanguage().then(defaultLanguage => {
                 getLanguageFile(defaultLanguage);
             });
         });
@@ -48,9 +48,9 @@ function getDefaultLanguage() {
     var deferred = $.Deferred();
     getLanguages().done(function(languages) {
         if (languages.length !== 0) {
-            var arrLanguage = languages.split(",", 1);
+            var arrayLanguages = languages.split(",", 1);
 
-            deferred.resolve(arrLanguage[0]);
+            deferred.resolve(arrayLanguages[0]);
         }
     });
     return deferred.promise();
