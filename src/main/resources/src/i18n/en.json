@@ -1,7 +1,7 @@
 {
     "tableau": {
         "title": "Tableau web connector",
-        "descTableau": "Tableau is a tool that allows to create visualizations in a fast way on any data set. With this tool you will be able to create dashboards yourself and thus take advantage of the power that Tableau offers you to perform data analysis.",
+        "descTableau": "Tableau is a tool that allows you to create visualizations in a fast way on any data set. With this tool you will be able to create dashboards yourself and thus take advantage of the power that Tableau offers you to perform data analysis.",
         "descWDC": "Tableau web data connectors allow to connect the tool with external data in order to obtain it in an automatic and easy way.",
         "olConnectors": "Specifically, the available connectors are intended for the following purposes:"
     },
@@ -18,7 +18,7 @@
         "func": "It allows to get data from any indicator and/or indicator instance that is published through eDatos.",
         "form": {
             "labels": {
-                "indicatorUrl": "Indicator URL / indicator instance",
+                "indicatorUrl": "Indicator / indicator instance URL",
                 "selectIndicator": "Select indicator",
                 "indicatorInstance": "Select indicator instance",
                 "measureColumns": "Visualize measures as columns",
@@ -43,7 +43,7 @@
         "linkIndicatorAPI": "indicators API",
         "indicatorUse": "To select the indicator data to load we have several options:",
         "liUrlIndicator": "Enter the URL of the data you want to load. This URL must be a request ending in \"data\" from the aforementioned API.",
-        "liCriteriaIndicator": "Browser by different criteria to select the resource you want to load."
+        "liCriteriaIndicator": "Browse by different criteria to select the resource you want to load."
     },
     "datasets": {
         "title": "Datasets",

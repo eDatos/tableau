@@ -43,7 +43,7 @@
         "linkIndicatorAPI": "API de indicadores",
         "indicatorUse": "A la hora de seleccionar los datos del indicador a cargar tiene varias opciones:",
         "liUrlIndicator": "Introducir la URL de los datos que desea cargar. Esta URL debe ser una petición de las que finalizan en \"data\" de la API anteriormente mencionada.",
-        "liCriteriaIndicator": "Navegador por distintos criterios para seleccionar el recurso que desea cargar."
+        "liCriteriaIndicator": "Navegar por distintos criterios para seleccionar el recurso que desea cargar."
     },
     "datasets": {
         "title": "Cubos",
