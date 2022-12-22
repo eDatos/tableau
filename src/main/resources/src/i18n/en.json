@@ -1,0 +1,126 @@
+{
+    "tableau": {
+        "title": "Tableau web connector",
+        "descTableau": "Tableau is a tool that allows you to create visualizations in a fast way on any data set. With this tool you will be able to create dashboards yourself and thus take advantage of the power that Tableau offers you to perform data analysis.",
+        "descWDC": "Tableau web data connectors allow to connect the tool with external data in order to obtain it in an automatic and easy way.",
+        "olConnectors": "Specifically, the available connectors are intended for the following purposes:"
+    },
+    "forms": {
+        "dataSelectionHeader": "Select data you want to obtain:",
+        "responseFormatHeader": "Response format:",
+        "dataModel": "Data model",
+        "labeling": "Labeling",
+        "decoding": "Recoding",
+        "button": "Get data"
+    },
+    "indicators": {
+        "title": "Indicators",
+        "func": "It allows to get data from any indicator and/or indicator instance that is published through eDatos.",
+        "form": {
+            "labels": {
+                "indicatorUrl": "Indicator / indicator instance URL",
+                "selectIndicator": "Select indicator",
+                "indicatorInstance": "Select indicator instance",
+                "measureColumns": "Visualize measures as columns",
+                "starModel": "Star model",
+                "recodeDates": "Include field calculated with date from reference periods",
+                "showGranularity": "Add the columns \"Geographic granularity\" and \"Temporal granularity\"",
+                "showLabels": "Add geographic and temporal labels to dataset",
+                "allLanguages": "Add all languages",
+                "url": "URL:",
+                "subjects": "Subjects",
+                "indicators": "Indicators",
+                "indicatorSystems": "Indicator systems:",
+                "indicatorInstances": "Indicator instances"
+            }
+        },
+        "buttons": {
+            "searchIndicators": "Search indicators",
+            "searchIndicatorSystems": "Search indicator systems",
+            "searchIndicatorInstancesButton": "Search indicator instances"
+        },
+        "descIndicator": "This connector allows you to load data of an indicator or an indicator instance. This data is originally published through the ",
+        "linkIndicatorAPI": "indicators API",
+        "indicatorUse": "To select the indicator data to load we have several options:",
+        "liUrlIndicator": "Enter the URL of the data you want to load. This URL must be a request ending in \"data\" from the aforementioned API.",
+        "liCriteriaIndicator": "Browse by different criteria to select the resource you want to load."
+    },
+    "datasets": {
+        "title": "Datasets",
+        "func": "It allows to get data from any dataset and/or query that is published through eDatos. In the same way, this connector also allows to import files that are published using the <a href=\"https://json-stat.org/\">JSONStat</a> standard. To use this option, it is only necessary to specify the URL in which the resource is published in the recommended format.",
+        "form": {
+            "labels": {
+                "datasetUrl": "Dataset URL / data search",
+                "selectOperation": "Select statistical operation",
+                "measureColumns": "Visualize measures as columns",
+                "starModel": "Star model",
+                "recodeDates": "Include field calculated with date from reference periods",
+                "showLabelsDataset": "Add dimension labels to dataset",
+                "allLanguages": "Add all languages",
+                "url": "URL:",
+                "operations": "Statitical operations:",
+                "datasets": "Datasets:"
+            }
+        },
+        "buttons": {
+            "searchOperations": "Search operations",
+            "searchDatasets": "Search datasets"
+        },
+        "descDataset": "This connector allows you to load data of a dataset or a query. This data is originally published through the ",
+        "linkDatasetAPI": "Statistical Resources API",
+        "datasetUse": "To select the data to load we have several options:",
+        "liUrlDataset": "Enter the URL of the data you want to load. This URL must be a request to get a dataset or a query from the API. Also, in the case of datasets, the \"dim\" parameter can be used to filter the data to be obtained in order to reduce the size of the response.",
+        "liOperationDataset": "Browse by statistical operation to select the dataset or query you want to load."
+    },
+    "codelists": {
+        "title": "Codelists",
+        "func": "It allows to get any classification that is published through eDatos. These classifications are especially useful due to they are used to code the variables of the datasets and the publications.",
+        "form": {
+            "labels": {
+                "codelistUrl": "Codelists URL",
+                "selectVariable": "Select variable",
+                "decode": "Do you want to perform a recoding?",
+                "allLanguages": "Add all languages",
+                "url": "URL:",
+                "decodeCodelists": "Classification to recode:",
+                "families": "Variable families:",
+                "variables": "Variables:",
+                "codelists": "Codelists:"
+            }
+        },
+        "buttons": {
+            "searchVariableFamilies": "Search variable families",
+            "searchVariables": "Search variables",
+            "searchCodelists": "Search codelists"
+            
+        },
+        "downloadDecodeLabel": "Indicate the operation you want to perform:",
+        "labelDownloadCodelist": "Download a codelist",
+        "labelDecodeCodelist": "Recode a codelist",
+        
+        "descCodelist": "This connector allows you to load any codelist used to code your variables/concepts. ",
+        "linkCodelistAPI": "Structural Resources API",
+        "codelistUse": "To select the list of codes to obtain we have several options:",
+        "liUrlCodelist": "Enter the URL of the data you want to load. This URL must be a request that returns the codes from a codelist and therefore must end in \"/codes\".",
+        "liCriteriaCodelist": "Browse through different criteria to select the resource you want to load."
+    },
+    "errorMsg": {
+        "error": {
+            "endpoint": "The indicated endpoint doesn't exist",
+            "request": "An error has occurred making the request",
+            "indicator": {
+                "url": "Indicator URL is invalid"
+            },
+            "codelist": {
+                "url": "Codelist URL is invalid"
+            },
+            "dataset": {
+                "url": {
+                    "invalid": "Dataset URL is invalid",
+                    "unsupportedResourceType": "The resource type associated with the URL is not supported"
+                }
+            },
+            "submit": "An error has occurred, the given URL may be wrong"
+        }
+    }
+}

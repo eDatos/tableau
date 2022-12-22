@@ -49,6 +49,8 @@ interface Endpoint {
     "statistical-resources": StatisticalResources;
     layout: LayoutResources;
     favicon: SimpleMetadataKey;
+    cookie: SimpleMetadataKey;
+    languages: SimpleMetadataKey;
     metadata: string;
     complementosApps: SimpleMetadataKey;
 }

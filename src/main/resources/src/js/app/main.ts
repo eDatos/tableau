@@ -478,3 +478,15 @@ function getFooterUrl(): JQuery.Promise<string> {
 function getFaviconUrl(): JQuery.Promise<string> {
     return getProperties().then(prop => getMetadataValue(prop.endpoint.favicon.metadataKey));
 }
+
+function getInternationalizationCookieName(): JQuery.Promise<string> {
+    return getProperties().then(prop => 
+        getMetadataValue(prop.endpoint.cookie.metadataKey)
+    );
+}
+
+function getLanguages(): JQuery.Promise<string> {
+    return getProperties().then(prop => 
+        getMetadataValue(prop.endpoint.languages.metadataKey)
+    );
+}

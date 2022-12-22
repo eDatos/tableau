@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <title>Conector web de Tableau</title>
+    <title id="titleTableau"></title>
     <meta charset="UTF-8">
     <meta http-equiv="Cache-Control" content="no-store"/>
     <link id="favicon" rel="icon" type="image/png" href="favicon.ico"/>
@@ -17,7 +17,9 @@
     <script>
         $(function () {
             getHeaderUrl().done(function(url) {
-                $("#headerTemplate").load(url);
+                $("#headerTemplate").load(url, function() {
+                    $("#title-bar").find("span").text(appTitle);
+                });
             });
             getFooterUrl().done(function(url) {
                 $("#footerTemplate").load(url);
@@ -114,12 +116,12 @@
             </li>
 
             <li class="apis-item">
-                <h2><a id="aDatasets" href="cubos.html">Cubos</a></h2>
+                <h2><a id="aDatasets" href="cubos.html"></a></h2>
                 <p id="pDatasets"></p>
             </li>
 
             <li class="apis-item">
-                <h2><a id="aCodelists" href="clasificaciones.html">Clasificaciones</a></h2>
+                <h2><a id="aCodelists" href="clasificaciones.html"></a></h2>
                 <p id="pCodelists"></p>
             </li>
         </ul>
@@ -128,7 +130,4 @@
 </div>
 </body>
 
-<script>
-    loadTexts();
-</script>
 </html>
