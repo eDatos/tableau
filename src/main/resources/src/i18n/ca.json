@@ -43,7 +43,7 @@
         "linkIndicatorAPI": "API d'indicadors",
         "indicatorUse": "A l'hora de seleccionar les dades de l'indicador a carregar teniu diverses opcions:",
         "liUrlIndicator": "Introduïu l'URL de les dades que desitjau carregar. Aquest URL ha de ser una petició de les que finalitzen en \"data\" de l'API anteriorment esmentada.",
-        "liCriteriaIndicator": "Navegador per diferents criteris per a seleccionar el recurs que desitjau carregar."
+        "liCriteriaIndicator": "Navegar per diferents criteris per a seleccionar el recurs que desitja carregar."
     },
     "datasets": {
         "title": "Conjunts de dades",
