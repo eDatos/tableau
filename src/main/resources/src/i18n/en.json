@@ -47,7 +47,7 @@
     },
     "datasets": {
         "title": "Datasets",
-        "func": "It allows to get data from any dataset and/or query that is published through eDatos. In the same way, this connector also allows to import files that are published using the JSONStat standard (https://json-stat.org/). To use this option, it is only necessary to specify the URL in which the resource is published in the recommended format.",
+        "func": "It allows to get data from any dataset and/or query that is published through eDatos. In the same way, this connector also allows to import files that are published using the <a href=\"https://json-stat.org/\">JSONStat</a> standard. To use this option, it is only necessary to specify the URL in which the resource is published in the recommended format.",
         "form": {
             "labels": {
                 "datasetUrl": "Dataset URL / data search",

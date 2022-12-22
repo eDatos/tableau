@@ -47,7 +47,7 @@
     },
     "datasets": {
         "title": "Conjunts de dades",
-        "func": "Permet obtenir dades de qualsevol conjunt i/o consulta que es publica a través de eDatos. De la mateixa manera, aquest connector també permet la importació de fitxers que estiguin publicats fent ús de l'estàndard JSONStat (https://json-stat.org/). Per a fer ús d'aquesta opció bastarà que s'especifiqui l'URL en què es publica el recurs en el format indicat.",
+        "func": "Permet obtenir dades de qualsevol conjunt i/o consulta que es publica a través de eDatos. De la mateixa manera, aquest connector també permet la importació de fitxers que estiguin publicats fent ús de l'estàndard <a href=\"https://json-stat.org/\">JSONStat</a>. Per a fer ús d'aquesta opció bastarà que s'especifiqui l'URL en què es publica el recurs en el format indicat.",
         "form": {
             "labels": {
                 "datasetUrl": "URL del conjunt de dades / consulta de dades",
