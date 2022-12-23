@@ -1,24 +1,6 @@
 var language = "";
 var appTitle = "";
-var errorMsg =  {
-    "error": {
-        "endpoint": "",
-        "request": "",
-        "indicator": {
-            "url": "L"
-        },
-        "codelist": {
-            "url": ""
-        },
-        "dataset": {
-            "url": {
-                "invalid": "",
-                "unsupportedResourceType": ""
-            }
-        },
-        "submit": ""
-    }
-};
+var errorMsg: any;
 
 
 //Detectar el idioma
