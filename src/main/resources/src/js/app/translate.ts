@@ -1,11 +1,6 @@
-
+var language = "";
 var appTitle = "";
-var errorMsg =  {
-    "error": {
-        "endpoint": "",
-        "request": "",
-    }
-};
+var errorMsg: any;
 
 
 //Detectar el idioma
@@ -13,14 +8,18 @@ getLanguage().then(language => {
     if (language === '') {
         //  No cookie - show navigator language
         let langNav = window.navigator.language;
-        getLanguageFile(langNav)
+        getLanguageFile(langNav).then(navigatorLanguage => {
+            this.language = navigatorLanguage;
+        })
         .fail(error => {
             //  No file for navigator language - show default language
             getDefaultLanguage().then(defaultLanguage => {
+                this.language = defaultLanguage;
                 getLanguageFile(defaultLanguage);
             });
         });
     } else {
+        this.language = language;
         getLanguageFile(language);
     }
 });
