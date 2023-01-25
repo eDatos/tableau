@@ -1,6 +1,8 @@
 var properties: Configuration;
 
 var endpoint;
+let oldUrl: string;
+let isGpeOrJsonStat: boolean;
 
 getProperties().then(function (resp) {
     properties = resp;
@@ -76,17 +78,28 @@ function onDownloadDecodeSelected(downloadDecodeRadio) {
         $("#decodeWrapper").hide();
     }
 }
-
 function isGpeOrJsonStatDataset() {
-    const isDatasetMode = $('#inputUrl').data("inputType") === "dataset";
+    const $inputUrl = $("#inputUrl");
+
+    if ($inputUrl.val() === oldUrl) {
+        const deferred = $.Deferred();
+        deferred.resolve(isGpeOrJsonStat);
+        return deferred.promise();
+    }
+    oldUrl = <string>$inputUrl.val();
+
+    const isDatasetMode = $inputUrl.data("inputType") === "dataset";
     if (isDatasetMode) {
         // calculateResourceType is only available from tableauDataset
         return calculateResourceType(<string>$('#inputUrl').val()).then(resourceType => {
-            return resourceType === ResourceType.GPE_DATASET || resourceType === ResourceType.JSON_STAT_DATASET;
+            const urlIsGpeOrJsonStat = resourceType === ResourceType.GPE_DATASET || resourceType === ResourceType.JSON_STAT_DATASET;
+            isGpeOrJsonStat = urlIsGpeOrJsonStat;
+            return urlIsGpeOrJsonStat;
         });
     } else {
-        var deferred = $.Deferred();
+        const deferred = $.Deferred();
         deferred.resolve(false);
+        isGpeOrJsonStat = false;
         return deferred.promise();
     }
 }
@@ -101,7 +114,7 @@ function disableCheckbox(checkbox: string) {
     $(checkbox).prop("checked", false);
 }
 
-function enableCheckboxForEdatos() {
+function enableCheckboxForDataset() {
     enableCheckbox("#measureColumns");
     enableCheckbox("#starModel");
 
@@ -128,11 +141,11 @@ function updateOptions() {
             if (isGpeOrJsonStat) {
                 enableCheckboxForGpeOrJsonStat();
             } else {
-                enableCheckboxForEdatos();
+                enableCheckboxForDataset();
             }
         });
     } else {
-        enableCheckboxForEdatos();
+        enableCheckboxForDataset();
     }
 }
 
