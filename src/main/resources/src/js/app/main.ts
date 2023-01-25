@@ -91,33 +91,49 @@ function isGpeOrJsonStatDataset() {
     }
 }
 
+
+function enableCheckbox(checkbox: string) {
+    $(checkbox).prop("disabled", false);
+}
+
+function disableCheckbox(checkbox: string) {
+    $(checkbox).prop("disabled", true);
+    $(checkbox).prop("checked", false);
+}
+
+function enableCheckboxForEdatos() {
+    enableCheckbox("#measureColumns");
+    enableCheckbox("#starModel");
+
+    enableCheckbox("#recodeDates");
+    enableCheckbox("#showLabels");
+    if ($("#showLabels").is(":checked")) {
+        enableCheckbox("#allLanguages");
+    }
+}
+
+function enableCheckboxForGpeOrJsonStat() {
+    disableCheckbox("#measureColumns");
+    disableCheckbox("#starModel");
+
+    enableCheckbox("#recodeDates");
+    enableCheckbox("#showLabels");
+    disableCheckbox("#allLanguages");
+}
+
 function updateOptions() {
     const isUrlSelected = (<HTMLInputElement>$("input[name='datatype']:checked")[0]).value == "url";
-    isGpeOrJsonStatDataset().then(isGpeOrJsonStat => {
-        if (isUrlSelected && isGpeOrJsonStat) {
-            disableCheckbox('#measureColumns');
-            disableCheckbox('#starModel');
-
-            enableCheckbox('#recodeDates');
-            enableCheckbox('#showLabels');
-        } else {
-            enableCheckbox('#measureColumns');
-            enableCheckbox('#starModel');
-
-            enableCheckbox('#recodeDates');
-            enableCheckbox('#showLabels');
-        }
-
-        function enableCheckbox(checkbox: string) {
-            $(checkbox).prop('disabled', false);
-            $(checkbox).prop('checked', true);
-        }
-
-        function disableCheckbox(checkbox: string) {
-            $(checkbox).prop('disabled', true);
-            $(checkbox).prop('checked', false);
-        }
-    });
+    if (isUrlSelected) {
+        isGpeOrJsonStatDataset().then(isGpeOrJsonStat => {
+            if (isGpeOrJsonStat) {
+                enableCheckboxForGpeOrJsonStat();
+            } else {
+                enableCheckboxForEdatos();
+            }
+        });
+    } else {
+        enableCheckboxForEdatos();
+    }
 }
 
 function chooseDataOption(radio) {
@@ -447,16 +463,20 @@ function searchDatasets() {
 }
 
 function enableAllLanguages() {
-    isGpeOrJsonStatDataset().then(isGpeOrJsonStatDataset => {
-        if ($("#showLabels").is(":checked") && !isGpeOrJsonStatDataset) {
-            $("#allLanguages")
-                .prop("disabled", false);
-        } else {
-            $("#allLanguages")
-                .prop("checked", false)
-                .prop("disabled", true);
-        }
-    });
+    const isUrlSelected = (<HTMLInputElement>$("input[name='datatype']:checked")[0]).value == "url";
+    if (isUrlSelected) {
+        isGpeOrJsonStatDataset().then(isGpeOrJsonStatDataset => {
+            if ($("#showLabels").is(":checked") && !isGpeOrJsonStatDataset) {
+                enableCheckbox("#allLanguages")
+            } else {
+                disableCheckbox("#allLanguages")
+            }
+        });
+    } else if ($("#showLabels").is(":checked")) {
+        enableCheckbox("#allLanguages")
+    } else {
+        disableCheckbox("#allLanguages")
+    }
 }
 
 function getHeaderUrl(): JQuery.Promise<string> {

@@ -499,6 +499,9 @@ function getJsonSchemaValidator() {
 }
 
 function calculateResourceType(url: string): JQuery.Promise<ResourceType> {
+    const $loaderUrl = $("#loaderUrl");
+    $loaderUrl.show();
+
     if (url.indexOf("tabla.do") >= 0) {
         // Directly resolve to GPE_DATASET in case the URL have the specified pattern
         return $.Deferred().resolve(ResourceType.GPE_DATASET).promise();
@@ -510,6 +513,7 @@ function calculateResourceType(url: string): JQuery.Promise<ResourceType> {
         // that matched the schema, otherwise the default one
         return getResourceTypeByMatchingJsonSchema(data);
     }).then(schema => {
+        $loaderUrl.hide();
         return schema || DEFAULT_RESOURCE_TYPE;
     }).fail((jqXHR, textStatus, errorThrown) => {
         if (url.trim().length === 0) {
@@ -522,6 +526,7 @@ function calculateResourceType(url: string): JQuery.Promise<ResourceType> {
             }
             showErrorMessage(errorMessage);
         }
+        $loaderUrl.hide();
     }).promise();
 }
 
