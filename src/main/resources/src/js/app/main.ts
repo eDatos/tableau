@@ -1,6 +1,8 @@
 var properties: Configuration;
 
 var endpoint;
+let oldUrl: string;
+let isGpeOrJsonStat: boolean;
 
 getProperties().then(function (resp) {
     properties = resp;
@@ -76,48 +78,79 @@ function onDownloadDecodeSelected(downloadDecodeRadio) {
         $("#decodeWrapper").hide();
     }
 }
-
 function isGpeOrJsonStatDataset() {
-    const isDatasetMode = $('#inputUrl').data("inputType") === "dataset";
+    const $inputUrl = $("#inputUrl");
+
+    if ($inputUrl.val() === oldUrl) {
+        const deferred = $.Deferred();
+        deferred.resolve(isGpeOrJsonStat);
+        return deferred.promise();
+    }
+    oldUrl = <string>$inputUrl.val();
+
+    const isDatasetMode = $inputUrl.data("inputType") === "dataset";
     if (isDatasetMode) {
         // calculateResourceType is only available from tableauDataset
         return calculateResourceType(<string>$('#inputUrl').val()).then(resourceType => {
-            return resourceType === ResourceType.GPE_DATASET || resourceType === ResourceType.JSON_STAT_DATASET;
+            const urlIsGpeOrJsonStat = resourceType === ResourceType.GPE_DATASET || resourceType === ResourceType.JSON_STAT_DATASET;
+            isGpeOrJsonStat = urlIsGpeOrJsonStat;
+            return urlIsGpeOrJsonStat;
         });
     } else {
-        var deferred = $.Deferred();
+        const deferred = $.Deferred();
         deferred.resolve(false);
+        isGpeOrJsonStat = false;
         return deferred.promise();
     }
 }
 
+
+function enableCheckbox(checkbox: string) {
+    $(checkbox).prop("disabled", false);
+}
+
+function disableCheckbox(checkbox: string) {
+    $(checkbox).prop("disabled", true);
+    $(checkbox).prop("checked", false);
+}
+
+function enableCheckboxForDataset() {
+    enableCheckbox("#measureColumns");
+    enableCheckbox("#starModel");
+
+    enableCheckbox("#recodeDates");
+    enableCheckbox("#showLabels");
+    if ($("#showLabels").is(":checked")) {
+        enableCheckbox("#allLanguages");
+    }
+}
+
+function enableCheckboxForGpeOrJsonStat() {
+    disableCheckbox("#measureColumns");
+    disableCheckbox("#starModel");
+
+    enableCheckbox("#recodeDates");
+    enableCheckbox("#showLabels");
+    disableCheckbox("#allLanguages");
+}
+
+let updateOptionsDebouncer;
 function updateOptions() {
     const isUrlSelected = (<HTMLInputElement>$("input[name='datatype']:checked")[0]).value == "url";
-    isGpeOrJsonStatDataset().then(isGpeOrJsonStat => {
-        if (isUrlSelected && isGpeOrJsonStat) {
-            disableCheckbox('#measureColumns');
-            disableCheckbox('#starModel');
-
-            enableCheckbox('#recodeDates');
-            enableCheckbox('#showLabels');
-        } else {
-            enableCheckbox('#measureColumns');
-            enableCheckbox('#starModel');
-
-            enableCheckbox('#recodeDates');
-            enableCheckbox('#showLabels');
-        }
-
-        function enableCheckbox(checkbox: string) {
-            $(checkbox).prop('disabled', false);
-            $(checkbox).prop('checked', true);
-        }
-
-        function disableCheckbox(checkbox: string) {
-            $(checkbox).prop('disabled', true);
-            $(checkbox).prop('checked', false);
-        }
-    });
+    if (isUrlSelected) {
+        clearTimeout(updateOptionsDebouncer);
+        updateOptionsDebouncer = setTimeout(() => {
+            isGpeOrJsonStatDataset().then(isGpeOrJsonStat => {
+                if (isGpeOrJsonStat) {
+                    enableCheckboxForGpeOrJsonStat();
+                } else {
+                    enableCheckboxForDataset();
+                }
+            });
+        }, 500);
+    } else {
+        enableCheckboxForDataset();
+    }
 }
 
 function chooseDataOption(radio) {
@@ -447,16 +480,20 @@ function searchDatasets() {
 }
 
 function enableAllLanguages() {
-    isGpeOrJsonStatDataset().then(isGpeOrJsonStatDataset => {
-        if ($("#showLabels").is(":checked") && !isGpeOrJsonStatDataset) {
-            $("#allLanguages")
-                .prop("disabled", false);
-        } else {
-            $("#allLanguages")
-                .prop("checked", false)
-                .prop("disabled", true);
-        }
-    });
+    const isUrlSelected = (<HTMLInputElement>$("input[name='datatype']:checked")[0]).value == "url";
+    if (isUrlSelected) {
+        isGpeOrJsonStatDataset().then(isGpeOrJsonStatDataset => {
+            if ($("#showLabels").is(":checked") && !isGpeOrJsonStatDataset) {
+                enableCheckbox("#allLanguages")
+            } else {
+                disableCheckbox("#allLanguages")
+            }
+        });
+    } else if ($("#showLabels").is(":checked")) {
+        enableCheckbox("#allLanguages")
+    } else {
+        disableCheckbox("#allLanguages")
+    }
 }
 
 function getHeaderUrl(): JQuery.Promise<string> {
