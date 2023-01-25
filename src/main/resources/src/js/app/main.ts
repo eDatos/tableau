@@ -134,16 +134,20 @@ function enableCheckboxForGpeOrJsonStat() {
     disableCheckbox("#allLanguages");
 }
 
+let updateOptionsDebouncer;
 function updateOptions() {
     const isUrlSelected = (<HTMLInputElement>$("input[name='datatype']:checked")[0]).value == "url";
     if (isUrlSelected) {
-        isGpeOrJsonStatDataset().then(isGpeOrJsonStat => {
-            if (isGpeOrJsonStat) {
-                enableCheckboxForGpeOrJsonStat();
-            } else {
-                enableCheckboxForDataset();
-            }
-        });
+        clearTimeout(updateOptionsDebouncer);
+        updateOptionsDebouncer = setTimeout(() => {
+            isGpeOrJsonStatDataset().then(isGpeOrJsonStat => {
+                if (isGpeOrJsonStat) {
+                    enableCheckboxForGpeOrJsonStat();
+                } else {
+                    enableCheckboxForDataset();
+                }
+            });
+        }, 500);
     } else {
         enableCheckboxForDataset();
     }
