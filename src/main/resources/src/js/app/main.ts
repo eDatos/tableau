@@ -1,8 +1,7 @@
 var properties: Configuration;
 
 var endpoint;
-let oldUrl: string;
-let isGpeOrJsonStat: boolean;
+const RESOURCE_TYPE_CACHE: Map<string, ResourceType> = new Map();
 
 getProperties().then(function (resp) {
     properties = resp;
@@ -78,28 +77,37 @@ function onDownloadDecodeSelected(downloadDecodeRadio) {
         $("#decodeWrapper").hide();
     }
 }
-function isGpeOrJsonStatDataset() {
-    const $inputUrl = $("#inputUrl");
 
-    if ($inputUrl.val() === oldUrl) {
+function isGpeOrJsonStatResourceType(resourceType: ResourceType | null): boolean {
+    if (resourceType == null) {
+        return false;
+    }
+    return resourceType === ResourceType.GPE_DATASET || resourceType === ResourceType.JSON_STAT_DATASET;
+}
+
+function isGpeOrJsonStatDataset(): Promise<boolean> {
+    const $inputUrl = $("#inputUrl");
+    const url = $inputUrl.val() as string;
+
+    if (RESOURCE_TYPE_CACHE.get(url) !== undefined) {
         const deferred = $.Deferred();
-        deferred.resolve(isGpeOrJsonStat);
+        deferred.resolve(isGpeOrJsonStatResourceType(RESOURCE_TYPE_CACHE[url]));
         return deferred.promise();
     }
-    oldUrl = <string>$inputUrl.val();
+    RESOURCE_TYPE_CACHE.clear();
 
     const isDatasetMode = $inputUrl.data("inputType") === "dataset";
     if (isDatasetMode) {
         // calculateResourceType is only available from tableauDataset
         return calculateResourceType(<string>$('#inputUrl').val()).then(resourceType => {
-            const urlIsGpeOrJsonStat = resourceType === ResourceType.GPE_DATASET || resourceType === ResourceType.JSON_STAT_DATASET;
-            isGpeOrJsonStat = urlIsGpeOrJsonStat;
+            const urlIsGpeOrJsonStat = isGpeOrJsonStatResourceType(resourceType);
+            RESOURCE_TYPE_CACHE.set(url, resourceType);
             return urlIsGpeOrJsonStat;
         });
     } else {
         const deferred = $.Deferred();
         deferred.resolve(false);
-        isGpeOrJsonStat = false;
+        RESOURCE_TYPE_CACHE.set(url, ResourceType.STATISTICAL_RESOURCE_DATASET);
         return deferred.promise();
     }
 }
