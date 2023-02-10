@@ -169,10 +169,10 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
                     let indDimension = Math.floor(remaining / subtotal);
                     remaining = remaining % subtotal;
                     if (connectionData.showMeasureColumns) {
+                        hash[connectionData.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
                         if (connectionData.measureColumns.dimension == connectionData.dimensions[j].id) {
                             copyHash[connectionData.measureColumns.dimension + "_" + _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code] = observations[i];
                         } else {
-                            hash[connectionData.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
                             copyHash[connectionData.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
                         }
                     } else {
