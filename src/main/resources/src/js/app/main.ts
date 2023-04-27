@@ -1,6 +1,7 @@
 var properties: Configuration;
 
 var endpoint;
+const RESOURCE_TYPE_CACHE: Map<string, ResourceType> = new Map();
 
 getProperties().then(function (resp) {
     properties = resp;
@@ -77,47 +78,87 @@ function onDownloadDecodeSelected(downloadDecodeRadio) {
     }
 }
 
-function isGpeOrJsonStatDataset() {
-    const isDatasetMode = $('#inputUrl').data("inputType") === "dataset";
+function isGpeOrJsonStatResourceType(resourceType: ResourceType | null): boolean {
+    if (resourceType == null) {
+        return false;
+    }
+    return resourceType === ResourceType.GPE_DATASET || resourceType === ResourceType.JSON_STAT_DATASET;
+}
+
+function isGpeOrJsonStatDataset(): Promise<boolean> {
+    const $inputUrl = $("#inputUrl");
+    const url = $inputUrl.val() as string;
+
+    if (RESOURCE_TYPE_CACHE.get(url) !== undefined) {
+        const deferred = $.Deferred();
+        deferred.resolve(isGpeOrJsonStatResourceType(RESOURCE_TYPE_CACHE[url]));
+        return deferred.promise();
+    }
+    RESOURCE_TYPE_CACHE.clear();
+
+    const isDatasetMode = $inputUrl.data("inputType") === "dataset";
     if (isDatasetMode) {
         // calculateResourceType is only available from tableauDataset
         return calculateResourceType(<string>$('#inputUrl').val()).then(resourceType => {
-            return resourceType === ResourceType.GPE_DATASET || resourceType === ResourceType.JSON_STAT_DATASET;
+            const urlIsGpeOrJsonStat = isGpeOrJsonStatResourceType(resourceType);
+            RESOURCE_TYPE_CACHE.set(url, resourceType);
+            return urlIsGpeOrJsonStat;
         });
     } else {
-        var deferred = $.Deferred();
+        const deferred = $.Deferred();
         deferred.resolve(false);
+        RESOURCE_TYPE_CACHE.set(url, ResourceType.STATISTICAL_RESOURCE_DATASET);
         return deferred.promise();
     }
 }
 
+
+function enableCheckbox(checkbox: string) {
+    $(checkbox).prop("disabled", false);
+}
+
+function disableCheckbox(checkbox: string) {
+    $(checkbox).prop("disabled", true);
+    $(checkbox).prop("checked", false);
+}
+
+function enableCheckboxForDataset() {
+    enableCheckbox("#measureColumns");
+    enableCheckbox("#starModel");
+
+    enableCheckbox("#recodeDates");
+    enableCheckbox("#showLabels");
+    if ($("#showLabels").is(":checked")) {
+        enableCheckbox("#allLanguages");
+    }
+}
+
+function enableCheckboxForGpeOrJsonStat() {
+    disableCheckbox("#measureColumns");
+    disableCheckbox("#starModel");
+
+    enableCheckbox("#recodeDates");
+    enableCheckbox("#showLabels");
+    disableCheckbox("#allLanguages");
+}
+
+let updateOptionsDebouncer;
 function updateOptions() {
     const isUrlSelected = (<HTMLInputElement>$("input[name='datatype']:checked")[0]).value == "url";
-    isGpeOrJsonStatDataset().then(isGpeOrJsonStat => {
-        if (isUrlSelected && isGpeOrJsonStat) {
-            disableCheckbox('#measureColumns');
-            disableCheckbox('#starModel');
-
-            enableCheckbox('#recodeDates');
-            enableCheckbox('#showLabels');
-        } else {
-            enableCheckbox('#measureColumns');
-            enableCheckbox('#starModel');
-
-            enableCheckbox('#recodeDates');
-            enableCheckbox('#showLabels');
-        }
-
-        function enableCheckbox(checkbox: string) {
-            $(checkbox).prop('disabled', false);
-            $(checkbox).prop('checked', true);
-        }
-
-        function disableCheckbox(checkbox: string) {
-            $(checkbox).prop('disabled', true);
-            $(checkbox).prop('checked', false);
-        }
-    });
+    if (isUrlSelected) {
+        clearTimeout(updateOptionsDebouncer);
+        updateOptionsDebouncer = setTimeout(() => {
+            isGpeOrJsonStatDataset().then(isGpeOrJsonStat => {
+                if (isGpeOrJsonStat) {
+                    enableCheckboxForGpeOrJsonStat();
+                } else {
+                    enableCheckboxForDataset();
+                }
+            });
+        }, 500);
+    } else {
+        enableCheckboxForDataset();
+    }
 }
 
 function chooseDataOption(radio) {
@@ -447,16 +488,20 @@ function searchDatasets() {
 }
 
 function enableAllLanguages() {
-    isGpeOrJsonStatDataset().then(isGpeOrJsonStatDataset => {
-        if ($("#showLabels").is(":checked") && !isGpeOrJsonStatDataset) {
-            $("#allLanguages")
-                .prop("disabled", false);
-        } else {
-            $("#allLanguages")
-                .prop("checked", false)
-                .prop("disabled", true);
-        }
-    });
+    const isUrlSelected = (<HTMLInputElement>$("input[name='datatype']:checked")[0]).value == "url";
+    if (isUrlSelected) {
+        isGpeOrJsonStatDataset().then(isGpeOrJsonStatDataset => {
+            if ($("#showLabels").is(":checked") && !isGpeOrJsonStatDataset) {
+                enableCheckbox("#allLanguages")
+            } else {
+                disableCheckbox("#allLanguages")
+            }
+        });
+    } else if ($("#showLabels").is(":checked")) {
+        enableCheckbox("#allLanguages")
+    } else {
+        disableCheckbox("#allLanguages")
+    }
 }
 
 function getHeaderUrl(): JQuery.Promise<string> {
@@ -477,4 +522,16 @@ function getFooterUrl(): JQuery.Promise<string> {
 
 function getFaviconUrl(): JQuery.Promise<string> {
     return getProperties().then(prop => getMetadataValue(prop.endpoint.favicon.metadataKey));
+}
+
+function getInternationalizationCookieName(): JQuery.Promise<string> {
+    return getProperties().then(prop => 
+        getMetadataValue(prop.endpoint.cookie.metadataKey)
+    );
+}
+
+function getLanguages(): JQuery.Promise<string> {
+    return getProperties().then(prop => 
+        getMetadataValue(prop.endpoint.languages.metadataKey)
+    );
 }

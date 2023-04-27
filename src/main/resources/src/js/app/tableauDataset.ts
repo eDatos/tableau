@@ -169,10 +169,10 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
                     let indDimension = Math.floor(remaining / subtotal);
                     remaining = remaining % subtotal;
                     if (connectionData.showMeasureColumns) {
+                        hash[connectionData.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
                         if (connectionData.measureColumns.dimension == connectionData.dimensions[j].id) {
                             copyHash[connectionData.measureColumns.dimension + "_" + _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code] = observations[i];
                         } else {
-                            hash[connectionData.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
                             copyHash[connectionData.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
                         }
                     } else {
@@ -499,6 +499,9 @@ function getJsonSchemaValidator() {
 }
 
 function calculateResourceType(url: string): JQuery.Promise<ResourceType> {
+    const $loaderUrl = $("#loaderUrl");
+    $loaderUrl.show();
+
     if (url.indexOf("tabla.do") >= 0) {
         // Directly resolve to GPE_DATASET in case the URL have the specified pattern
         return $.Deferred().resolve(ResourceType.GPE_DATASET).promise();
@@ -510,6 +513,7 @@ function calculateResourceType(url: string): JQuery.Promise<ResourceType> {
         // that matched the schema, otherwise the default one
         return getResourceTypeByMatchingJsonSchema(data);
     }).then(schema => {
+        $loaderUrl.hide();
         return schema || DEFAULT_RESOURCE_TYPE;
     }).fail((jqXHR, textStatus, errorThrown) => {
         if (url.trim().length === 0) {
@@ -522,6 +526,7 @@ function calculateResourceType(url: string): JQuery.Promise<ResourceType> {
             }
             showErrorMessage(errorMessage);
         }
+        $loaderUrl.hide();
     }).promise();
 }
 

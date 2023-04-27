@@ -1,0 +1,126 @@
+{
+    "tableau": {
+        "title": "Connector web de Tableau",
+        "descTableau": "Tableau és una eina que permet crear visualitzacions de manera molt ràpida sobre qualsevol conjunt de dades. Amb aquesta eina podreu crear el vostre propi quadre de comandament i aprofitar així la potència que us ofereix Tableau per a realitzar anàlisis sobre les dades.",
+        "descWDC": "Els connectors de dades web de Tableau permeten connectar l'eina amb dades externes per poder obtenir-les de manera automàtica i molt senzilla.",
+        "olConnectors": "En concret, els connectors disponibles estan destinats als fins següents:"
+    },
+    "forms": {
+        "dataSelectionHeader": "Seleccionau les dades que desitjau obtenir:",
+        "responseFormatHeader": "Format de resposta:",
+        "dataModel": "Model de dades",
+        "labeling": "Etiquetat",
+        "decoding": "Recodificació",
+        "button": "Obtenir dades"
+    },
+    "indicators": {
+        "title": "Indicadors",
+        "func": "Permet obtenir dades de qualsevol indicador i/o instància d'indicador que es publica a través de eDatos.",
+        "form": {
+            "labels": {
+                "indicatorUrl": "URL de l'indicador / instància d'indicador",
+                "selectIndicator": "Seleccionar indicador",
+                "indicatorInstance": "Seleccionar instància d'indicador",
+                "measureColumns": "Visualitzar les mesures com columnes",
+                "starModel": "Model estrella",
+                "recodeDates": "Incloure camp calculat amb data a partir de períodes de referència",
+                "showGranularity": "Afegir les columnes \"Granularitat geogràfica\" i \"Granularitat temporal\"",
+                "showLabels": "Afegir les etiquetes geográfique i temporals al conjunt de dades",
+                "allLanguages": "Afegir tots els idiomes",
+                "url": "URL:",
+                "subjects": "Temes",
+                "indicators": "Indicadors",
+                "indicatorSystems": "Sistemes d'indicadors:",
+                "indicatorInstances": "Instàncies d'indicadors"
+            }
+        },
+        "buttons": {
+            "searchIndicators": "Cercar indicadors",
+            "searchIndicatorSystems": "Cercar sistemes d'indicadors",
+            "searchIndicatorInstances": "Cercar instàncies d'indicadors"
+        },
+        "descIndicator": "Aquest connector us permet carregar les dades d'un indicador o d'una instància d'indicador. Aquestes dades es publiquen originalmente a través de la ",
+        "linkIndicatorAPI": "API d'indicadors",
+        "indicatorUse": "A l'hora de seleccionar les dades de l'indicador a carregar teniu diverses opcions:",
+        "liUrlIndicator": "Introduïu l'URL de les dades que desitjau carregar. Aquest URL ha de ser una petició de les que finalitzen en \"data\" de l'API anteriorment esmentada.",
+        "liCriteriaIndicator": "Navegar per diferents criteris per a seleccionar el recurs que desitja carregar."
+    },
+    "datasets": {
+        "title": "Conjunts de dades",
+        "func": "Permet obtenir dades de qualsevol conjunt i/o consulta que es publica a través de eDatos. De la mateixa manera, aquest connector també permet la importació de fitxers que estiguin publicats fent ús de l'estàndard <a href=\"https://json-stat.org/\">JSONStat</a>. Per a fer ús d'aquesta opció bastarà que s'especifiqui l'URL en què es publica el recurs en el format indicat.",
+        "form": {
+            "labels": {
+                "datasetUrl": "URL del conjunt de dades / consulta de dades",
+                "selectOperation": "Seleccionar operació estadística",
+                "measureColumns": "Visualitzar les mesures com columnes",
+                "starModel": "Model estrella",
+                "recodeDates": "Incloure camp calculat amb data a partir de períodes de referència",
+                "showLabelsDataset": "Afegir les etiquetes de les dimensions al conjunt de dades",
+                "allLanguages": "Afegir tots els idiomes",
+                "url": "URL:",
+                "operations": "Operacions estadístiques:",
+                "datasets": "Base de dades:"
+            }
+        },
+        "buttons": {
+            "searchOperations": "Cercar operacions",
+            "searchDatasets": "Cercar base de dades"
+        },
+        "descDataset": "Aquest connector us permet carregar les dades d'una base de dades o d'una consulta. Aquestes dades es publiquen originalment a través de la ",
+        "linkDatasetAPI": "API de recursos estadístics",
+        "datasetUse": "A l'hora de seleccionar les dades a carregar disposam de diverses opcions:",
+        "liUrlDataset": "Introduir l'URL de les dades que es desitgen carregar. Aquest URL ha de ser una petició per a obtenir un conjunt de dades o una consulta de l'API. A més, en el cas dels conjunts de dades, podrà fer ús del paràmetre \"dim\" per tal de filtrar les dades a obtenir i així reduir la llargària de la resposta.",
+        "liOperationDataset": "Navegar per operació estadística per a seleccionar la base de dades o consulta que es desitja carregar."
+    },
+    "codelists": {
+        "title": "Classificacions",
+        "func": "Permet obtenir qualsevol classificació publicada a través de eDatos. Aquestes classificacions són especialment útils perquè són les utilitzades en la codificació de les variables dels conjunts de dades i de les publicacions.",
+        "form": {
+            "labels": {
+                "codelistUrl": "URL de la classificació",
+                "selectVariable": "Seleccionar variable",
+                "decode": "Desitjau realitzar una recodificació?",
+                "allLanguages": "Afegir tots els idiomes",
+                "url": "URL:",
+                "decodeCodelists": "Classificació a recodificar:",
+                "families": "Famílies de variables:",
+                "variables": "Variables:",
+                "codelists": "Classificacions:"
+            }
+        },
+        "buttons": {
+            "searchVariableFamilies": "Cercar famílies de variables",
+            "searchVariables": "Cercar variables",
+            "searchCodelists": "Cercar classificacions"
+            
+        },
+        "downloadDecodeLabel": "Indicau l'operació que desitjau realitzar:",
+        "labelDownloadCodelist": "Descarregar una classificació",
+        "labelDecodeCodelist": "Recodificar una classificació",
+        
+        "descCodelist": "Aquest connector us permet carregar qualsevol de les classificacions que s'utilitzen per a codificar les vostres variables/conceptes. ",
+        "linkCodelistAPI": "API de Recursos Estructurals",
+        "codelistUse": "A l'hora de seleccionar la clsasificació que es desitja obtenir disposam de diverses opcions:",
+        "liUrlCodelist": "Introduir l'URL de les dades que es desitja carregar. Aquest URL ha de ser una petició que retorni els codis d'una classificació i, per tant, ha d'acabar en \"/codes\".",
+        "liCriteriaCodelist": "avegar por diferents criteris per a seleccionar el recurs que es desitja carregar."
+    },
+    "errorMsg": {
+        "error": {
+            "endpoint": "L'endpoint indicat no existeix",
+            "request": "S'ha produït un error en realitzar la petició",
+            "indicator": {
+                "url": "L'URL de l'indicador no és vàlida"
+            },
+            "codelist": {
+                "url": "L'URL de la classificació no és vàlida"
+            },
+            "dataset": {
+                "url": {
+                    "invalid": "La URL no és vàlida",
+                    "unsupportedResourceType": "Tipus de recurs associat a l'URL no admès"
+                }
+            },
+            "submit": "S'ha produït un error, és possible que l'URL indicada sigui incorrecta"
+        }
+    }
+}
