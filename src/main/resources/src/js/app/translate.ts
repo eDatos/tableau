@@ -1,4 +1,4 @@
-var language = "";
+var language;
 var appTitle = "";
 var errorMsg: any;
 
@@ -8,6 +8,9 @@ getLanguage().then(language => {
     if (language === '') {
         //  No cookie - show navigator language
         let langNav = window.navigator.language;
+        if (/\w*-\w*/.test(langNav)) {
+            langNav = langNav.substr(0, 2); // from strings like ["en-US", "zh-CN", "ja-JP"] we are only interested in the language part, not the country
+        }
         getLanguageFile(langNav).then(navigatorLanguage => {
             this.language = navigatorLanguage;
         })
