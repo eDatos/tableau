@@ -2,47 +2,32 @@ var language = window.navigator.language.substr(0, 2);
 var appTitle = "";
 var errorMsg: any;
 
-
-//Detectar el idioma
-getLanguage().then(language => {
-    if (language === '') {
-        //  No cookie - show navigator language
-        let langNav = window.navigator.language;
-        if (/\w*-\w*/.test(langNav)) {
-            langNav = langNav.substr(0, 2); // from strings like ["en-US", "zh-CN", "ja-JP"] we are only interested in the language part, not the country
-        }
-        getLanguageFile(langNav).then(navigatorLanguage => {
-            this.language = navigatorLanguage;
-        })
-        .fail(error => {
+getLanguage().then(lang => {
+    loadTranslations(lang)
+        .then(r => console.info("Translations loaded"))
+        .fail(() => {
             //  No file for navigator language - show default language
             getDefaultLanguage().then(defaultLanguage => {
                 loadTranslations(defaultLanguage);
             });
         });
-    } else {
-        this.language = language;
-        getLanguageFile(language);
-    }
 });
-
 
 //obtener el valor de la cookie
 const getCookieValue = (name) => (
     document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || ''
 );
 
-function getLanguage() {
-    
-    var deferred = $.Deferred();
-
-    getInternationalizationCookieName().done(function(cookieName) {
-        let langCookie = getCookieValue(cookieName);
-
-        deferred.resolve(langCookie);
+function getLanguage(){
+    return getInternationalizationCookieName().then(cookieName => {
+        const langFromCookie = getCookieValue(cookieName);
+        if (langFromCookie === '') {
+            //  No cookie - show navigator language
+            return window.navigator.language.substr(0, 2); // from strings like ["en-US", "zh-CN", "ja-JP"] we are only interested in the language part, not the country
+        } else {
+            return getDefaultLanguage();
+        }
     });
-
-    return deferred.promise();
 }
 
 function getDefaultLanguage() {

@@ -323,18 +323,23 @@ function searchVariableFamilies() {
         .done(function (endpoint) {
             const url = endpoint + "/variablefamilies.json?limit=1000&orderBy=ID ASC";
             $.getJSON(url, function (resp) {
-                if (resp.variableFamily) {
-                    for (var i = 0; i < resp.variableFamily.length; i++) {
-                        variableFamilies[i] = { id: resp.variableFamily[i].id, text: _.keyBy(resp.variableFamily[i].name.text, 'lang')[language].value };
+                getLanguage().then(lang => {
+                    if (resp.variableFamily) {
+                        for (var i = 0; i < resp.variableFamily.length; i++) {
+                            variableFamilies[i] = {
+                                id: resp.variableFamily[i].id,
+                                text: _.keyBy(resp.variableFamily[i].name.text, 'lang')[lang].value
+                            };
+                        }
                     }
-                }
-                $('#selectVariableFamily').select2({
-                    data: _.sortBy(variableFamilies, 'text'),
-                    dropdownAutoWidth: true,
-                    width: '83.3%',
-                });
-                $("#loaderVariableFamily").hide();
-                searchVariables();
+                    $('#selectVariableFamily').select2({
+                        data: _.sortBy(variableFamilies, 'text'),
+                        dropdownAutoWidth: true,
+                        width: '83.3%',
+                    });
+                    $("#loaderVariableFamily").hide();
+                    searchVariables();
+                })
             }).fail(function () {
                 $("#loaderVariableFamily").hide();
                 $('#errorMsg').html(errorMsg.error.endpoint);
@@ -381,20 +386,25 @@ function searchCodelists() {
 
     const url = endpoint + '/codelists.json?limit=1000&orderBy=ID ASC&query=VARIABLE_URN EQ "' + $("#selectVariable").val() + '" AND LATEST EQ "true"';
     $.getJSON(url, function (resp) {
-        if (resp.codelist) {
-            for (var i = 0; i < resp.codelist.length; i++) {
-                codelists[i] = { id: resp.codelist[i].selfLink.href, text: _.keyBy(resp.codelist[i].name.text, 'lang')[language].value };
+        getLanguage().then(language => {
+            if (resp.codelist) {
+                for (var i = 0; i < resp.codelist.length; i++) {
+                    codelists[i] = {
+                        id: resp.codelist[i].selfLink.href,
+                        text: _.keyBy(resp.codelist[i].name.text, 'lang')[language].value
+                    };
+                }
             }
-        }
-        $("#selectCodelist").select2({
-            data: _.sortBy(codelists, 'text'),
-            dropdownAutoWidth: true,
-            width: '83.3%',
+            $("#selectCodelist").select2({
+                data: _.sortBy(codelists, 'text'),
+                dropdownAutoWidth: true,
+                width: '83.3%',
+            });
+            if ($("#decode").is(":checked")) {
+                updateDecodelists();
+            }
+            $("#loaderCodelist").hide();
         });
-        if ($("#decode").is(":checked")) {
-            updateDecodelists();
-        }
-        $("#loaderCodelist").hide();
     }).fail(function () {
         $("#loaderCodelist").hide();
         $("#errorMsg").html(errorMsg.error.request);
@@ -432,18 +442,23 @@ function searchOperations() {
     getEndpointMetadataValue(properties.endpoint.operations)
         .done(function (endpoint) {
             $.getJSON(endpoint + "/operations.json?query=STATUS EQ \"" + properties.operations.status.production + "\"&limit=1000&orderBy=ID ASC", function (resp) {
-                if (resp.operation) {
-                    for (var i = 0; i < resp.operation.length; i++) {
-                        operations[i] = { id: resp.operation[i].urn, text: _.keyBy(resp.operation[i].name.text, 'lang')[language].value };
+                getLanguage().then(language => {
+                    if (resp.operation) {
+                        for (var i = 0; i < resp.operation.length; i++) {
+                            operations[i] = {
+                                id: resp.operation[i].urn,
+                                text: _.keyBy(resp.operation[i].name.text, 'lang')[language].value
+                            };
+                        }
                     }
-                }
-                $("#selectOperation").select2({
-                    data: _.sortBy(operations, 'text'),
-                    dropdownAutoWidth: true,
-                    width: '83.3%',
+                    $("#selectOperation").select2({
+                        data: _.sortBy(operations, 'text'),
+                        dropdownAutoWidth: true,
+                        width: '83.3%',
+                    });
+                    $("#loaderOperation").hide();
+                    searchDatasets();
                 });
-                $("#loaderOperation").hide();
-                searchDatasets();
             }).fail(function () {
                 $("#loaderOperation").hide();
                 $("#errorMsg").html(errorMsg.error.endpoint);
@@ -461,21 +476,23 @@ function searchDatasets() {
         .done(function (endpoint) {
             const url = endpoint + "/datasets.json?limit=1000&orderBy=ID ASC&query=STATISTICAL_OPERATION_URN EQ '" + $("#selectOperation").val() + "'";
             $.getJSON(url, function (resp) {
-                if (resp.dataset) {
-                    for (var i = 0; i < resp.dataset.length; i++) {
-                        datasets[i] = {
-                            id: resp.dataset[i].selfLink.href.substring(0, resp.dataset[i].selfLink.href.lastIndexOf('/')),
-                            text: _.keyBy(resp.dataset[i].name.text, 'lang')[language].value,
-                        };
+                getLanguage().then(language => {
+                    if (resp.dataset) {
+                        for (var i = 0; i < resp.dataset.length; i++) {
+                            datasets[i] = {
+                                id: resp.dataset[i].selfLink.href.substring(0, resp.dataset[i].selfLink.href.lastIndexOf('/')),
+                                text: _.keyBy(resp.dataset[i].name.text, 'lang')[language].value,
+                            };
+                        }
                     }
-                }
-                $("#selectDataset").select2({
-                    data: _.sortBy(_.uniqBy(datasets, 'id'), 'text'),
-                    dropdownAutoWidth: true,
-                    width: '83.3%',
+                    $("#selectDataset").select2({
+                        data: _.sortBy(_.uniqBy(datasets, 'id'), 'text'),
+                        dropdownAutoWidth: true,
+                        width: '83.3%',
+                    });
+                    $("#loaderDataset").hide();
+                    document.getElementById("selectDataset").parentElement.style.display = "block";
                 });
-                $("#loaderDataset").hide();
-                document.getElementById("selectDataset").parentElement.style.display = "block";
             }).fail(function () {
                 $("#loaderDataset").hide();
                 $("#errorMsg").html(errorMsg.error.request);
