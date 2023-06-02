@@ -17,8 +17,7 @@ getLanguage().then(language => {
         .fail(error => {
             //  No file for navigator language - show default language
             getDefaultLanguage().then(defaultLanguage => {
-                this.language = defaultLanguage;
-                getLanguageFile(defaultLanguage);
+                loadTranslations(defaultLanguage);
             });
         });
     } else {
@@ -59,7 +58,7 @@ function getDefaultLanguage() {
 }
 
 //Solicitar el archivo de traducciones
-function getLanguageFile(language: string) {
+function loadTranslations(language: string) {
     var deferred = $.Deferred();
     $.getJSON(`./i18n/${language}.json`, function(resp) {
         let translations = resp;
