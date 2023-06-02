@@ -41,3 +41,39 @@ function getEndpointMetadataValue(endpointInfo) {
     });
     return deferred.promise();
 }
+
+function getProperties(): JQuery.jqXHR<Configuration> {
+    return $.getJSON("config/properties.json").promise();
+}
+
+function getHeaderUrl(): JQuery.Promise<string> {
+    return getProperties()
+        .then(prop => getMetadataValue(
+            prop.endpoint.layout.metadataKey.header.key,
+            prop.endpoint.layout.metadataKey.header.parameters),
+        );
+}
+
+function getFooterUrl(): JQuery.Promise<string> {
+    return getProperties()
+        .then(prop => getMetadataValue(
+            prop.endpoint.layout.metadataKey.footer.key,
+            prop.endpoint.layout.metadataKey.footer.parameters),
+        );
+}
+
+function getFaviconUrl(): JQuery.Promise<string> {
+    return getProperties().then(prop => getMetadataValue(prop.endpoint.favicon.metadataKey));
+}
+
+function getInternationalizationCookieName(): JQuery.Promise<string> {
+    return getProperties().then(prop =>
+        getMetadataValue(prop.endpoint.cookie.metadataKey)
+    );
+}
+
+function getLanguages(): JQuery.Promise<string> {
+    return getProperties().then(prop =>
+        getMetadataValue(prop.endpoint.languages.metadataKey)
+    );
+}
