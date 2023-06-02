@@ -1,4 +1,4 @@
-var language;
+var language = window.navigator.language.substr(0, 2);
 var appTitle = "";
 var errorMsg: any;
 
