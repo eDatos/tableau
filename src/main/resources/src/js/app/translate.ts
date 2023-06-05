@@ -14,6 +14,8 @@ getLanguage().then(lang => {
             //  No file for navigator language - show default language
             getDefaultLanguage().then(defaultLanguage => {
                 loadTranslations(defaultLanguage);
+            }).fail(() => {
+                translationsLoaded.reject();
             });
         });
 });
