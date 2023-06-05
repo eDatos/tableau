@@ -2,9 +2,14 @@ var language = window.navigator.language.substr(0, 2);
 var appTitle = "";
 var errorMsg: any;
 
+var translationsLoaded = $.Deferred();
+
 getLanguage().then(lang => {
     loadTranslations(lang)
-        .then(r => console.info("Translations loaded"))
+        .then(r => {
+            console.info("Translations loaded");
+            translationsLoaded.resolve();
+        })
         .fail(() => {
             //  No file for navigator language - show default language
             getDefaultLanguage().then(defaultLanguage => {
