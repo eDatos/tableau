@@ -354,24 +354,28 @@ function searchVariables() {
     var variables = [];
     $("#selectCodelist").parent().hide();
     $("#selectVariable").html('').select2();
-    // This endpoint is assigned its value on metadata-service. It´s not the best way but it´s working for now until it is refactorized
-    const url = endpoint + "/variablefamilies/" + (<HTMLInputElement>document.getElementById("selectVariableFamily")).value + "/variables.json?limit=1000&orderBy=ID ASC";
-    $.getJSON(url, function (resp) {
-        if (resp.variable) {
-            for (var i = 0; i < resp.variable.length; i++) {
-                variables[i] = { id: resp.variable[i].urn, text: _.keyBy(resp.variable[i].name.text, 'lang')[language].value };
+    getEndpointMetadataValue(properties.endpoint['structural-resources']).done(function (endpoint) {
+        const url = endpoint + "/variablefamilies/" + (<HTMLInputElement>document.getElementById("selectVariableFamily")).value + "/variables.json?limit=1000&orderBy=ID ASC";
+        $.getJSON(url, function (resp) {
+            if (resp.variable) {
+                for (var i = 0; i < resp.variable.length; i++) {
+                    variables[i] = {
+                        id: resp.variable[i].urn,
+                        text: _.keyBy(resp.variable[i].name.text, 'lang')[language].value
+                    };
+                }
             }
-        }
-        $("#selectVariable").select2({
-            data: _.sortBy(variables, 'text'),
-            dropdownAutoWidth: true,
-            width: '83.3%',
+            $("#selectVariable").select2({
+                data: _.sortBy(variables, 'text'),
+                dropdownAutoWidth: true,
+                width: '83.3%',
+            });
+            $("#loaderVariable").hide();
+            searchCodelists();
+        }).fail(function () {
+            $("#loaderCodelist").hide();
+            $("#errorMsg").html(errorMsg.error.request);
         });
-        $("#loaderVariable").hide();
-        searchCodelists();
-    }).fail(function () {
-        $("#loaderCodelist").hide();
-        $("#errorMsg").html(errorMsg.error.request);
     });
 }
 
@@ -384,32 +388,33 @@ function searchCodelists() {
     codelists = [];
     $("#selectCodelist").html('').select2();
 
-    const url = endpoint + '/codelists.json?limit=1000&orderBy=ID ASC&query=VARIABLE_URN EQ "' + $("#selectVariable").val() + '" AND LATEST EQ "true"';
-    $.getJSON(url, function (resp) {
-        getLanguage().then(language => {
-            if (resp.codelist) {
-                for (var i = 0; i < resp.codelist.length; i++) {
-                    codelists[i] = {
-                        id: resp.codelist[i].selfLink.href,
-                        text: _.keyBy(resp.codelist[i].name.text, 'lang')[language].value
-                    };
+    getEndpointMetadataValue(properties.endpoint['structural-resources']).done(function (endpoint) {
+        const url = endpoint + '/codelists.json?limit=1000&orderBy=ID ASC&query=VARIABLE_URN EQ "' + $("#selectVariable").val() + '" AND LATEST EQ "true"';
+        $.getJSON(url, function (resp) {
+            getLanguage().then(language => {
+                if (resp.codelist) {
+                    for (var i = 0; i < resp.codelist.length; i++) {
+                        codelists[i] = {
+                            id: resp.codelist[i].selfLink.href,
+                            text: _.keyBy(resp.codelist[i].name.text, 'lang')[language].value
+                        };
+                    }
                 }
-            }
-            $("#selectCodelist").select2({
-                data: _.sortBy(codelists, 'text'),
-                dropdownAutoWidth: true,
-                width: '83.3%',
+                $("#selectCodelist").select2({
+                    data: _.sortBy(codelists, 'text'),
+                    dropdownAutoWidth: true,
+                    width: '83.3%',
+                });
+                if ($("#decode").is(":checked")) {
+                    updateDecodelists();
+                }
+                $("#loaderCodelist").hide();
             });
-            if ($("#decode").is(":checked")) {
-                updateDecodelists();
-            }
+        }).fail(function () {
             $("#loaderCodelist").hide();
+            $("#errorMsg").html(errorMsg.error.request);
         });
-    }).fail(function () {
-        $("#loaderCodelist").hide();
-        $("#errorMsg").html(errorMsg.error.request);
     });
-
 }
 
 function updateDecodelists() {
