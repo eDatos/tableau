@@ -145,6 +145,14 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
         });
     });
 
+    /**
+     * @param observation string that contains a value or is empty if no value is present
+     * @return null if the observation is empty, otherwise the same value
+     */
+    function parseObs(observation: string) {
+        return observation || null;
+    }
+
 
     // Dataset
     function parseStatisticalResourceDatasetResponse(dataResponse, connectionData, table, doneCallback) {
@@ -159,7 +167,7 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
                 var hash = {};
                 var copyHash = {};
                 if (!connectionData.showMeasureColumns) {
-                    hash[connectionData.observationId] = observations[i];
+                    hash[connectionData.observationId] = parseObs(observations[i]);
                 }
                 var remaining = i;
                 var subtotal = total;
@@ -171,7 +179,7 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
                     if (connectionData.showMeasureColumns) {
                         hash[connectionData.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
                         if (connectionData.measureColumns.dimension == connectionData.dimensions[j].id) {
-                            copyHash[connectionData.measureColumns.dimension + "_" + _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code] = observations[i];
+                            copyHash[connectionData.measureColumns.dimension + "_" + _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code] = parseObs(observations[i]);
                         } else {
                             copyHash[connectionData.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
                         }
