@@ -156,9 +156,9 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
 
     // Dataset
     function parseStatisticalResourceDatasetResponse(dataResponse, connectionData, table, doneCallback) {
-        var tableData = [];
-        var observations = dataResponse.data.observations.split(" | ");
-        var total = 1;
+        let tableData = [];
+        let observations = dataResponse.data.observations.split(" | ");
+        let total = 1;
         for (let i = 0; i < Object.keys(connectionData.dimensions).length; i++) {
             total = total * dataResponse.data.dimensions.dimension[i].representations.total;
         }
@@ -189,21 +189,29 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
                     if (!connectionData.starModel) {
                         if (connectionData.recodeDates && connectionData.timeDimension == connectionData.dimensions[j].id) {
                             hash["Fecha"] = calculateDateSdmx(_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code);
+                            copyHash["Fecha"] = calculateDateSdmx(_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code);
                         }
                         if (connectionData.labels) {
                             var dimension = _.keyBy(dataResponse.metadata.dimensions.dimension, "id")[connectionData.dimensions[j].id];
-                            var dimensionValue = _.keyBy(dimension.dimensionValues.value, "id")[hash[connectionData.dimensions[j].id]];
-                            var dimensionLabel = _.keyBy(dimensionValue.name.text, "lang");
+                            let dimensionValue;
+                            let dimensionLabel;
+                            if (dimension.type === "MEASURE_DIMENSION") {
+                                dimensionValue = _.keyBy(dimension.dimensionValues.value, "id")[_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code];
+                                dimensionLabel = _.keyBy(dimensionValue.name.text, "lang");
+                            } else {
+                                dimensionValue = _.keyBy(dimension.dimensionValues.value, "id")[hash[connectionData.dimensions[j].id]];
+                                dimensionLabel = _.keyBy(dimensionValue.name.text, "lang");
+                            }
                             if (connectionData.allLanguages) {
                                 for (let k = 0; k < connectionData.languages.length; k++) {
                                     if (dimensionLabel[connectionData.languages[k]]) {
-                                        hash["Etiqueta_" + dimension.id + "_" + connectionData.languages[k]] = dimensionLabel[connectionData.languages[k]].value;
+                                        copyHash["Etiqueta_" + dimension.id + "_" + connectionData.languages[k]] = dimensionLabel[connectionData.languages[k]].value;
                                     } else {
-                                        hash["Etiqueta_" + dimension.id + "_" + connectionData.languages[k]] = '';
+                                        copyHash["Etiqueta_" + dimension.id + "_" + connectionData.languages[k]] = '';
                                     }
                                 }
                             } else {
-                                hash["Etiqueta_" + dimension.id] = dimensionLabel['es'].value;
+                                copyHash["Etiqueta_" + dimension.id] = dimensionLabel['es'].value;
                             }
                         }
                     }
