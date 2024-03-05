@@ -479,7 +479,7 @@ function searchDatasets() {
     $("#selectDataset").html('').select2();
     getEndpointMetadataValue(properties.endpoint['statistical-resources'])
         .done(function (endpoint) {
-            const url = endpoint + "/datasets.json?limit=1000&orderBy=ID ASC&query=STATISTICAL_OPERATION_URN EQ '" + $("#selectOperation").val() + "'";
+            const url = endpoint + "/datasets.json?limit=1000&orderBy=ID ASC&query=IS_LAST_VERSION EQ 'true' AND STATISTICAL_OPERATION_URN EQ '" + $("#selectOperation").val() + "'";
             $.getJSON(url, function (resp) {
                 getLanguage().then(language => {
                     if (resp.dataset) {
