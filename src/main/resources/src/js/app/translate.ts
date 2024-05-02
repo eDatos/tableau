@@ -16,8 +16,7 @@ loadTranslations()
 function getLanguage(){     
     const langFromCookie = typeof Edatos !== 'undefined' ? Edatos.i18n.getChosenLocaleCookie() : null;
     if (!langFromCookie) {
-        //  No cookie - show navigator language
-        return window.navigator.language.substr(0, 2); // from strings like ["en-US", "zh-CN", "ja-JP"] we are only interested in the language part, not the country
+        return 'es';
     } else {
         return langFromCookie;
     }
