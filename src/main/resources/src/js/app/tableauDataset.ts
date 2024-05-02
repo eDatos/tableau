@@ -303,6 +303,7 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
             }
         }
         $.getJSON(connectionData.url, function (resp) {
+            const language = getLanguage();
             tableau.connectionName = tableau.connectionName + _.keyBy(resp.name.text, 'lang')[language].value;
             connectionData.name = _.keyBy(resp.name.text, 'lang')[language].value;
             connectionData.observationId = resp.id;

@@ -101,6 +101,7 @@
                             }
                         }
                     } else {
+                        const language = getLanguage();
                         if (table.tableInfo.id == "codelist01Data") {
                             dataEntry.Nombre_origen = _.keyBy(dataResponse.code[i].name.text, 'lang')[language].value;
                         } else {
@@ -191,6 +192,7 @@
                 connectionData.urlDecodeCodelist = addJsonFormat(connectionData.urlDecodeCodelist);
 
                 $.getJSON(connectionData.url.substring(0, connectionData.url.indexOf('/codes')), function (resp) {
+                    const language = getLanguage();
                     tableau.connectionName = tableau.connectionName + _.keyBy(resp.name.text, 'lang')[language].value;
                     if (connectionData.allLanguages) {
                         let languages = [];
