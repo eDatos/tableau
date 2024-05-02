@@ -355,6 +355,7 @@ function searchVariables() {
     $("#selectVariable").html('').select2();
     getEndpointMetadataValue(properties.endpoint['structural-resources']).done(function (endpoint) {
         const url = endpoint + "/variablefamilies/" + (<HTMLInputElement>document.getElementById("selectVariableFamily")).value + "/variables.json?limit=1000&orderBy=ID ASC";
+        const language = getLanguage();
         $.getJSON(url, function (resp) {
             if (resp.variable) {
                 for (var i = 0; i < resp.variable.length; i++) {
