@@ -390,25 +390,24 @@ function searchCodelists() {
     getEndpointMetadataValue(properties.endpoint['structural-resources']).done(function (endpoint) {
         const url = endpoint + '/codelists.json?limit=1000&orderBy=ID ASC&query=VARIABLE_URN EQ "' + $("#selectVariable").val() + '" AND LATEST EQ "true"';
         $.getJSON(url, function (resp) {
-            getLanguage().then(language => {
-                if (resp.codelist) {
-                    for (var i = 0; i < resp.codelist.length; i++) {
-                        codelists[i] = {
-                            id: resp.codelist[i].selfLink.href,
-                            text: _.keyBy(resp.codelist[i].name.text, 'lang')[language].value
-                        };
-                    }
+            const language = getLanguage();
+            if (resp.codelist) {
+                for (var i = 0; i < resp.codelist.length; i++) {
+                    codelists[i] = {
+                        id: resp.codelist[i].selfLink.href,
+                        text: _.keyBy(resp.codelist[i].name.text, 'lang')[language].value
+                    };
                 }
-                $("#selectCodelist").select2({
-                    data: _.sortBy(codelists, 'text'),
-                    dropdownAutoWidth: true,
-                    width: '83.3%',
-                });
-                if ($("#decode").is(":checked")) {
-                    updateDecodelists();
-                }
-                $("#loaderCodelist").hide();
+            }
+            $("#selectCodelist").select2({
+                data: _.sortBy(codelists, 'text'),
+                dropdownAutoWidth: true,
+                width: '83.3%',
             });
+            if ($("#decode").is(":checked")) {
+                updateDecodelists();
+            }
+            $("#loaderCodelist").hide();
         }).fail(function () {
             $("#loaderCodelist").hide();
             $("#errorMsg").html(errorMsg.error.request);
@@ -446,23 +445,22 @@ function searchOperations() {
     getEndpointMetadataValue(properties.endpoint.operations)
         .done(function (endpoint) {
             $.getJSON(endpoint + "/operations.json?query=STATUS EQ \"" + properties.operations.status.production + "\"&limit=1000&orderBy=ID ASC", function (resp) {
-                getLanguage().then(language => {
-                    if (resp.operation) {
-                        for (var i = 0; i < resp.operation.length; i++) {
-                            operations[i] = {
-                                id: resp.operation[i].urn,
-                                text: _.keyBy(resp.operation[i].name.text, 'lang')[language].value
-                            };
-                        }
+                const language = getLanguage();
+                if (resp.operation) {
+                    for (var i = 0; i < resp.operation.length; i++) {
+                        operations[i] = {
+                            id: resp.operation[i].urn,
+                            text: _.keyBy(resp.operation[i].name.text, 'lang')[language].value
+                        };
                     }
-                    $("#selectOperation").select2({
-                        data: _.sortBy(operations, 'text'),
-                        dropdownAutoWidth: true,
-                        width: '83.3%',
-                    });
-                    $("#loaderOperation").hide();
-                    searchDatasets();
+                }
+                $("#selectOperation").select2({
+                    data: _.sortBy(operations, 'text'),
+                    dropdownAutoWidth: true,
+                    width: '83.3%',
                 });
+                $("#loaderOperation").hide();
+                searchDatasets();
             }).fail(function () {
                 $("#loaderOperation").hide();
                 $("#errorMsg").html(errorMsg.error.endpoint);
