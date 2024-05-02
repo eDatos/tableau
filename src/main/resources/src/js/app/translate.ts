@@ -1,56 +1,31 @@
-var language = window.navigator.language.substr(0, 2);
 var appTitle = "";
 var errorMsg: any;
+declare var Edatos:  { i18n: { getChosenLocaleCookie }}; 
 
 var translationsLoaded = $.Deferred();
 
-getLanguage().then(lang => {
-    loadTranslations(lang)
-        .then(r => {
-            console.info("Translations loaded");
-            translationsLoaded.resolve();
-        })
-        .fail(() => {
-            //  No file for navigator language - show default language
-            getDefaultLanguage().then(defaultLanguage => {
-                loadTranslations(defaultLanguage);
-            }).fail(() => {
-                translationsLoaded.reject();
-            });
-        });
-});
-
-//obtener el valor de la cookie
-const getCookieValue = (name) => (
-    document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || ''
-);
-
-function getLanguage(){
-    return getInternationalizationCookieName().then(cookieName => {
-        const langFromCookie = getCookieValue(cookieName);
-        if (langFromCookie === '') {
-            //  No cookie - show navigator language
-            return window.navigator.language.substr(0, 2); // from strings like ["en-US", "zh-CN", "ja-JP"] we are only interested in the language part, not the country
-        } else {
-            return getDefaultLanguage();
-        }
+loadTranslations()
+    .then(r => {
+        console.info("Translations loaded");
+        translationsLoaded.resolve();
+    })
+    .fail(() => {
+        translationsLoaded.reject();
     });
-}
-
-function getDefaultLanguage() {
-    var deferred = $.Deferred();
-    getLanguages().done(function(languages) {
-        if (languages.length !== 0) {
-            var arrayLanguages = languages.split(",", 1);
-
-            deferred.resolve(arrayLanguages[0]);
-        }
-    });
-    return deferred.promise();
+    
+function getLanguage(){     
+    const langFromCookie = typeof Edatos !== 'undefined' ? Edatos.i18n.getChosenLocaleCookie() : null;
+    if (!langFromCookie) {
+        //  No cookie - show navigator language
+        return window.navigator.language.substr(0, 2); // from strings like ["en-US", "zh-CN", "ja-JP"] we are only interested in the language part, not the country
+    } else {
+        return langFromCookie;
+    }
 }
 
 //Solicitar el archivo de traducciones
-function loadTranslations(language: string) {
+function loadTranslations() {
+    const language = getLanguage();
     var deferred = $.Deferred();
     $.getJSON(`./i18n/${language}.json`, function(resp) {
         let translations = resp;

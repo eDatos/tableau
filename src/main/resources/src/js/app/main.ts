@@ -323,23 +323,22 @@ function searchVariableFamilies() {
         .done(function (endpoint) {
             const url = endpoint + "/variablefamilies.json?limit=1000&orderBy=ID ASC";
             $.getJSON(url, function (resp) {
-                getLanguage().then(lang => {
-                    if (resp.variableFamily) {
-                        for (var i = 0; i < resp.variableFamily.length; i++) {
-                            variableFamilies[i] = {
-                                id: resp.variableFamily[i].id,
-                                text: _.keyBy(resp.variableFamily[i].name.text, 'lang')[lang].value
-                            };
-                        }
+                const language = getLanguage();
+                if (resp.variableFamily) {
+                    for (var i = 0; i < resp.variableFamily.length; i++) {
+                        variableFamilies[i] = {
+                            id: resp.variableFamily[i].id,
+                            text: _.keyBy(resp.variableFamily[i].name.text, 'lang')[language].value
+                        };
                     }
-                    $('#selectVariableFamily').select2({
-                        data: _.sortBy(variableFamilies, 'text'),
-                        dropdownAutoWidth: true,
-                        width: '83.3%',
-                    });
-                    $("#loaderVariableFamily").hide();
-                    searchVariables();
-                })
+                }
+                $('#selectVariableFamily').select2({
+                    data: _.sortBy(variableFamilies, 'text'),
+                    dropdownAutoWidth: true,
+                    width: '83.3%',
+                });
+                $("#loaderVariableFamily").hide();
+                searchVariables();
             }).fail(function () {
                 $("#loaderVariableFamily").hide();
                 $('#errorMsg').html(errorMsg.error.endpoint);
@@ -481,26 +480,22 @@ function searchDatasets() {
         .done(function (endpoint) {
             const url = endpoint + "/datasets.json?limit=1000&orderBy=ID ASC&query=IS_LAST_VERSION EQ 'true' AND STATISTICAL_OPERATION_URN EQ '" + $("#selectOperation").val() + "'";
             $.getJSON(url, function (resp) {
-                getLanguage().then(language => {
-                    if (resp.dataset) {
-                        for (var i = 0; i < resp.dataset.length; i++) {
-                            datasets[i] = {
-                                id: resp.dataset[i].selfLink.href.substring(0, resp.dataset[i].selfLink.href.lastIndexOf('/')),
-                                text: _.keyBy(resp.dataset[i].name.text, 'lang')[language].value,
-                            };
-                        }
+                const language = getLanguage();
+                if (resp.dataset) {
+                    for (var i = 0; i < resp.dataset.length; i++) {
+                        datasets[i] = {
+                            id: resp.dataset[i].selfLink.href.substring(0, resp.dataset[i].selfLink.href.lastIndexOf('/')),
+                            text: _.keyBy(resp.dataset[i].name.text, 'lang')[language].value,
+                        };
                     }
-                    $("#selectDataset").select2({
-                        data: _.sortBy(_.uniqBy(datasets, 'id'), 'text'),
-                        dropdownAutoWidth: true,
-                        width: '83.3%',
-                    });
-                    $("#loaderDataset").hide();
-                    document.getElementById("selectDataset").parentElement.style.display = "block";
+                }
+                $("#selectDataset").select2({
+                    data: _.sortBy(_.uniqBy(datasets, 'id'), 'text'),
+                    dropdownAutoWidth: true,
+                    width: '83.3%',
                 });
-            }).fail(function () {
                 $("#loaderDataset").hide();
-                $("#errorMsg").html(errorMsg.error.request);
+                document.getElementById("selectDataset").parentElement.style.display = "block";
             });
         });
 }
