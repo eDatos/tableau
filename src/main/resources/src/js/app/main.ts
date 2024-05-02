@@ -494,7 +494,10 @@ function searchDatasets() {
                     width: '83.3%',
                 });
                 $("#loaderDataset").hide();
-                document.getElementById("selectDataset").parentElement.style.display = "block";
+                document.getElementById("selectDataset").parentElement.style.display = "block";            
+            }).fail(function () {
+                $("#loaderDataset").hide();
+                $("#errorMsg").html(errorMsg.error.request);
             });
         });
 }
