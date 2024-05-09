@@ -8,6 +8,9 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
+## 2.3.5 a 2.3.6-SNAPSHOT
+* Esta versión necesita que complementos-apps - 7.6.1-SNAPSHOT esté desplegada para disponer de todas las funcionalidades, aunque no se rompe si no es el caso.
+
 ## 2.2.4 a 2.3.0
 * Se han realizado cambios que implican que, previo al despliegue de esta versión en cualquier entorno, se debe actualizar el fichero de propiedades properties.json para añadir dos nuevas claves necesarias para la internacionalización (la cookie de idioma y los idiomas del dropdown).  Se debe añadir la siguiente entrada justo antes de la clave "metadata"
 
