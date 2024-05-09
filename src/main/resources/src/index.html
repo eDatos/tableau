@@ -18,6 +18,7 @@
         $(function () {
             getHeaderUrl().done(function(url) {
                 $("#headerTemplate").load(url, function() {
+                    initializeTranslations();
                     translationsLoaded.done(() => $("#title-bar").find("span").text(appTitle));
                 });
             });
