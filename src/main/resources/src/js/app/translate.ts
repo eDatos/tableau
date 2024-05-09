@@ -1,30 +1,43 @@
 var appTitle = "";
 var errorMsg: any;
-declare var Edatos:  { i18n: { getChosenLocaleCookie }}; 
+declare var Edatos:  { i18n: { getChosenLocaleCookie, getDefaultLanguage }}; 
 
 var translationsLoaded = $.Deferred();
 
-loadTranslations()
-    .then(r => {
-        console.info("Translations loaded");
-        translationsLoaded.resolve();
-    })
-    .fail(() => {
-        translationsLoaded.reject();
-    });
+function initializeTranslations() {
+    loadTranslations()
+        .then(r => {
+            console.info("Translations loaded");
+            translationsLoaded.resolve();
+        })
+        .fail(() => {
+            loadTranslations(getDefaultLanguage())
+            .then(r => {
+                console.info("Default translations loaded");
+                translationsLoaded.resolve();
+            })
+            .fail(() => {
+                translationsLoaded.reject();
+            });
+        });
+}
     
 function getLanguage(){     
     const langFromCookie = typeof Edatos !== 'undefined' ? Edatos.i18n.getChosenLocaleCookie() : null;
     if (!langFromCookie) {
-        return 'es';
+        return getDefaultLanguage();
     } else {
         return langFromCookie;
     }
 }
 
+function getDefaultLanguage() {
+    return typeof Edatos !== 'undefined' && typeof Edatos.i18n.getDefaultLanguage !== 'undefined' ? Edatos.i18n.getDefaultLanguage() : 'es';
+}
+
 //Solicitar el archivo de traducciones
-function loadTranslations() {
-    const language = getLanguage();
+function loadTranslations(lang?: string) {
+    const language = lang || getLanguage();
     var deferred = $.Deferred();
     $.getJSON(`./i18n/${language}.json`, function(resp) {
         let translations = resp;
@@ -34,7 +47,7 @@ function loadTranslations() {
         deferred.resolve(translations);
     })
     .fail(function () {
-        $("#errorMsg").html(errorMsg.error.request);
+        $("#errorMsg").html(errorMsg?.error.request);
         deferred.reject();
     });
     return deferred.promise();
