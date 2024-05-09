@@ -47,8 +47,9 @@
         <div class="section" id="selectData">
             <form>
                 <h4 id="titleForm"></h4>
-                <label id="labelDatasetUrl" class="radioLabel">
+                <label class="radioLabel">
                     <input type="radio" name="datatype" onclick="chooseDataOption(this)" value="url">
+                    <span id="labelDatasetUrl"></span>
                 </label>
                 <div id="loaderUrl" class="loader first-loader" style="display: none"></div>
                 <div class="row radioDiv" id="url" style="display: none">
@@ -56,8 +57,9 @@
                     <input type="text" class="col-xs-10" name="inputUrl" id="inputUrl" data-input-type="dataset" oninput="updateOptions(this)"/>
                 </div>
 
-                <label id="labelSelectOperation" class="radioLabel">
+                <label class="radioLabel">
                     <input type="radio" name="datatype" onclick="chooseDataOption(this)" value="operation" checked>
+                    <span id="labelSelectOperation"></span>
                 </label>
                 <div id="loaderOperation" class="loader first-loader" style="display: none"></div>
                 <div class="selectDiv row radioDiv" id="operation">
@@ -73,23 +75,30 @@
 
                 <div class="responseFormat">
                     <h4 id="responseFormat"></h4>
-                    <div class="subtitle" id="dataModel">
-                        <label id="labelMeasureColumns" class="radioLabel">
+                    <div class="subtitle">
+                        <span id="dataModel"></span>
+                        <label class="radioLabel">
                             <input type="checkbox" id="measureColumns" checked>
+                            <span id="labelMeasureColumns"></span>
                         </label>
-                        <label id="labelStarModel" class="radioLabel">
+                        <label class="radioLabel">
                             <input type="checkbox" id="starModel" checked>
+                            <span id="labelStarModel"></span>
                         </label>
                     </div>
-                    <div class="subtitle" id="labeling">
-                        <label id="labelRecodeDates" class="radioLabel">
+                    <div class="subtitle">
+                        <span id="labeling"></span>
+                        <label class="radioLabel">
                             <input type="checkbox" id="recodeDates" checked>
+                            <span id="labelRecodeDates"></span>
                         </label>
-                        <label id="labelShowLabelsDataset" class="radioLabel">
+                        <label class="radioLabel">
                             <input type="checkbox" id="showLabels" onclick="enableAllLanguages()">
+                            <span id="labelShowLabelsDataset"></span>
                         </label>
-                        <label id="labelAllLanguages" class="radioLabel">
+                        <label class="radioLabel">
                             <input type="checkbox" id="allLanguages" disabled>
+                            <span id="labelAllLanguages"></span>
                         </label>
                     </div>
                 </div>
@@ -102,8 +111,8 @@
             </form>
         </div>
         <div class="section">
-            <p id="descDataset">
-                <a id="linkDatasetAPI"></a>
+            <p>
+                <span id="descDatasetPre"></span><a id="linkDatasetAPI"></a><span id="descDatasetPost"></span>
             </p>
             <p id="datasetUse"></p>
             <ol>
