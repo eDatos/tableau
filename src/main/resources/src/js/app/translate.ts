@@ -137,3 +137,8 @@ function loadTexts(translations) {
     $("#liCriteriaCodelist").text(translations.codelists.liCriteriaCodelist);
 
 };
+
+function getLocalisedLabel(text) {
+    const internationalString = _.keyBy(text, 'lang');
+    return internationalString[getLanguage()]?.value || internationalString[getDefaultLanguage()]?.value;
+}

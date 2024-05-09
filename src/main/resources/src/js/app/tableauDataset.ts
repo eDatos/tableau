@@ -304,8 +304,8 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
         }
         $.getJSON(connectionData.url, function (resp) {
             const language = getLanguage();
-            tableau.connectionName = tableau.connectionName + _.keyBy(resp.name.text, 'lang')[language].value;
-            connectionData.name = _.keyBy(resp.name.text, 'lang')[language].value;
+            tableau.connectionName = tableau.connectionName + getLocalisedLabel(resp.name.text);
+            connectionData.name = getLocalisedLabel(resp.name.text);
             connectionData.observationId = resp.id;
             if (connectionData.showMeasureColumns) {
                 var measureColumns: DatasetMeasureColumn = {};
@@ -330,7 +330,7 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
             for (let i = 0; i < resp.metadata.dimensions.total; i++) {
                 dimensions[i] = {
                     id: resp.metadata.dimensions.dimension[i].id,
-                    label: _.keyBy(resp.metadata.dimensions.dimension[i].name.text, 'lang')[language].value,
+                    label: getLocalisedLabel(resp.metadata.dimensions.dimension[i].name.text),
                 };
             }
             if (connectionData.recodeDates) {

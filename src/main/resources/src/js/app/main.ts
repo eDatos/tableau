@@ -328,7 +328,7 @@ function searchVariableFamilies() {
                     for (var i = 0; i < resp.variableFamily.length; i++) {
                         variableFamilies[i] = {
                             id: resp.variableFamily[i].id,
-                            text: _.keyBy(resp.variableFamily[i].name.text, 'lang')[language].value
+                            text: getLocalisedLabel(resp.variableFamily[i].name.text)
                         };
                     }
                 }
@@ -361,7 +361,7 @@ function searchVariables() {
                 for (var i = 0; i < resp.variable.length; i++) {
                     variables[i] = {
                         id: resp.variable[i].urn,
-                        text: _.keyBy(resp.variable[i].name.text, 'lang')[language].value
+                        text: getLocalisedLabel(resp.variable[i].name.text)
                     };
                 }
             }
@@ -396,7 +396,7 @@ function searchCodelists() {
                 for (var i = 0; i < resp.codelist.length; i++) {
                     codelists[i] = {
                         id: resp.codelist[i].selfLink.href,
-                        text: _.keyBy(resp.codelist[i].name.text, 'lang')[language].value
+                        text: getLocalisedLabel(resp.codelist[i].name.text)
                     };
                 }
             }
@@ -451,7 +451,7 @@ function searchOperations() {
                     for (var i = 0; i < resp.operation.length; i++) {
                         operations[i] = {
                             id: resp.operation[i].urn,
-                            text: _.keyBy(resp.operation[i].name.text, 'lang')[language].value
+                            text: getLocalisedLabel(resp.operation[i].name.text)
                         };
                     }
                 }
@@ -484,7 +484,7 @@ function searchDatasets() {
                     for (var i = 0; i < resp.dataset.length; i++) {
                         datasets[i] = {
                             id: resp.dataset[i].selfLink.href.substring(0, resp.dataset[i].selfLink.href.lastIndexOf('/')),
-                            text: _.keyBy(resp.dataset[i].name.text, 'lang')[language].value,
+                            text: getLocalisedLabel(resp.dataset[i].name.text),
                         };
                     }
                 }
