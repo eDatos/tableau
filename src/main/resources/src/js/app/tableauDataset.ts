@@ -317,7 +317,7 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
                     for (let i = 0; i < dimension.dimensionValues.value.length; i++) {
                         values[i] = {
                             id: dimension.dimensionValues.value[i].id,
-                            label: _.keyBy(dimension.dimensionValues.value[i].name.text, 'lang')['es'].value,
+                            label: getLocalisedLabel(dimension.dimensionValues.value[i].name.text),
                         };
                     }
                     measureColumns.values = values;
