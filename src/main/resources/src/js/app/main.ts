@@ -103,7 +103,7 @@ function isGpeOrJsonStatDataset(): Promise<boolean> {
     } else {
         const deferred = $.Deferred();
         deferred.resolve(false);
-        RESOURCE_TYPE_CACHE.set(url, ResourceType.STATISTICAL_RESOURCE_DATASET);
+        RESOURCE_TYPE_CACHE.set(url, null);
         return deferred.promise();
     }
 }
@@ -323,7 +323,6 @@ function searchVariableFamilies() {
         .done(function (endpoint) {
             const url = endpoint + "/variablefamilies.json?limit=1000&orderBy=ID ASC";
             $.getJSON(url, function (resp) {
-                const language = getLanguage();
                 if (resp.variableFamily) {
                     for (var i = 0; i < resp.variableFamily.length; i++) {
                         variableFamilies[i] = {
@@ -355,7 +354,6 @@ function searchVariables() {
     $("#selectVariable").html('').select2();
     getEndpointMetadataValue(properties.endpoint['structural-resources']).done(function (endpoint) {
         const url = endpoint + "/variablefamilies/" + (<HTMLInputElement>document.getElementById("selectVariableFamily")).value + "/variables.json?limit=1000&orderBy=ID ASC";
-        const language = getLanguage();
         $.getJSON(url, function (resp) {
             if (resp.variable) {
                 for (var i = 0; i < resp.variable.length; i++) {
@@ -391,7 +389,6 @@ function searchCodelists() {
     getEndpointMetadataValue(properties.endpoint['structural-resources']).done(function (endpoint) {
         const url = endpoint + '/codelists.json?limit=1000&orderBy=ID ASC&query=VARIABLE_URN EQ "' + $("#selectVariable").val() + '" AND LATEST EQ "true"';
         $.getJSON(url, function (resp) {
-            const language = getLanguage();
             if (resp.codelist) {
                 for (var i = 0; i < resp.codelist.length; i++) {
                     codelists[i] = {
@@ -446,7 +443,6 @@ function searchOperations() {
     getEndpointMetadataValue(properties.endpoint.operations)
         .done(function (endpoint) {
             $.getJSON(endpoint + "/operations.json?query=STATUS EQ \"" + properties.operations.status.production + "\"&limit=1000&orderBy=ID ASC", function (resp) {
-                const language = getLanguage();
                 if (resp.operation) {
                     for (var i = 0; i < resp.operation.length; i++) {
                         operations[i] = {
@@ -479,7 +475,6 @@ function searchDatasets() {
         .done(function (endpoint) {
             const url = endpoint + "/datasets.json?limit=1000&orderBy=ID ASC&query=IS_LAST_VERSION EQ 'true' AND STATISTICAL_OPERATION_URN EQ '" + $("#selectOperation").val() + "'";
             $.getJSON(url, function (resp) {
-                const language = getLanguage();
                 if (resp.dataset) {
                     for (var i = 0; i < resp.dataset.length; i++) {
                         datasets[i] = {
