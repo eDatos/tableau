@@ -103,7 +103,7 @@ function isGpeOrJsonStatDataset(): Promise<boolean> {
     } else {
         const deferred = $.Deferred();
         deferred.resolve(false);
-        RESOURCE_TYPE_CACHE.set(url, ResourceType.STATISTICAL_RESOURCE_DATASET);
+        RESOURCE_TYPE_CACHE.set(url, null);
         return deferred.promise();
     }
 }
