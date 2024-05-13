@@ -101,10 +101,11 @@
                             }
                         }
                     } else {
+                        const language = getLanguage();
                         if (table.tableInfo.id == "codelist01Data") {
-                            dataEntry.Nombre_origen = _.keyBy(dataResponse.code[i].name.text, 'lang')[language].value;
+                            dataEntry.Nombre_origen = getLocalisedLabel(dataResponse.code[i].name.text);
                         } else {
-                            dataEntry.Nombre_recodificado = _.keyBy(dataResponse.code[i].name.text, 'lang')[language].value;
+                            dataEntry.Nombre_recodificado = getLocalisedLabel(dataResponse.code[i].name.text);
                         }
                     }
                     tableData.push(dataEntry);
@@ -191,7 +192,8 @@
                 connectionData.urlDecodeCodelist = addJsonFormat(connectionData.urlDecodeCodelist);
 
                 $.getJSON(connectionData.url.substring(0, connectionData.url.indexOf('/codes')), function (resp) {
-                    tableau.connectionName = tableau.connectionName + _.keyBy(resp.name.text, 'lang')[language].value;
+                    const language = getLanguage();
+                    tableau.connectionName = tableau.connectionName + getLocalisedLabel(resp.name.text);
                     if (connectionData.allLanguages) {
                         let languages = [];
                         for (let i = 0; i < resp.name.text.length; i++) {

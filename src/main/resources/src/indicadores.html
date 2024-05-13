@@ -25,6 +25,7 @@
         $(function () {
             getHeaderUrl().done(function (url) {
                 $("#headerTemplate").load(url, function() {
+                    initializeTranslations();
                     translationsLoaded.done(() => $("#title-bar").find("span").text(appTitle));
                 });
             });
@@ -44,16 +45,18 @@
         <div class="section" id="selectData">
             <form>
                 <h4 id="titleForm"></h4>
-                <label id="labelIndicatorUrl" class="radioLabel">
+                <label class="radioLabel">
                     <input type="radio" name="datatype" onclick="chooseDataOption(this)" value="url">
+                    <span id="labelIndicatorUrl"></span>
                 </label>
                 <div class="row radioDiv" id="url" style="display: none">
                     <label id="labelUrl" class="col-xs-2"></label>
                     <input class="col-xs-10" name="url" id="inputUrl" />
                 </div>
 
-                <label id="labelSelectIndicator" class="radioLabel">
+                <label class="radioLabel">
                     <input type="radio" name="datatype" onclick="chooseDataOption(this)" value="indicator" checked>
+                    <span id="labelSelectIndicator"></span>
                 </label>
                 <div id="loaderSubject" class="loader first-loader" style="display: none"></div>
                 <div class="selectDiv row radioDiv" id="indicator">
@@ -67,8 +70,9 @@
                     <select class="col-xs-10" id="selectIndicator"></select>
                 </div>
 
-                <label id="labelIndicatorInstance" class="radioLabel">
+                <label class="radioLabel">
                     <input type="radio" name="datatype" onclick="chooseDataOption(this)" value="indicatorInstance">
+                    <span  id="labelIndicatorInstance" ></span>
                 </label>
                 <div id="loaderIndicatorSystem" class="loader first-loader" style="display: none"></div>
                 <div class="selectDiv row radioDiv" id="indicatorInstance" style="display: none">
@@ -84,26 +88,34 @@
 
                 <div class="responseFormat">
                     <h4 id="responseFormat"></h4>
-                    <div class="subtitle" id="dataModel">
-                        <label id="labelMeasureColumns" class="radioLabel">
+                    <div class="subtitle">
+                        <span id="dataModel"></span>
+                        <label class="radioLabel">
                             <input type="checkbox" id="measureColumns" checked>
+                            <span id="labelMeasureColumns"></span>
                         </label>
-                        <label id="labelStarModel" class="radioLabel">
+                        <label class="radioLabel">
                             <input type="checkbox" id="starModel" checked>
+                            <span id="labelStarModel"></span>
                         </label>
                     </div>
-                    <div class="subtitle" id="labeling">
-                        <label id="labelRecodeDates" class="radioLabel">
+                    <div class="subtitle">
+                        <span id="labeling"></span>
+                        <label class="radioLabel">
                             <input type="checkbox" id="recodeDates" checked>
+                            <span id="labelRecodeDates"></span>
                         </label>
-                        <label id="labelShowGranularity" class="radioLabel">
+                        <label class="radioLabel">
                             <input type="checkbox" id="showGranularity" checked>
+                            <span id="labelShowGranularity"></span>
                         </label>
-                        <label id="labelShowLabels" class="radioLabel">
+                        <label class="radioLabel">
                             <input type="checkbox" id="showLabels" onclick="enableAllLanguages()">
+                            <span id="labelShowLabels"></span>
                         </label>
-                        <label id="labelAllLanguages" class="radioLabel">
+                        <label class="radioLabel">
                             <input type="checkbox" id="allLanguages" disabled>
+                            <span id="labelAllLanguages"></span>
                         </label>
                     </div>
 
@@ -118,8 +130,8 @@
         </div>
         <div class="section">
             <div class="text">
-                <p id="descIndicator">
-                    <a id="linkIndicatorAPI"></a>
+                <p>
+                    <span id="descIndicatorPre"></span><a id="linkIndicatorAPI"></a><span id="descIndicatorPost"></span>
                 </p>
                 <p id="indicatorUse"></p>
                 <ol>

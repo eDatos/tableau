@@ -22,6 +22,7 @@
         $(function () {
             getHeaderUrl().done(function(url) {
                 $("#headerTemplate").load(url, function() {
+                    initializeTranslations();
                     translationsLoaded.done(() => $("#title-bar").find("span").text(appTitle));
                 });
             });
@@ -42,17 +43,19 @@
             <form>
                 <div id="formContainer">
                     <h4 id="titleForm"></h4>
-                    <label id="labelCodelistUrl" class="radioLabel">
+                    <label class="radioLabel">
                         <input id="codelistUrlInput" type="radio" name="datatype" onclick="chooseDataOption(this)" value="url">
+                        <span id="labelCodelistUrl"></span>
                     </label>
                     <div class="row radioDiv" id="url" style="display: none">
                         <label id="labelUrl" class="col-xs-2"></label>
                         <input class="col-xs-10" name="url" id="inputUrl" />
                     </div>
 
-                    <label id="selectVariableLabel" class="radioLabel">
+                    <label class="radioLabel">
                         <input id="selectVariableInput" type="radio" name="datatype" onchange="chooseDataOption(this)"
-                            value="variableFamily" checked>
+                        value="variableFamily" checked>
+                        <span id="selectVariableLabel"></span>
                     </label>
                     <div id="loaderVariableFamily" class="loader first-loader" style="display: none"></div>
                     <div class="selectDiv row radioDiv" id="variableFamily">
@@ -72,9 +75,11 @@
                 </div>
                 <div class="responseFormat">
                     <h4 id="responseFormat"></h4>
-                    <div class="subtitle" id="decoding">
-                        <label id="labelDecode" class="radioLabel">
+                    <div class="subtitle">
+                        <span  id="decoding"></span>
+                        <label class="radioLabel">
                             <input type="checkbox" id="decode" onchange="onDownloadDecodeSelected(this)">
+                            <span id="labelDecode"></span>
                         </label>
                         <div id="loaderDecode" class="loader" style="display: none"></div>
                         <div id="decodeWrapper" class="selectDiv row radioDiv" style="display: none">
@@ -82,9 +87,11 @@
                             <select class="col-xs-10" id="selectDecodeCodelist"></select>
                         </div>
                     </div>
-                    <div class="subtitle" id="labeling">
-                        <label id="labelAllLanguages" class="radioLabel">
+                    <div class="subtitle">
+                        <span id="labeling"></span>
+                        <label class="radioLabel">
                             <input type="checkbox" id="allLanguages">
+                            <span id="labelAllLanguages"></span>
                         </label>
                     </div>
                 </div>
@@ -96,8 +103,8 @@
         </div>
         <div class="section">
             <div class="text">
-                <p id="descCodelist">
-                    <a id="linkCodelistAPI"></a>
+                <p>
+                    <span id="descCodelistPre"></span><a id="linkCodelistAPI"></a><span id="descCodelistPost"></span>
                 </p>
                 <p id="codelistUse"></p>
                 <ol>

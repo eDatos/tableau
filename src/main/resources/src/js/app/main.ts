@@ -103,7 +103,7 @@ function isGpeOrJsonStatDataset(): Promise<boolean> {
     } else {
         const deferred = $.Deferred();
         deferred.resolve(false);
-        RESOURCE_TYPE_CACHE.set(url, ResourceType.STATISTICAL_RESOURCE_DATASET);
+        RESOURCE_TYPE_CACHE.set(url, null);
         return deferred.promise();
     }
 }
@@ -323,23 +323,21 @@ function searchVariableFamilies() {
         .done(function (endpoint) {
             const url = endpoint + "/variablefamilies.json?limit=1000&orderBy=ID ASC";
             $.getJSON(url, function (resp) {
-                getLanguage().then(lang => {
-                    if (resp.variableFamily) {
-                        for (var i = 0; i < resp.variableFamily.length; i++) {
-                            variableFamilies[i] = {
-                                id: resp.variableFamily[i].id,
-                                text: _.keyBy(resp.variableFamily[i].name.text, 'lang')[lang].value
-                            };
-                        }
+                if (resp.variableFamily) {
+                    for (var i = 0; i < resp.variableFamily.length; i++) {
+                        variableFamilies[i] = {
+                            id: resp.variableFamily[i].id,
+                            text: getLocalisedLabel(resp.variableFamily[i].name.text)
+                        };
                     }
-                    $('#selectVariableFamily').select2({
-                        data: _.sortBy(variableFamilies, 'text'),
-                        dropdownAutoWidth: true,
-                        width: '83.3%',
-                    });
-                    $("#loaderVariableFamily").hide();
-                    searchVariables();
-                })
+                }
+                $('#selectVariableFamily').select2({
+                    data: _.sortBy(variableFamilies, 'text'),
+                    dropdownAutoWidth: true,
+                    width: '83.3%',
+                });
+                $("#loaderVariableFamily").hide();
+                searchVariables();
             }).fail(function () {
                 $("#loaderVariableFamily").hide();
                 $('#errorMsg').html(errorMsg.error.endpoint);
@@ -361,7 +359,7 @@ function searchVariables() {
                 for (var i = 0; i < resp.variable.length; i++) {
                     variables[i] = {
                         id: resp.variable[i].urn,
-                        text: _.keyBy(resp.variable[i].name.text, 'lang')[language].value
+                        text: getLocalisedLabel(resp.variable[i].name.text)
                     };
                 }
             }
@@ -391,25 +389,23 @@ function searchCodelists() {
     getEndpointMetadataValue(properties.endpoint['structural-resources']).done(function (endpoint) {
         const url = endpoint + '/codelists.json?limit=1000&orderBy=ID ASC&query=VARIABLE_URN EQ "' + $("#selectVariable").val() + '" AND LATEST EQ "true"';
         $.getJSON(url, function (resp) {
-            getLanguage().then(language => {
-                if (resp.codelist) {
-                    for (var i = 0; i < resp.codelist.length; i++) {
-                        codelists[i] = {
-                            id: resp.codelist[i].selfLink.href,
-                            text: _.keyBy(resp.codelist[i].name.text, 'lang')[language].value
-                        };
-                    }
+            if (resp.codelist) {
+                for (var i = 0; i < resp.codelist.length; i++) {
+                    codelists[i] = {
+                        id: resp.codelist[i].selfLink.href,
+                        text: getLocalisedLabel(resp.codelist[i].name.text)
+                    };
                 }
-                $("#selectCodelist").select2({
-                    data: _.sortBy(codelists, 'text'),
-                    dropdownAutoWidth: true,
-                    width: '83.3%',
-                });
-                if ($("#decode").is(":checked")) {
-                    updateDecodelists();
-                }
-                $("#loaderCodelist").hide();
+            }
+            $("#selectCodelist").select2({
+                data: _.sortBy(codelists, 'text'),
+                dropdownAutoWidth: true,
+                width: '83.3%',
             });
+            if ($("#decode").is(":checked")) {
+                updateDecodelists();
+            }
+            $("#loaderCodelist").hide();
         }).fail(function () {
             $("#loaderCodelist").hide();
             $("#errorMsg").html(errorMsg.error.request);
@@ -447,23 +443,21 @@ function searchOperations() {
     getEndpointMetadataValue(properties.endpoint.operations)
         .done(function (endpoint) {
             $.getJSON(endpoint + "/operations.json?query=STATUS EQ \"" + properties.operations.status.production + "\"&limit=1000&orderBy=ID ASC", function (resp) {
-                getLanguage().then(language => {
-                    if (resp.operation) {
-                        for (var i = 0; i < resp.operation.length; i++) {
-                            operations[i] = {
-                                id: resp.operation[i].urn,
-                                text: _.keyBy(resp.operation[i].name.text, 'lang')[language].value
-                            };
-                        }
+                if (resp.operation) {
+                    for (var i = 0; i < resp.operation.length; i++) {
+                        operations[i] = {
+                            id: resp.operation[i].urn,
+                            text: getLocalisedLabel(resp.operation[i].name.text)
+                        };
                     }
-                    $("#selectOperation").select2({
-                        data: _.sortBy(operations, 'text'),
-                        dropdownAutoWidth: true,
-                        width: '83.3%',
-                    });
-                    $("#loaderOperation").hide();
-                    searchDatasets();
+                }
+                $("#selectOperation").select2({
+                    data: _.sortBy(operations, 'text'),
+                    dropdownAutoWidth: true,
+                    width: '83.3%',
                 });
+                $("#loaderOperation").hide();
+                searchDatasets();
             }).fail(function () {
                 $("#loaderOperation").hide();
                 $("#errorMsg").html(errorMsg.error.endpoint);
@@ -481,23 +475,21 @@ function searchDatasets() {
         .done(function (endpoint) {
             const url = endpoint + "/datasets.json?limit=1000&orderBy=ID ASC&query=IS_LAST_VERSION EQ 'true' AND STATISTICAL_OPERATION_URN EQ '" + $("#selectOperation").val() + "'";
             $.getJSON(url, function (resp) {
-                getLanguage().then(language => {
-                    if (resp.dataset) {
-                        for (var i = 0; i < resp.dataset.length; i++) {
-                            datasets[i] = {
-                                id: resp.dataset[i].selfLink.href.substring(0, resp.dataset[i].selfLink.href.lastIndexOf('/')),
-                                text: _.keyBy(resp.dataset[i].name.text, 'lang')[language].value,
-                            };
-                        }
+                if (resp.dataset) {
+                    for (var i = 0; i < resp.dataset.length; i++) {
+                        datasets[i] = {
+                            id: resp.dataset[i].selfLink.href.substring(0, resp.dataset[i].selfLink.href.lastIndexOf('/')),
+                            text: getLocalisedLabel(resp.dataset[i].name.text),
+                        };
                     }
-                    $("#selectDataset").select2({
-                        data: _.sortBy(_.uniqBy(datasets, 'id'), 'text'),
-                        dropdownAutoWidth: true,
-                        width: '83.3%',
-                    });
-                    $("#loaderDataset").hide();
-                    document.getElementById("selectDataset").parentElement.style.display = "block";
+                }
+                $("#selectDataset").select2({
+                    data: _.sortBy(_.uniqBy(datasets, 'id'), 'text'),
+                    dropdownAutoWidth: true,
+                    width: '83.3%',
                 });
+                $("#loaderDataset").hide();
+                document.getElementById("selectDataset").parentElement.style.display = "block";            
             }).fail(function () {
                 $("#loaderDataset").hide();
                 $("#errorMsg").html(errorMsg.error.request);
