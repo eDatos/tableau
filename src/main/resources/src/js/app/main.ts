@@ -209,7 +209,7 @@ function searchSubjects() {
                 $('#errorMsg').html("");
                 if (resp.items) {
                     for (var i = 0; i < resp.items.length; i++) {
-                        subjects[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
+                        subjects[i] = { id: resp.items[i].id, text: getLocalisedIndicatorsLabel(resp.items[i].title) };
                     }
                 }
                 $('#selectSubject').select2({
@@ -240,7 +240,7 @@ function searchIndicators() {
                 $('#errorMsg').html("");
                 if (resp.items) {
                     for (var i = 0; i < resp.items.length; i++) {
-                        indicators[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
+                        indicators[i] = { id: resp.items[i].id, text: getLocalisedIndicatorsLabel(resp.items[i].title) };
                     }
                 }
                 $('#selectIndicator').select2({
@@ -268,7 +268,7 @@ function searchIndicatorsSystems() {
                 $('#errorMsg').html("");
                 if (resp.items) {
                     for (var i = 0; i < resp.items.length; i++) {
-                        indicatorsSystems[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
+                        indicatorsSystems[i] = { id: resp.items[i].id, text: getLocalisedIndicatorsLabel(resp.items[i].title) };
                     }
                 }
                 $('#selectIndicatorSystem').select2({
@@ -296,7 +296,7 @@ function searchIndicatorsInstances() {
         $.getJSON(url, function (resp) {
             if (resp.items) {
                 for (var i = 0; i < resp.items.length; i++) {
-                    indicatorsInstances[i] = { id: resp.items[i].id, text: resp.items[i].title.__default__ };
+                    indicatorsInstances[i] = { id: resp.items[i].id, text: getLocalisedIndicatorsLabel(resp.items[i].title) };
                 }
             }
             $('#selectIndicatorInstance').select2({

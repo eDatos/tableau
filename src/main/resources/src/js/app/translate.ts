@@ -142,3 +142,13 @@ function getLocalisedLabel(text) {
     const internationalString = _.keyBy(text, 'lang');
     return internationalString[getLanguage()]?.value || internationalString[getDefaultLanguage()]?.value;
 }
+
+function getLocalisedIndicatorsLabel(internationalString) {
+    // Sample:
+    // "subjectTitle": {
+    //     "en": "Education",
+    //     "es": "Educación",
+    //     "__default__": "Educación"
+    // }
+    return internationalString[getLanguage()] || internationalString.__default__;
+}
