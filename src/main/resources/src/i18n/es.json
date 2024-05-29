@@ -1,8 +1,8 @@
 {
     "tableau": {
         "title": "Conector web de Tableau",
-        "descTableau": "Tableau es una herramienta que permite crear visualizaciones de manera muy rápida sobre cualquier conjunto de datos. Con esta herramienta podrá crear sus propios cuadros de mandos y aprovechar así la potencia que le brinda Tableau para realizar análisis sobre los datos.",
-        "descWDC": "Los Web Data Connectors de Tableau permiten conectar la herramienta con datos externos para poder obtenerlos de manera automática y muy sencilla.",
+        "descTableau": "Tableau es una herramienta que permite crear visualizaciones de manera muy rápida sobre cualquier conjunto de datos. Con esta herramienta podrá crear su propio cuadro de mandos y aprovechar así la potencia que le brinda Tableau para realizar análisis sobre los datos.",
+        "descWDC": "Los conectores de datos web de Tableau permiten conectar la herramienta con datos externos para poder obtenerlos de manera automática y muy sencilla.",
         "olConnectors": "En concreto los conectores disponibles están destinados a los siguientes fines:"
     },
     "forms": {
@@ -46,11 +46,11 @@
         "liCriteriaIndicator": "Navegar por distintos criterios para seleccionar el recurso que desea cargar."
     },
     "datasets": {
-        "title": "Cubos",
-        "func": "Permite obtener datos de cualquier dataset y/o consulta que se publica a través de eDatos. De la misma manera, este conector también permite la importación de ficheros que estén publicados haciendo uso del estándar <a href=\"https://json-stat.org/\">JSONStat</a>. Para hacer uso de esta opción bastará con que se especifique la URL en la que se publica el recurso en el formato indicado.",
+        "title": "Conjuntos de datos",
+        "func": "Permite obtener datos de cualquier cubo de datos y/o consulta que se publica a través de eDatos. De la misma manera, este conector también permite la importación de ficheros que estén publicados haciendo uso del estándar <a href=\"https://json-stat.org/\">JSONStat</a>. Para hacer uso de esta opción bastará con que se especifique la URL en la que se publica el recurso en el formato indicado.",
         "form": {
             "labels": {
-                "datasetUrl": "URL del cubo / consulta de datos",
+                "datasetUrl": "URL del conjunto de datos / consulta de datos",
                 "selectOperation": "Seleccionar operación estadística",
                 "measureColumns": "Visualizar las medidas como columnas",
                 "starModel": "Modelo estrella",
@@ -59,22 +59,22 @@
                 "allLanguages": "Añadir todos los idiomas",
                 "url": "URL:",
                 "operations": "Operaciones estadísticas:",
-                "datasets": "Cubos:"
+                "datasets": "Conjuntos de datos:"
             }
         },
         "buttons": {
             "searchOperations": "Buscar operaciones",
             "searchDatasets": "Buscar cubos"
         },
-        "descDataset": "Este conector le permite cargar los datos de un dataset o una consulta. Estos datos se publican originalmente a través de la ",
+        "descDataset": "Este conector le permite cargar los datos de un conjunto de datos o una consulta. Estos datos se publican originalmente a través de la ",
         "linkDatasetAPI": "API de Recursos Estadísticos",
         "datasetUse": "A la hora de seleccionar los datos a cargar disponemos de varias opciones:",
-        "liUrlDataset": "Introducir la URL de los datos que se desean cargar. Esta URL debe ser una petición para obtener un dataset o una query de la API. Además, en el caso de los datasets podrá hacer uso del parámetro \"dim\" para filtrar los datos a obtener y así reducir el tamaño de la respuesta.",
-        "liOperationDataset": "Navegar por operación estadística para seleccionar el dataset o query que desea cargar."
+        "liUrlDataset": "Introducir la URL de los datos que se desean cargar. Esta URL debe ser una petición para obtener un conjunto de datos o una consulta de la API. Además, en el caso de los conjuntos de datos podrá hacer uso del parámetro \"dim\" para filtrar los datos a obtener y así reducir el tamaño de la respuesta.",
+        "liOperationDataset": "Navegar por operación estadística para seleccionar el conjunto de datos o consulta que desea cargar."
     },
     "codelists": {
         "title": "Clasificaciones",
-        "func": "Permite obtener cualquier clasificación publicada a través de eDatos. Estas clasificaciones son especialmente útiles puesto que son las utilizadas en la codificación de las variables de los datasets y las publicaciones.",
+        "func": "Permite obtener cualquier clasificación publicada a través de eDatos. Estas clasificaciones son especialmente útiles puesto que son las utilizadas en la codificación de las variables de los conjuntos de datos y las publicaciones.",
         "form": {
             "labels": {
                 "codelistUrl": "URL de la clasificación",

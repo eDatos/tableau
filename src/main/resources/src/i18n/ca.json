@@ -25,7 +25,7 @@
                 "starModel": "Model estrella",
                 "recodeDates": "Incloure camp calculat amb data a partir de períodes de referència",
                 "showGranularity": "Afegir les columnes \"Granularitat geogràfica\" i \"Granularitat temporal\"",
-                "showLabels": "Afegir les etiquetes geográfique i temporals al conjunt de dades",
+                "showLabels": "Afegir les etiquetes geogràfiques i temporals al conjunt de dades",
                 "allLanguages": "Afegir tots els idiomes",
                 "url": "URL:",
                 "subjects": "Temes",
@@ -47,7 +47,7 @@
     },
     "datasets": {
         "title": "Conjunts de dades",
-        "func": "Permet obtenir dades de qualsevol conjunt i/o consulta que es publica a través de eDatos. De la mateixa manera, aquest connector també permet la importació de fitxers que estiguin publicats fent ús de l'estàndard <a href=\"https://json-stat.org/\">JSONStat</a>. Per a fer ús d'aquesta opció bastarà que s'especifiqui l'URL en què es publica el recurs en el format indicat.",
+        "func": "Permet obtenir dades de qualsevol cub de dades i/o consulta que es publica a través d'eDatos. De la mateixa manera, aquest connector també permet la importació de fitxers que estiguin publicats fent ús de l'estàndard <a href=\"https://json-stat.org/\">JSONStat</a>. Per a fer ús d'aquesta opció bastarà que s'especifiqui l'URL en què es publica el recurs en el format indicat.",
         "form": {
             "labels": {
                 "datasetUrl": "URL del conjunt de dades / consulta de dades",
@@ -59,22 +59,22 @@
                 "allLanguages": "Afegir tots els idiomes",
                 "url": "URL:",
                 "operations": "Operacions estadístiques:",
-                "datasets": "Base de dades:"
+                "datasets": "Conjunts de dades:"
             }
         },
         "buttons": {
             "searchOperations": "Cercar operacions",
-            "searchDatasets": "Cercar base de dades"
+            "searchDatasets": "Cercar conjunt de dades"
         },
-        "descDataset": "Aquest connector us permet carregar les dades d'una base de dades o d'una consulta. Aquestes dades es publiquen originalment a través de la ",
+        "descDataset": "Aquest connector us permet carregar les dades d'un conjunt de dades o d'una consulta. Aquestes dades es publiquen originalment a través de la ",
         "linkDatasetAPI": "API de recursos estadístics",
         "datasetUse": "A l'hora de seleccionar les dades a carregar disposam de diverses opcions:",
         "liUrlDataset": "Introduir l'URL de les dades que es desitgen carregar. Aquest URL ha de ser una petició per a obtenir un conjunt de dades o una consulta de l'API. A més, en el cas dels conjunts de dades, podrà fer ús del paràmetre \"dim\" per tal de filtrar les dades a obtenir i així reduir la llargària de la resposta.",
-        "liOperationDataset": "Navegar per operació estadística per a seleccionar la base de dades o consulta que es desitja carregar."
+        "liOperationDataset": "Navegar per operació estadística per a seleccionar el conjunt de dades o consulta que es desitja carregar."
     },
     "codelists": {
         "title": "Classificacions",
-        "func": "Permet obtenir qualsevol classificació publicada a través de eDatos. Aquestes classificacions són especialment útils perquè són les utilitzades en la codificació de les variables dels conjunts de dades i de les publicacions.",
+        "func": "Permet obtenir qualsevol classificació publicada a través d'eDatos. Aquestes classificacions són especialment útils perquè són les utilitzades en la codificació de les variables dels conjunts de dades i de les publicacions.",
         "form": {
             "labels": {
                 "codelistUrl": "URL de la classificació",
