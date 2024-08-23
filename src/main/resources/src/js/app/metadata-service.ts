@@ -77,3 +77,17 @@ function getLanguages(): JQuery.Promise<string> {
         getMetadataValue(prop.endpoint.languages.metadataKey)
     );
 }
+
+function loadHtmlFromUrlIn(id: string, url: string, callback: () => void) {
+    $.ajax({
+        url: url,
+        dataType: 'html',
+        async: false,
+        success: function(html) {
+            const slotHtml = document.createRange().createContextualFragment(html);
+            document.getElementById(id).innerHTML = '';
+            document.getElementById(id).append(slotHtml);
+            callback();
+        }
+    });
+}
