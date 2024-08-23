@@ -15,9 +15,9 @@
     <script src="js/app/translate.js" type="text/javascript"></script>
     <script src="js/app/main.js" type="text/javascript"></script>
     <script>
-        function getHeader() {
+        function getHeader(url) {
             return $.ajax({
-                url: 'https://estadisticas.arte-consultores.com/apps/organisations/iecm/common/header/header.html?appName=Conector+web+de+Tableau&appUrl=index.html&appId=tableau',
+                url: url,
                 dataType: 'html',
                 async: !1,
                 success: function(html) {
@@ -136,8 +136,12 @@
 </div>
 </body>
 <script>
-    const slotHtml = document.createRange().createContextualFragment(getHeader().responseText);
-    document.getElementById("headerTemplate").innerHTML = '';
-    document.getElementById("headerTemplate").append(slotHtml);
+    $(function () {
+        getHeaderUrl().done(function(url) {
+            const slotHtml = document.createRange().createContextualFragment(getHeader(url).responseText);
+            document.getElementById("headerTemplate").innerHTML = '';
+            document.getElementById("headerTemplate").append(slotHtml);
+        });
+    });
 </script>
 </html>
