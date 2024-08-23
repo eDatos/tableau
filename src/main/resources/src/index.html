@@ -17,20 +17,10 @@
     <script>
         $(function () {
             getHeaderUrl().done(function(url) {
-                $.ajax({
-                    url: url,
-                    dataType: 'html',
-                    async: false,
-                    success: function(html) {
-                        const slotHtml = document.createRange().createContextualFragment(html);
-                        document.getElementById("headerTemplate").innerHTML = '';
-                        document.getElementById("headerTemplate").append(slotHtml);
-
-                        initializeTranslations();
-                        translationsLoaded.done(() => $("#title-bar").find("span").text(appTitle));
-                    }
+                loadHtmlFromUrlIn("headerTemplate", url, function() {
+                    initializeTranslations();
+                    translationsLoaded.done(() => $("#title-bar").find("span").text(appTitle));
                 });
-
             });
             getFooterUrl().done(function(url) {
                 $("#footerTemplate").load(url);
