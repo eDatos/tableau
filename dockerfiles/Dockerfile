@@ -15,12 +15,6 @@
 ###
 FROM nginx:alpine
 
-RUN apk add --no-cache unzip
-
-# Elimina contenido por defecto de nginx
-RUN rm -rf /usr/share/nginx/html/*
-
-COPY ./target/*.jar /tmp/app.jar
-RUN unzip /tmp/*.jar -d /usr/share/nginx/html/ && rm /tmp/app.jar
+COPY ./src/main/resources/public /usr/share/nginx/html
 
 EXPOSE 80
