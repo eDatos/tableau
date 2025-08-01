@@ -31,7 +31,8 @@
                     "key": "metamac.app.style.header.url",
                     "parameters": {
                         "appName": "Conector web de Tableau",
-                        "appUrl": "/"
+                        "appUrl": "/",
+                        "appId": "tableau-wdc2"
                     }
                 },
                 "footer": {

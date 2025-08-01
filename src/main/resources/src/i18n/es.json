@@ -3,7 +3,7 @@
         "title": "Conector web de Tableau",
         "descTableau": "Tableau es una herramienta que permite crear visualizaciones de manera muy rápida sobre cualquier conjunto de datos. Con esta herramienta podrá crear su propio cuadro de mandos y aprovechar así la potencia que le brinda Tableau para realizar análisis sobre los datos.",
         "descWDC": "Los conectores de datos web de Tableau permiten conectar la herramienta con datos externos para poder obtenerlos de manera automática y muy sencilla.",
-        "olConnectors": "En concreto los conectores disponibles están destinados a los siguientes fines:"
+        "olConnectors": "En concreto, los conectores disponibles están destinados a los siguientes fines:"
     },
     "forms": {
         "dataSelectionHeader": "Seleccione los datos que desea obtener:",
