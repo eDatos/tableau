@@ -156,105 +156,162 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
 
     // Dataset
     function parseStatisticalResourceDatasetResponse(dataResponse, connectionData, table, doneCallback) {
-        let tableData = [];
-        let observations = dataResponse.data.observations.split(" | ");
-        let total = 1;
-        for (let i = 0; i < Object.keys(connectionData.dimensions).length; i++) {
-            total = total * dataResponse.data.dimensions.dimension[i].representations.total;
-        }
-        if (table.tableInfo.id == "datasetData") {
-            for (let i = 0; i < observations.length; i++) {
-                var hash = {};
-                var copyHash = {};
-                if (!connectionData.showMeasureColumns) {
-                    hash[connectionData.observationId] = parseObs(observations[i]);
-                }
-                var remaining = i;
-                var subtotal = total;
-                for (let j = 0; j < dataResponse.data.dimensions.total; j++) {
-                    var totalDimension = dataResponse.data.dimensions.dimension[j].representations.total;
-                    subtotal = Math.floor(subtotal / totalDimension);
-                    let indDimension = Math.floor(remaining / subtotal);
-                    remaining = remaining % subtotal;
-                    if (connectionData.showMeasureColumns) {
-                        if (connectionData.measureColumns.dimension == connectionData.dimensions[j].id) {
-                            copyHash[connectionData.measureColumns.dimension + "_" + _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code] = parseObs(observations[i]);
-                        } else {
-                            hash[connectionData.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
-                            copyHash[connectionData.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
-                        }
-                    } else {
-                        hash[connectionData.dimensions[j].id] = _.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code;
-                    }
-                    if (!connectionData.starModel) {
-                        if (connectionData.recodeDates && connectionData.timeDimension == connectionData.dimensions[j].id) {
-                            hash["Fecha"] = calculateDateSdmx(_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code);
-                            copyHash["Fecha"] = calculateDateSdmx(_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code);
-                        }
-                        if (connectionData.labels) {
-                            var dimension = _.keyBy(dataResponse.metadata.dimensions.dimension, "id")[connectionData.dimensions[j].id];
-                            let dimensionValue;
-                            let dimensionLabel;
-                            if (dimension.type === "MEASURE_DIMENSION") {
-                                dimensionValue = _.keyBy(dimension.dimensionValues.value, "id")[_.keyBy(dataResponse.data.dimensions.dimension[j].representations.representation, 'index')[indDimension].code];
-                                dimensionLabel = _.keyBy(dimensionValue.name.text, "lang");
-                            } else {
-                                dimensionValue = _.keyBy(dimension.dimensionValues.value, "id")[hash[connectionData.dimensions[j].id]];
-                                dimensionLabel = _.keyBy(dimensionValue.name.text, "lang");
-                            }
-                            if (connectionData.allLanguages) {
-                                for (let k = 0; k < connectionData.languages.length; k++) {
-                                    if (dimensionLabel[connectionData.languages[k]]) {
-                                        copyHash["Etiqueta_" + dimension.id + "_" + connectionData.languages[k]] = dimensionLabel[connectionData.languages[k]].value;
-                                    } else {
-                                        copyHash["Etiqueta_" + dimension.id + "_" + connectionData.languages[k]] = '';
-                                    }
-                                }
-                            } else {
-                                copyHash["Etiqueta_" + dimension.id] = dimensionLabel['es'].value;
-                            }
-                        }
-                    }
-                }
-                if (connectionData.showMeasureColumns && table.tableInfo.id == "datasetData") {
-                    var index = _.findIndex(tableData, hash);
-                    if (index != -1) {
-                        _.extend(tableData[index], copyHash);
-                    }
-                    else {
-                        tableData.push(copyHash);
-                    }
-                } else {
-                    tableData.push(hash);
-                }
-            }
-        } else {
-            var dimension = _.keyBy(dataResponse.metadata.dimensions.dimension, "id")[table.tableInfo.id];
-            for (let i = 0; i < dimension.dimensionValues.total; i++) {
-                var hash = {};
-                hash[table.tableInfo.id] = dimension.dimensionValues.value[i].id;
-                if (connectionData.recodeDates && connectionData.timeDimension == table.tableInfo.id) {
-                    hash["Fecha"] = calculateDateSdmx(dimension.dimensionValues.value[i].id);
-                }
-                if (connectionData.labels) {
-                    var dimensionLabels = _.keyBy(dimension.dimensionValues.value[i].name.text, "lang");
-                    if (connectionData.allLanguages) {
-                        for (let k = 0; k < connectionData.languages.length; k++) {
-                            if (dimensionLabels[connectionData.languages[k]]) {
-                                hash["Etiqueta_" + dimension.id + "_" + connectionData.languages[k]] = dimensionLabels[connectionData.languages[k]].value;
-                            } else {
-                                hash["Etiqueta_" + dimension.id + "_" + connectionData.languages[k]] = '';
-                            }
-                        }
-                    } else {
-                        hash["Etiqueta_" + dimension.id] = dimensionLabels['es'].value;
-                    }
-                }
-                tableData.push(hash);
-            }
-        }
+        const tableData = table.tableInfo.id == "datasetData"
+            ? parseDatasetDataTable(dataResponse, connectionData)
+            : parseDimensionTable(dataResponse, connectionData, table);
+
         table.appendRows(_.values(tableData));
         doneCallback();
+    }
+
+    function parseDatasetDataTable(dataResponse, connectionData) {
+        const observations = dataResponse.data.observations.split(" | ");
+        const total = calculateTotal(dataResponse.data.dimensions.dimension);
+        const cache = buildDimensionCache(dataResponse, connectionData);
+        const tableDataMap = connectionData.showMeasureColumns ? {} : null;
+        const tableData = [];
+
+        for (let i = 0; i < observations.length; i++) {
+
+            const rowData = processObservation(i, observations[i], total, dataResponse, connectionData, cache);
+
+            if (connectionData.showMeasureColumns) {
+                const hashKey = JSON.stringify(rowData.hash);
+                tableDataMap[hashKey] = tableDataMap[hashKey]
+                    ? _.extend(tableDataMap[hashKey], rowData.copyHash)
+                    : rowData.copyHash;
+            } else {
+                tableData.push(rowData.hash);
+            }
+        }
+
+        return connectionData.showMeasureColumns ? _.values(tableDataMap) : tableData;
+    }
+
+    function parseDimensionTable(dataResponse, connectionData, table) {
+        const dimension = _.keyBy(dataResponse.metadata.dimensions.dimension, "id")[table.tableInfo.id];
+        const dimensionId = dimension.id;
+        const shouldRecodeDates = connectionData.recodeDates && connectionData.timeDimension == table.tableInfo.id;
+        const tableData = [];
+
+        for (let i = 0; i < dimension.dimensionValues.total; i++) {
+            const dimensionValue = dimension.dimensionValues.value[i];
+            const hash = { [table.tableInfo.id]: dimensionValue.id };
+
+            if (shouldRecodeDates) {
+                hash["Fecha"] = calculateDateSdmx(dimensionValue.id);
+            }
+
+            if (connectionData.labels) {
+                addLabelsToHash(hash, dimensionValue.name.text, dimensionId, connectionData);
+            }
+
+            tableData.push(hash);
+        }
+
+        return tableData;
+    }
+
+    function calculateTotal(dimensions) {
+        return dimensions.reduce((total, dim) => total * dim.representations.total, 1);
+    }
+
+    function buildDimensionCache(dataResponse, connectionData) {
+        const cache = {
+            representationsByIndex: [],
+            metadataDimensionsById: connectionData.labels ? _.keyBy(dataResponse.metadata.dimensions.dimension, "id") : {},
+            dimensionValuesById: []
+        };
+
+        for (let j = 0; j < dataResponse.data.dimensions.total; j++) {
+            cache.representationsByIndex[j] = _.keyBy(
+                dataResponse.data.dimensions.dimension[j].representations.representation,
+                'index'
+            );
+
+            if (connectionData.labels && !connectionData.starModel) {
+                const dimension = cache.metadataDimensionsById[connectionData.dimensions[j].id];
+                if (dimension) {
+                    cache.dimensionValuesById[j] = _.keyBy(dimension.dimensionValues.value, "id");
+                }
+            }
+        }
+
+        return cache;
+    }
+
+    function processObservation(index, observation, total, dataResponse, connectionData, cache) {
+        const hash = {};
+        const copyHash = {};
+
+        if (!connectionData.showMeasureColumns) {
+            hash[connectionData.observationId] = parseObs(observation);
+        }
+
+        let remaining = index;
+        let subtotal = total;
+
+        for (let j = 0; j < dataResponse.data.dimensions.total; j++) {
+            const dimension = dataResponse.data.dimensions.dimension[j];
+            subtotal = Math.floor(subtotal / dimension.representations.total);
+            const indDimension = Math.floor(remaining / subtotal);
+            remaining = remaining % subtotal;
+
+            const representationCode = cache.representationsByIndex[j][indDimension].code;
+            const dimensionId = connectionData.dimensions[j].id;
+
+            processDimensionValue(hash, copyHash, dimensionId, representationCode, observation, connectionData, cache, j);
+        }
+
+        return { hash, copyHash };
+    }
+
+    function processDimensionValue(hash, copyHash, dimensionId, representationCode, observation, connectionData, cache, dimensionIndex) {
+        const isMeasureDimension = connectionData.showMeasureColumns && connectionData.measureColumns.dimension == dimensionId;
+
+        if (isMeasureDimension) {
+            copyHash[connectionData.measureColumns.dimension + "_" + representationCode] = parseObs(observation);
+        } else {
+            hash[dimensionId] = representationCode;
+            if (connectionData.showMeasureColumns) {
+                copyHash[dimensionId] = representationCode;
+            }
+        }
+
+        if (!connectionData.starModel) {
+            if (connectionData.recodeDates && connectionData.timeDimension == dimensionId) {
+                const fecha = calculateDateSdmx(representationCode);
+                hash["Fecha"] = fecha;
+                copyHash["Fecha"] = fecha;
+            }
+
+            if (connectionData.labels && !isMeasureDimension) {
+                addDimensionLabels(copyHash, dimensionId, representationCode, hash[dimensionId], dimensionIndex, connectionData, cache);
+            }
+        }
+    }
+
+    function addDimensionLabels(copyHash, dimensionId, representationCode, hashValue, dimensionIndex, connectionData, cache) {
+        const dimension = cache.metadataDimensionsById[dimensionId];
+        if (!dimension) return;
+
+        const valueId = dimension.type === "MEASURE_DIMENSION" ? representationCode : hashValue;
+        const dimensionValue = cache.dimensionValuesById[dimensionIndex][valueId];
+        if (!dimensionValue) return;
+
+        addLabelsToHash(copyHash, dimensionValue.name.text, dimension.id, connectionData);
+    }
+
+    function addLabelsToHash(hash, nameText, dimensionId, connectionData) {
+        const dimensionLabels = _.keyBy(nameText, "lang");
+
+        if (connectionData.allLanguages) {
+            connectionData.languages.forEach(lang => {
+                hash["Etiqueta_" + dimensionId + "_" + lang] = dimensionLabels[lang] ? dimensionLabels[lang].value : '';
+            });
+        } else {
+            hash["Etiqueta_" + dimensionId] = dimensionLabels['es'].value;
+        }
     }
 
     function parseJsonStatDatasetResponse(dataResponse: JsonStat.Dataset, connectionData: DatasetsConnectionData, tableauTable, doneCallback) {
