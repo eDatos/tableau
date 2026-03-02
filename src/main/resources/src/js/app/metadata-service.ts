@@ -47,10 +47,19 @@ function getProperties(): JQuery.jqXHR<Configuration> {
 }
 
 function getHeaderUrl(): JQuery.Promise<string> {
+    const additionalHeaderRequestParameters = {};
+    if (window.tableau && tableau.platformVersion) {
+        const currentTableauMajorVersion = Number(tableau.platformVersion.split(".")[0]);
+        if (currentTableauMajorVersion >= 2025) {
+            // For Tableau 2025 and later we need to disable matomo to prevent crashing the app
+            additionalHeaderRequestParameters["disableAnalytics"] = true;
+        }
+    }
+
     return getProperties()
         .then(prop => getMetadataValue(
             prop.endpoint.layout.metadataKey.header.key,
-            prop.endpoint.layout.metadataKey.header.parameters),
+            Object.assign({}, prop.endpoint.layout.metadataKey.header.parameters, additionalHeaderRequestParameters)),
         );
 }
 
