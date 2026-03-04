@@ -47,20 +47,28 @@ function getProperties(): JQuery.jqXHR<Configuration> {
 }
 
 function getHeaderUrl(): JQuery.Promise<string> {
-    const additionalHeaderRequestParameters = {};
-    if (window.tableau && tableau.platformVersion) {
-        const currentTableauMajorVersion = Number(tableau.platformVersion.split(".")[0]);
-        if (currentTableauMajorVersion >= 2025) {
-            // For Tableau 2025 and later we need to disable matomo to prevent crashing the app
-            additionalHeaderRequestParameters["disableAnalytics"] = true;
+    var deferred = $.Deferred();
+    addEventListener("load", () => {
+        const additionalHeaderRequestParameters = {};
+        if (window.tableau && tableau.platformVersion) {
+            console.log("Detected Tableau platform version: " + tableau.platformVersion);
+            const currentTableauMajorVersion = Number(tableau.platformVersion.split(".")[0]);
+            if (currentTableauMajorVersion >= 2025) {
+                // For Tableau 2025 and later we need to disable matomo to prevent crashing the app
+                additionalHeaderRequestParameters["disableAnalytics"] = true;
+            }
         }
-    }
 
-    return getProperties()
-        .then(prop => getMetadataValue(
-            prop.endpoint.layout.metadataKey.header.key,
-            Object.assign({}, prop.endpoint.layout.metadataKey.header.parameters, additionalHeaderRequestParameters)),
-        );
+        getProperties()
+            .then(prop => getMetadataValue(
+                prop.endpoint.layout.metadataKey.header.key,
+                Object.assign({}, prop.endpoint.layout.metadataKey.header.parameters, additionalHeaderRequestParameters)),
+            )
+            .done(function (result) {
+                deferred.resolve(result);
+            });
+    });
+    return deferred.promise();
 }
 
 function getFooterUrl(): JQuery.Promise<string> {
