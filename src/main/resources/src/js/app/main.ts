@@ -64,6 +64,17 @@ function addNumber(number) {
     return number < 10 ? "0" + number + " " : number + " ";
 }
 
+// Qt WebEngine in Tableau 2019.4+ silently drops an appendRows call above ~128 MB
+// https://tableau.github.io/webdataconnector/docs/wdc_get_data.html
+const APPEND_ROWS_CHUNK_SIZE = 10000;
+
+function appendRowsInChunks(table: Tableau.Table, rows: DataEntry[]) {
+    for (let rowIndex = 0; rowIndex < rows.length; rowIndex += APPEND_ROWS_CHUNK_SIZE) {
+        table.appendRows(rows.slice(rowIndex, rowIndex + APPEND_ROWS_CHUNK_SIZE));
+        tableau.reportProgress("Cargando filas " + Math.min(rowIndex + APPEND_ROWS_CHUNK_SIZE, rows.length) + " / " + rows.length);
+    }
+}
+
 function onDownloadDecodeSelected(downloadDecodeRadio) {
     if ($("#" + downloadDecodeRadio.id).is(":checked")) {
         searchCodelists();

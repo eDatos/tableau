@@ -160,7 +160,7 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
             ? parseDatasetDataTable(dataResponse, connectionData)
             : parseDimensionTable(dataResponse, connectionData, table);
 
-        table.appendRows(_.values(tableData));
+        appendRowsInChunks(table, _.values(tableData));
         doneCallback();
     }
 
@@ -339,7 +339,7 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
             tableData.push(hash);
         }
 
-        tableauTable.appendRows(_.values(tableData));
+        appendRowsInChunks(tableauTable, _.values(tableData));
         doneCallback();
     }
 
@@ -413,7 +413,7 @@ const schemas: Partial<{ [key in ResourceType]: {} }> = {};
     function parseGPEDatasetResponse(dataResponse: GPE.Dataset, connectionData: DatasetsConnectionData, table, doneCallback) {
         var tableData = [];
         parseGPEDatasetResponseForDatasetData(table, dataResponse, connectionData, tableData);
-        table.appendRows(_.values(tableData));
+        appendRowsInChunks(table, _.values(tableData));
         doneCallback();
     }
 
