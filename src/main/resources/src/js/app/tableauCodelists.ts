@@ -126,7 +126,7 @@
                 }
             }
 
-            table.appendRows(tableData);
+            appendRowsInChunks(table, tableData);
             doneCallback();
         }, function () {
             doneCallback();
